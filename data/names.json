@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "gulf-of-mexico",
+      "enabled": true,
+      "description": "Restore Gulf of Mexico",
+      "substitutions": [
+        {
+          "locale": "en",
+          "from": "Gulf of Mexico (Gulf of America)",
+          "to": "Gulf of Mexico"
+        },
+        {
+          "locale": "en",
+          "from": "Gulf of America (Gulf of Mexico)",
+          "to": "Gulf of Mexico"
+        },
+        {
+          "locale": "en",
+          "from": "Gulf of America",
+          "to": "Gulf of Mexico"
+        }
+      ]
+    },
+    {
+      "id": "lake-ontario",
+      "enabled": true,
+      "description": "Restore Lake Ontario",
+      "substitutions": [
+        {
+          "locale": "en",
+          "from": "Lake Ontario (Lake America)",
+          "to": "Lake Ontario"
+        },
+        {
+          "locale": "en",
+          "from": "Lake America (Lake Ontario)",
+          "to": "Lake Ontario"
+        },
+        {
+          "locale": "en",
+          "from": "Lake America",
+          "to": "Lake Ontario"
+        }
+      ]
+    }
+  ]
+}

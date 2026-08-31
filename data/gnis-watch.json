@@ -1,0 +1,17 @@
+{
+  "_comment": "Baselines for tools/gnis-watch.mjs, observed live from GNIS. When an ALERT fires, update data/names.json with the newly observed strings, then refresh these baselines.",
+  "features": [
+    {
+      "gazId": 558730,
+      "note": "Gulf of Mexico",
+      "officialName": "Gulf of America",
+      "lastEditMs": 1739141637000
+    },
+    {
+      "gazId": 970427,
+      "note": "Lake Ontario (Great Lake)",
+      "officialName": "Lake America",
+      "lastEditMs": 1787860686000
+    }
+  ]
+}

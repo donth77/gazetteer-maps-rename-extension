@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Gazetteer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Gazetteer</h1>
+    <label class="master">
+      <input type="checkbox" id="master-toggle" data-i18n-arialabel="ariaMasterToggle">
+      <span class="switch" aria-hidden="true"></span>
+    </label>
+  </header>
+
+  <ul id="rules" class="rules"></ul>
+
+  <section class="status" id="status" hidden>
+    <div class="status-row"><span id="state-dot" class="dot" aria-hidden="true"></span><strong id="state-label"></strong></div>
+    <p class="summary" id="summary" hidden></p>
+  </section>
+
+  <p class="contested" id="contested" hidden data-i18n="contestedWarning" role="status">Two of your places share a word on the map, and a
+  label drawn earlier may show the wrong one. Reload the tab to redraw.</p>
+
+  <p class="offsite" id="offsite" hidden data-i18n="offsite">Open Google Maps to see status here.</p>
+
+  <footer>
+    <button type="button" id="open-options" class="link" data-i18n="openSettings">Settings</button>
+    <button type="button" id="reload" class="link" hidden data-i18n="reloadTab">Reload tab</button>
+    <span class="version" id="version"></span>
+  </footer>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+{
+  "extDescription": {
+    "message": "Stellen Sie den Golf von Mexiko, den Ontariosee und jeden anderen umbenannten Ort auf Google Maps wieder her."
+  },
+  "settingsTitle": {
+    "message": "Gazetteer-Einstellungen"
+  },
+  "tagline": {
+    "message": "Bestimmen Sie, wie Google Maps Orte nennt."
+  },
+  "scopeNotice": {
+    "message": "Gazetteer benennt Orte in der Seitenleiste, in Suchergebnissen, im Tab-Titel und auf der Karte selbst um. Wenn eine Beschriftung bereits sichtbar war, bevor Sie eine Änderung gespeichert haben, wird sie beim nächsten Neuzeichnen der Karte aktualisiert. Verschieben, zoomen oder laden Sie den Tab neu, um es sofort zu sehen."
+  },
+  "toggleEnabled": {
+    "message": "Aktiviert"
+  },
+  "rasterToggleLabel": {
+    "message": "Alte Namen während des Ladens ausblenden"
+  },
+  "rasterToggleHint": {
+    "message": "Während die Karte lädt, zeigt Google kurz ein Vorschaubild, das noch die alten Namen enthält. Mit dieser Option sehen Sie stattdessen ein graues Laderaster, und die ersten angezeigten Namen sind Ihre umbenannten. Wird auf Computern, die die vollständige Karte nicht ausführen können, automatisch deaktiviert."
+  },
+  "searchToggleLabel": {
+    "message": "Umbenannte Orte im Suchfeld anzeigen"
+  },
+  "searchToggleHint": {
+    "message": "Nach einer Suche trägt Maps den alten Namen des Ortes ins Suchfeld ein. Mit dieser Option zeigt das Feld stattdessen Ihre umbenannte Version. Zu beachten: Eine erneute Suche sucht nach dem umbenannten Text, und ein erfundener Name findet möglicherweise nichts. Selbst eingegebener Text wird nie verändert."
+  },
+  "colLanguage": {
+    "message": "Sprache"
+  },
+  "colGoogleShows": {
+    "message": "Google zeigt"
+  },
+  "colShowInstead": {
+    "message": "Stattdessen anzeigen"
+  },
+  "colRemove": {
+    "message": "Entfernen"
+  },
+  "phRuleDescription": {
+    "message": "Was hiermit wiederhergestellt wird"
+  },
+  "phFrom": {
+    "message": "Name wie angezeigt"
+  },
+  "phTo": {
+    "message": "Anzuzeigender Name"
+  },
+  "ariaRuleDescription": {
+    "message": "Beschreibung der Regel"
+  },
+  "ariaFrom": {
+    "message": "Zu suchender Text"
+  },
+  "ariaTo": {
+    "message": "Ersatztext"
+  },
+  "ariaLanguage": {
+    "message": "Sprache, für die diese Umbenennung gilt"
+  },
+  "ariaDeleteRule": {
+    "message": "Diese Regel löschen"
+  },
+  "ariaRemoveRename": {
+    "message": "Diese Umbenennung entfernen"
+  },
+  "addRename": {
+    "message": "Umbenennung hinzufügen"
+  },
+  "addPlace": {
+    "message": "Ort hinzufügen"
+  },
+  "backupHeading": {
+    "message": "Sicherung"
+  },
+  "backupHint": {
+    "message": "Exportieren speichert Ihre Umbenennungen in einer Datei, zur Sicherung oder zum Teilen. Importieren ersetzt alles durch den Inhalt einer Datei."
+  },
+  "exportJson": {
+    "message": "JSON exportieren"
+  },
+  "importJson": {
+    "message": "JSON importieren"
+  },
+  "restoreDefaults": {
+    "message": "Standardwerte wiederherstellen"
+  },
+  "savedPill": {
+    "message": "Gespeichert"
+  },
+  "emptyRules": {
+    "message": "Noch keine Orte konfiguriert. Fügen Sie unten einen hinzu."
+  },
+  "importError": {
+    "message": "Import fehlgeschlagen: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmDeleteRule": {
+    "message": "„$1“ und seine Umbenennungen löschen?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmRemoveRename": {
+    "message": "Die Umbenennung von „$1“ zu „$2“ entfernen?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "confirmRestore": {
+    "message": "Alle Ihre Umbenennungen durch die Standardwerte ersetzen?"
+  },
+  "dialogCancel": {
+    "message": "Abbrechen"
+  },
+  "dialogDelete": {
+    "message": "Löschen"
+  },
+  "dialogRemove": {
+    "message": "Entfernen"
+  },
+  "dialogRestore": {
+    "message": "Wiederherstellen"
+  },
+  "allLanguages": {
+    "message": "Alle Sprachen"
+  },
+  "noMatchingLanguage": {
+    "message": "Keine passende Sprache"
+  },
+  "popupNoRules": {
+    "message": "Keine Regeln konfiguriert."
+  },
+  "popupRenameCountOne": {
+    "message": "1 Umbenennung"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 Umbenennungen",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusOff": {
+    "message": "Deaktiviert"
+  },
+  "statusRewritingPageMap": {
+    "message": "Seite und Karte werden umbenannt ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusRewritingPage": {
+    "message": "Diese Seite wird umbenannt ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNotInstalled": {
+    "message": "Komponente wurde nicht installiert"
+  },
+  "statusNoLocaleRules": {
+    "message": "Keine aktiven Regeln für diese Sprache"
+  },
+  "statusNothingHere": {
+    "message": "Installiert, hier nichts zu ändern"
+  },
+  "summaryOne": {
+    "message": "1 Name hier umgeschrieben"
+  },
+  "summaryMany": {
+    "message": "$1 Namen hier umgeschrieben",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "contestedWarning": {
+    "message": "Zwei Ihrer Orte teilen sich ein Wort auf der Karte, und eine früher gezeichnete Beschriftung zeigt möglicherweise das falsche. Laden Sie den Tab neu, um neu zu zeichnen."
+  },
+  "offsite": {
+    "message": "Öffnen Sie Google Maps, um hier den Status zu sehen."
+  },
+  "openSettings": {
+    "message": "Einstellungen"
+  },
+  "reloadTab": {
+    "message": "Tab neu laden"
+  },
+  "ariaMasterToggle": {
+    "message": "Umbenennen ein- oder ausschalten"
+  },
+  "ariaEnableRule": {
+    "message": "$1 aktivieren",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "rulesRegionLabel": {
+    "message": "Umbenennungsregeln"
+  }
+}

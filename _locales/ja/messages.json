@@ -1,0 +1,222 @@
+{
+  "extDescription": {
+    "message": "メキシコ湾、オンタリオ湖など、名前が変更された場所を Google マップ上で元に戻します。"
+  },
+  "settingsTitle": {
+    "message": "Gazetteer の設定"
+  },
+  "tagline": {
+    "message": "Google マップの地名表示を自分で決められます。"
+  },
+  "scopeNotice": {
+    "message": "Gazetteer は、サイドバー、検索結果、タブのタイトル、そして地図そのものの地名を書き換えます。変更を保存する前から表示されていたラベルは、次に地図が再描画されるときに更新されます。すぐに確認するには、地図を動かすか、ズームするか、タブを再読み込みしてください。"
+  },
+  "toggleEnabled": {
+    "message": "有効"
+  },
+  "rasterToggleLabel": {
+    "message": "読み込み中に古い名前を隠す"
+  },
+  "rasterToggleHint": {
+    "message": "地図の読み込み中、Google は古い名前が残ったプレビュー画像を一瞬表示します。この設定をオンにすると、代わりに灰色の読み込みグリッドが表示され、最初に現れる名前はあなたが変更した名前になります。完全な地図を実行できないパソコンでは自動的にオフになります。"
+  },
+  "searchToggleLabel": {
+    "message": "検索ボックスにも変更後の名前を表示する"
+  },
+  "searchToggleHint": {
+    "message": "検索すると、Maps は検索ボックスに場所の古い名前を入れます。この設定をオンにすると、ボックスには変更後の名前が表示されます。注意: 再度検索すると変更後のテキストで検索され、創作した名前では何も見つからないことがあります。自分で入力したテキストが変更されることはありません。"
+  },
+  "colLanguage": {
+    "message": "言語"
+  },
+  "colGoogleShows": {
+    "message": "Google の表示"
+  },
+  "colShowInstead": {
+    "message": "代わりに表示"
+  },
+  "colRemove": {
+    "message": "削除"
+  },
+  "phRuleDescription": {
+    "message": "この設定で戻す名前"
+  },
+  "phFrom": {
+    "message": "表示されている名前"
+  },
+  "phTo": {
+    "message": "表示したい名前"
+  },
+  "ariaRuleDescription": {
+    "message": "ルールの説明"
+  },
+  "ariaFrom": {
+    "message": "検索するテキスト"
+  },
+  "ariaTo": {
+    "message": "置き換えるテキスト"
+  },
+  "ariaLanguage": {
+    "message": "この名前変更を適用する言語"
+  },
+  "ariaDeleteRule": {
+    "message": "このルールを削除"
+  },
+  "ariaRemoveRename": {
+    "message": "この名前変更を削除"
+  },
+  "addRename": {
+    "message": "名前変更を追加"
+  },
+  "addPlace": {
+    "message": "場所を追加"
+  },
+  "backupHeading": {
+    "message": "バックアップ"
+  },
+  "backupHint": {
+    "message": "エクスポートすると、名前変更の設定をファイルに保存できます（バックアップや共有に）。インポートすると、すべてがファイルの内容に置き換えられます。"
+  },
+  "exportJson": {
+    "message": "JSON をエクスポート"
+  },
+  "importJson": {
+    "message": "JSON をインポート"
+  },
+  "restoreDefaults": {
+    "message": "初期設定に戻す"
+  },
+  "savedPill": {
+    "message": "保存しました"
+  },
+  "emptyRules": {
+    "message": "まだ場所が設定されていません。下から追加してください。"
+  },
+  "importError": {
+    "message": "インポートできませんでした: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmDeleteRule": {
+    "message": "「$1」とその名前変更を削除しますか?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmRemoveRename": {
+    "message": "「$1」から「$2」への名前変更を削除しますか?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "confirmRestore": {
+    "message": "すべての名前変更を初期設定に置き換えますか?"
+  },
+  "dialogCancel": {
+    "message": "キャンセル"
+  },
+  "dialogDelete": {
+    "message": "削除"
+  },
+  "dialogRemove": {
+    "message": "削除"
+  },
+  "dialogRestore": {
+    "message": "復元"
+  },
+  "allLanguages": {
+    "message": "すべての言語"
+  },
+  "noMatchingLanguage": {
+    "message": "一致する言語がありません"
+  },
+  "popupNoRules": {
+    "message": "ルールが設定されていません。"
+  },
+  "popupRenameCountOne": {
+    "message": "1 件の名前変更"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 件の名前変更",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusOff": {
+    "message": "オフ"
+  },
+  "statusRewritingPageMap": {
+    "message": "ページと地図を書き換え中 ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusRewritingPage": {
+    "message": "このページを書き換え中 ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNotInstalled": {
+    "message": "コンポーネントがインストールされませんでした"
+  },
+  "statusNoLocaleRules": {
+    "message": "この言語で有効なルールはありません"
+  },
+  "statusNothingHere": {
+    "message": "インストール済み、ここでは変更なし"
+  },
+  "summaryOne": {
+    "message": "ここで 1 件の名前を書き換えました"
+  },
+  "summaryMany": {
+    "message": "ここで $1 件の名前を書き換えました",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "contestedWarning": {
+    "message": "2 つの場所が地図上で同じ単語を共有しているため、先に描画されたラベルが誤った名前を表示している可能性があります。タブを再読み込みすると再描画されます。"
+  },
+  "offsite": {
+    "message": "Google マップを開くと、ここに状態が表示されます。"
+  },
+  "openSettings": {
+    "message": "設定"
+  },
+  "reloadTab": {
+    "message": "タブを再読み込み"
+  },
+  "ariaMasterToggle": {
+    "message": "名前変更のオン/オフ"
+  },
+  "ariaEnableRule": {
+    "message": "$1 を有効にする",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "rulesRegionLabel": {
+    "message": "名前変更ルール"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "gazetteer",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Restore the Gulf of Mexico, Lake Ontario, and rename anything else on Google Maps.",
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "icons": "node tools/make-icons.mjs",
+    "test": "node --test test/unit/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "pnpm run typecheck && pnpm test",
+    "verify": "node tools/verify-live.mjs",
+    "demo": "node tools/demo.mjs"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^22.20.1",
+    "esbuild": "^0.25.0",
+    "playwright": "^1.62.1",
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

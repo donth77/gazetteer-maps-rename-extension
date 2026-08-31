@@ -1,0 +1,20 @@
+[
+  { "id": "test-country", "enabled": true, "description": "Country: Iceland",
+    "substitutions": [ { "locale": "*", "from": "Iceland", "to": "Frostheim" } ] },
+  { "id": "test-territory", "enabled": true, "description": "Territory: Puerto Rico",
+    "substitutions": [ { "locale": "*", "from": "Puerto Rico", "to": "Borinquen" } ] },
+  { "id": "test-state", "enabled": true, "description": "State: Florida",
+    "substitutions": [
+      { "locale": "*", "from": "Florida", "to": "Sunshine" },
+      { "locale": "*", "from": "FLORIDA", "to": "SUNSHINE" } ] },
+  { "id": "test-city", "enabled": true, "description": "City: Houston",
+    "substitutions": [ { "locale": "*", "from": "Houston", "to": "Space City" } ] },
+  { "id": "test-town", "enabled": true, "description": "Town: Oswego NY",
+    "substitutions": [ { "locale": "*", "from": "Oswego", "to": "Ozville" } ] },
+  { "id": "test-street", "enabled": true, "description": "Street: Broadway NYC",
+    "substitutions": [ { "locale": "*", "from": "Broadway", "to": "Wideway" } ] },
+  { "id": "test-landmark", "enabled": true, "description": "Landmark: Statue of Liberty",
+    "substitutions": [ { "locale": "*", "from": "Statue of Liberty", "to": "Statue of Freedom" } ] },
+  { "id": "test-store", "enabled": true, "description": "Store: Walgreens",
+    "substitutions": [ { "locale": "*", "from": "Walgreens", "to": "Wellgreens" } ] }
+]

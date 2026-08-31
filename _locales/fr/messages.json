@@ -1,0 +1,222 @@
+{
+  "extDescription": {
+    "message": "Restaurez le golfe du Mexique, le lac Ontario et tout autre lieu renommé sur Google Maps."
+  },
+  "settingsTitle": {
+    "message": "Paramètres de Gazetteer"
+  },
+  "tagline": {
+    "message": "Contrôlez comment Google Maps nomme les lieux."
+  },
+  "scopeNotice": {
+    "message": "Gazetteer renomme les lieux dans le panneau latéral, dans les résultats de recherche, dans le titre de l'onglet et sur la carte elle-même. Si une étiquette était déjà affichée avant l'enregistrement d'une modification, elle sera mise à jour au prochain redessin de la carte. Déplacez la carte, zoomez ou rechargez l'onglet pour le voir immédiatement."
+  },
+  "toggleEnabled": {
+    "message": "Activé"
+  },
+  "rasterToggleLabel": {
+    "message": "Masquer les anciens noms pendant le chargement"
+  },
+  "rasterToggleHint": {
+    "message": "Pendant le chargement, Google affiche brièvement un aperçu qui contient encore les anciens noms. Avec cette option, vous voyez à la place une grille grise de chargement, et les premiers noms affichés sont les vôtres. Se désactive automatiquement sur les ordinateurs qui ne peuvent pas exécuter la carte complète."
+  },
+  "searchToggleLabel": {
+    "message": "Afficher les lieux renommés dans la barre de recherche"
+  },
+  "searchToggleHint": {
+    "message": "Après une recherche, Maps inscrit l'ancien nom du lieu dans la barre de recherche. Avec cette option, la barre affiche votre version renommée. À savoir : une nouvelle recherche portera sur le texte renommé, et un nom inventé peut ne rien trouver. Le texte que vous saisissez vous-même n'est jamais modifié."
+  },
+  "colLanguage": {
+    "message": "Langue"
+  },
+  "colGoogleShows": {
+    "message": "Google affiche"
+  },
+  "colShowInstead": {
+    "message": "Afficher à la place"
+  },
+  "colRemove": {
+    "message": "Retirer"
+  },
+  "phRuleDescription": {
+    "message": "Ce que cela restaure"
+  },
+  "phFrom": {
+    "message": "Nom tel qu’affiché"
+  },
+  "phTo": {
+    "message": "Nom à afficher"
+  },
+  "ariaRuleDescription": {
+    "message": "Description de la règle"
+  },
+  "ariaFrom": {
+    "message": "Texte à rechercher"
+  },
+  "ariaTo": {
+    "message": "Texte de remplacement"
+  },
+  "ariaLanguage": {
+    "message": "Langue à laquelle ce renommage s’applique"
+  },
+  "ariaDeleteRule": {
+    "message": "Supprimer cette règle"
+  },
+  "ariaRemoveRename": {
+    "message": "Retirer ce renommage"
+  },
+  "addRename": {
+    "message": "Ajouter un renommage"
+  },
+  "addPlace": {
+    "message": "Ajouter un lieu"
+  },
+  "backupHeading": {
+    "message": "Sauvegarde"
+  },
+  "backupHint": {
+    "message": "Exporter enregistre vos renommages dans un fichier, pour sauvegarde ou partage. Importer remplace tout par le contenu d'un fichier."
+  },
+  "exportJson": {
+    "message": "Exporter en JSON"
+  },
+  "importJson": {
+    "message": "Importer du JSON"
+  },
+  "restoreDefaults": {
+    "message": "Rétablir les valeurs par défaut"
+  },
+  "savedPill": {
+    "message": "Enregistré"
+  },
+  "emptyRules": {
+    "message": "Aucun lieu configuré pour le moment. Ajoutez-en un ci-dessous."
+  },
+  "importError": {
+    "message": "Impossible d'importer : $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmDeleteRule": {
+    "message": "Supprimer « $1 » et ses renommages ?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmRemoveRename": {
+    "message": "Retirer le renommage de « $1 » en « $2 » ?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "confirmRestore": {
+    "message": "Remplacer tous vos renommages par les valeurs par défaut ?"
+  },
+  "dialogCancel": {
+    "message": "Annuler"
+  },
+  "dialogDelete": {
+    "message": "Supprimer"
+  },
+  "dialogRemove": {
+    "message": "Retirer"
+  },
+  "dialogRestore": {
+    "message": "Rétablir"
+  },
+  "allLanguages": {
+    "message": "Toutes les langues"
+  },
+  "noMatchingLanguage": {
+    "message": "Aucune langue correspondante"
+  },
+  "popupNoRules": {
+    "message": "Aucune règle configurée."
+  },
+  "popupRenameCountOne": {
+    "message": "1 renommage"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 renommages",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusOff": {
+    "message": "Désactivé"
+  },
+  "statusRewritingPageMap": {
+    "message": "Renommage de la page et de la carte ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusRewritingPage": {
+    "message": "Renommage de cette page ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNotInstalled": {
+    "message": "Le composant ne s’est pas installé"
+  },
+  "statusNoLocaleRules": {
+    "message": "Aucune règle active pour cette langue"
+  },
+  "statusNothingHere": {
+    "message": "Installé, rien à modifier ici"
+  },
+  "summaryOne": {
+    "message": "1 nom réécrit ici"
+  },
+  "summaryMany": {
+    "message": "$1 noms réécrits ici",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "contestedWarning": {
+    "message": "Deux de vos lieux partagent un mot sur la carte, et une étiquette déjà dessinée peut afficher le mauvais. Rechargez l'onglet pour redessiner."
+  },
+  "offsite": {
+    "message": "Ouvrez Google Maps pour voir l'état ici."
+  },
+  "openSettings": {
+    "message": "Paramètres"
+  },
+  "reloadTab": {
+    "message": "Recharger l'onglet"
+  },
+  "ariaMasterToggle": {
+    "message": "Activer ou désactiver le renommage"
+  },
+  "ariaEnableRule": {
+    "message": "Activer $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "rulesRegionLabel": {
+    "message": "Règles de renommage"
+  }
+}

@@ -1,0 +1,6 @@
+docs
+.playwright-mcp
+node_modules
+dist
+verify*.png
+dist-dbg

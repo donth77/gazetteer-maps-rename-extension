@@ -1,0 +1,83 @@
+# Daily breakage detection (design doc §7 and §8). Two independent signals:
+#
+#  - gnis-watch: polls the federal names database for the tracked features.
+#    Watches the CAUSE: a GNIS rename lands days before Google ships it, the
+#    endpoint has no bot detection, and this is the check most likely to still
+#    work when the browser hooks break. An official-name change FAILS the run
+#    (GitHub emails the owner).
+#
+#  - live-extension: loads the built extension into a real browser against
+#    live Google Maps and asserts the hooks still rewrite (verify-live exit 1
+#    = real breakage = failure). Google challenges Actions IPs sometimes;
+#    verify-live classifies that as INFRA (exit 2), which warns and passes
+#    after a retry rather than alerting - alert fatigue is what kills
+#    self-monitoring, and it always arrives disguised as infra noise.
+name: daily-health
+on:
+  schedule:
+    - cron: '17 13 * * *'
+  workflow_dispatch:
+jobs:
+  gnis-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Poll GNIS for official-name changes
+        run: |
+          set +e
+          node tools/gnis-watch.mjs
+          code=$?
+          set -e
+          if [ "$code" -eq 2 ]; then
+            echo "::warning::GNIS endpoint unreachable (infra). Not alerting; next run retries."
+            exit 0
+          fi
+          exit "$code"
+  live-extension:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify hooks against live Google Maps
+        run: |
+          export CHROME_PATH="$(node -e 'console.log(require("playwright").chromium.executablePath())')"
+          mkdir -p health-shots
+          attempt() {
+            set +e
+            xvfb-run -a env HEADED=1 SHOT=health-shots/verify.png node tools/verify-live.mjs
+            code=$?
+            set -e
+            return $code
+          }
+          if attempt; then exit 0; fi
+          code=$?
+          if [ "$code" -eq 2 ]; then
+            echo "First attempt hit infra noise; retrying once..."
+            sleep 30
+            if attempt; then exit 0; fi
+            code=$?
+            if [ "$code" -eq 2 ]; then
+              echo "::warning::Google challenged this runner twice (infra). Not alerting; next run retries."
+              exit 0
+            fi
+          fi
+          exit "$code"
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-shots
+          path: health-shots/
+          if-no-files-found: ignore

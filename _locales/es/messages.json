@@ -1,0 +1,222 @@
+{
+  "extDescription": {
+    "message": "Restaura el Golfo de México, el Lago Ontario y cualquier otro lugar renombrado en Google Maps."
+  },
+  "settingsTitle": {
+    "message": "Configuración de Gazetteer"
+  },
+  "tagline": {
+    "message": "Controla cómo Google Maps llama a los lugares."
+  },
+  "scopeNotice": {
+    "message": "Gazetteer renombra lugares en la barra lateral, en los resultados de búsqueda, en el título de la pestaña y en el propio mapa. Si una etiqueta ya estaba en pantalla antes de guardar un cambio, se actualiza la próxima vez que el mapa se redibuje. Desplázate, haz zoom o recarga la pestaña para verlo de inmediato."
+  },
+  "toggleEnabled": {
+    "message": "Activado"
+  },
+  "rasterToggleLabel": {
+    "message": "Ocultar los nombres antiguos durante la carga"
+  },
+  "rasterToggleHint": {
+    "message": "Mientras el mapa carga, Google muestra brevemente una imagen previa que aún contiene los nombres antiguos. Con esta opción activada, verás una cuadrícula gris de carga en su lugar, y los primeros nombres en aparecer serán los tuyos. Se desactiva automáticamente en equipos que no pueden ejecutar el mapa completo."
+  },
+  "searchToggleLabel": {
+    "message": "Mostrar los lugares renombrados en el cuadro de búsqueda"
+  },
+  "searchToggleHint": {
+    "message": "Tras una búsqueda, Maps escribe el nombre antiguo del lugar en el cuadro de búsqueda. Con esta opción activada, el cuadro muestra tu versión renombrada. Ten en cuenta: si vuelves a buscar, se buscará el texto renombrado, y un nombre inventado puede no dar resultados. El texto que escribas tú nunca se modifica."
+  },
+  "colLanguage": {
+    "message": "Idioma"
+  },
+  "colGoogleShows": {
+    "message": "Google muestra"
+  },
+  "colShowInstead": {
+    "message": "Mostrar en su lugar"
+  },
+  "colRemove": {
+    "message": "Quitar"
+  },
+  "phRuleDescription": {
+    "message": "Qué restaura esto"
+  },
+  "phFrom": {
+    "message": "Nombre tal como aparece"
+  },
+  "phTo": {
+    "message": "Nombre a mostrar"
+  },
+  "ariaRuleDescription": {
+    "message": "Descripción de la regla"
+  },
+  "ariaFrom": {
+    "message": "Texto a buscar"
+  },
+  "ariaTo": {
+    "message": "Texto de reemplazo"
+  },
+  "ariaLanguage": {
+    "message": "Idioma al que se aplica este cambio de nombre"
+  },
+  "ariaDeleteRule": {
+    "message": "Eliminar esta regla"
+  },
+  "ariaRemoveRename": {
+    "message": "Quitar este cambio de nombre"
+  },
+  "addRename": {
+    "message": "Añadir un cambio de nombre"
+  },
+  "addPlace": {
+    "message": "Añadir un lugar"
+  },
+  "backupHeading": {
+    "message": "Copia de seguridad"
+  },
+  "backupHint": {
+    "message": "Exportar guarda tus cambios de nombre en un archivo, para respaldo o para compartir. Importar reemplaza todo con el contenido de un archivo."
+  },
+  "exportJson": {
+    "message": "Exportar JSON"
+  },
+  "importJson": {
+    "message": "Importar JSON"
+  },
+  "restoreDefaults": {
+    "message": "Restaurar valores predeterminados"
+  },
+  "savedPill": {
+    "message": "Guardado"
+  },
+  "emptyRules": {
+    "message": "Aún no hay lugares configurados. Añade uno abajo."
+  },
+  "importError": {
+    "message": "No se pudo importar: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmDeleteRule": {
+    "message": "¿Eliminar «$1» y sus cambios de nombre?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmRemoveRename": {
+    "message": "¿Quitar el cambio de nombre de «$1» a «$2»?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "confirmRestore": {
+    "message": "¿Reemplazar todos tus cambios de nombre por los valores predeterminados?"
+  },
+  "dialogCancel": {
+    "message": "Cancelar"
+  },
+  "dialogDelete": {
+    "message": "Eliminar"
+  },
+  "dialogRemove": {
+    "message": "Quitar"
+  },
+  "dialogRestore": {
+    "message": "Restaurar"
+  },
+  "allLanguages": {
+    "message": "Todos los idiomas"
+  },
+  "noMatchingLanguage": {
+    "message": "Ningún idioma coincide"
+  },
+  "popupNoRules": {
+    "message": "No hay reglas configuradas."
+  },
+  "popupRenameCountOne": {
+    "message": "1 cambio de nombre"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 cambios de nombre",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusOff": {
+    "message": "Desactivado"
+  },
+  "statusRewritingPageMap": {
+    "message": "Renombrando la página y el mapa ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusRewritingPage": {
+    "message": "Renombrando esta página ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNotInstalled": {
+    "message": "El componente no se instaló"
+  },
+  "statusNoLocaleRules": {
+    "message": "No hay reglas activas para este idioma"
+  },
+  "statusNothingHere": {
+    "message": "Instalado, nada que cambiar aquí"
+  },
+  "summaryOne": {
+    "message": "1 nombre reescrito aquí"
+  },
+  "summaryMany": {
+    "message": "$1 nombres reescritos aquí",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "contestedWarning": {
+    "message": "Dos de tus lugares comparten una palabra en el mapa, y una etiqueta dibujada antes puede mostrar la incorrecta. Recarga la pestaña para redibujar."
+  },
+  "offsite": {
+    "message": "Abre Google Maps para ver el estado aquí."
+  },
+  "openSettings": {
+    "message": "Configuración"
+  },
+  "reloadTab": {
+    "message": "Recargar pestaña"
+  },
+  "ariaMasterToggle": {
+    "message": "Activar o desactivar el renombrado"
+  },
+  "ariaEnableRule": {
+    "message": "Activar $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "rulesRegionLabel": {
+    "message": "Reglas de renombrado"
+  }
+}

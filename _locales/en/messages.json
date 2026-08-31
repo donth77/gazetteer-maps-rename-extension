@@ -1,0 +1,222 @@
+{
+  "extDescription": {
+    "message": "Restore the Gulf of Mexico, Lake Ontario, and any other renamed place on Google Maps."
+  },
+  "settingsTitle": {
+    "message": "Gazetteer Settings"
+  },
+  "tagline": {
+    "message": "Control what Google Maps calls things."
+  },
+  "scopeNotice": {
+    "message": "Gazetteer renames places in the sidebar, in search results, in the tab title, and on the map itself. If a label was already on screen before you saved a change, it updates the next time the map redraws. Pan, zoom, or reload the tab to see it right away."
+  },
+  "toggleEnabled": {
+    "message": "Enabled"
+  },
+  "rasterToggleLabel": {
+    "message": "Hide old names while loading"
+  },
+  "rasterToggleHint": {
+    "message": "While the map loads, Google briefly shows a preview image that still has the old names on it. With this on, you see a plain gray loading grid instead, and the first names to appear are your renamed ones. Turns itself off on computers that can't run the full map."
+  },
+  "searchToggleLabel": {
+    "message": "Show renamed places in the search box"
+  },
+  "searchToggleHint": {
+    "message": "After a search, Maps fills the search box with a place's old name. With this on, the box shows your renamed version instead. One thing to know: searching again will look up the renamed text, and an invented name may find nothing. Text you type yourself is never changed."
+  },
+  "colLanguage": {
+    "message": "Language"
+  },
+  "colGoogleShows": {
+    "message": "Google shows"
+  },
+  "colShowInstead": {
+    "message": "Show instead"
+  },
+  "colRemove": {
+    "message": "Remove"
+  },
+  "phRuleDescription": {
+    "message": "What this restores"
+  },
+  "phFrom": {
+    "message": "Name as rendered"
+  },
+  "phTo": {
+    "message": "Name to show"
+  },
+  "ariaRuleDescription": {
+    "message": "Rule description"
+  },
+  "ariaFrom": {
+    "message": "Text to match"
+  },
+  "ariaTo": {
+    "message": "Replacement text"
+  },
+  "ariaLanguage": {
+    "message": "Language this rename applies in"
+  },
+  "ariaDeleteRule": {
+    "message": "Delete this rule"
+  },
+  "ariaRemoveRename": {
+    "message": "Remove this rename"
+  },
+  "addRename": {
+    "message": "Add a rename"
+  },
+  "addPlace": {
+    "message": "Add a place"
+  },
+  "backupHeading": {
+    "message": "Backup"
+  },
+  "backupHint": {
+    "message": "Export saves your renames to a file, for backup or for sharing. Import replaces everything with the contents of a file."
+  },
+  "exportJson": {
+    "message": "Export JSON"
+  },
+  "importJson": {
+    "message": "Import JSON"
+  },
+  "restoreDefaults": {
+    "message": "Restore defaults"
+  },
+  "savedPill": {
+    "message": "Saved"
+  },
+  "emptyRules": {
+    "message": "No places configured yet. Add one below."
+  },
+  "importError": {
+    "message": "Could not import: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmDeleteRule": {
+    "message": "Delete \"$1\" and its renames?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "confirmRemoveRename": {
+    "message": "Remove the rename \"$1\" to \"$2\"?",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      },
+      "2": {
+        "content": "$2"
+      }
+    }
+  },
+  "confirmRestore": {
+    "message": "Replace all your renames with the shipped defaults?"
+  },
+  "dialogCancel": {
+    "message": "Cancel"
+  },
+  "dialogDelete": {
+    "message": "Delete"
+  },
+  "dialogRemove": {
+    "message": "Remove"
+  },
+  "dialogRestore": {
+    "message": "Restore"
+  },
+  "allLanguages": {
+    "message": "All languages"
+  },
+  "noMatchingLanguage": {
+    "message": "No matching language"
+  },
+  "popupNoRules": {
+    "message": "No rules configured."
+  },
+  "popupRenameCountOne": {
+    "message": "1 rename"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 renames",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusOff": {
+    "message": "Turned off"
+  },
+  "statusRewritingPageMap": {
+    "message": "Rewriting page and map ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusRewritingPage": {
+    "message": "Rewriting this page ($1)",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "statusNotInstalled": {
+    "message": "Hook did not install"
+  },
+  "statusNoLocaleRules": {
+    "message": "No rules active for this locale"
+  },
+  "statusNothingHere": {
+    "message": "Installed, nothing to change here"
+  },
+  "summaryOne": {
+    "message": "1 name rewritten here"
+  },
+  "summaryMany": {
+    "message": "$1 names rewritten here",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "contestedWarning": {
+    "message": "Two of your places share a word on the map, and a label drawn earlier may show the wrong one. Reload the tab to redraw."
+  },
+  "offsite": {
+    "message": "Open Google Maps to see status here."
+  },
+  "openSettings": {
+    "message": "Settings"
+  },
+  "reloadTab": {
+    "message": "Reload tab"
+  },
+  "ariaMasterToggle": {
+    "message": "Turn renaming on or off"
+  },
+  "ariaEnableRule": {
+    "message": "Enable $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "rulesRegionLabel": {
+    "message": "Renaming rules"
+  }
+}

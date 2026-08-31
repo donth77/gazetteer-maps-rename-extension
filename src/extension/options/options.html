@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="settingsTitle">Gazetteer Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="icons/icon48.png" alt="" width="32" height="32">
+      <div>
+        <h1>Gazetteer</h1>
+        <p class="tagline" data-i18n="tagline">Control what Google Maps calls things.</p>
+      </div>
+    </div>
+    <label class="master">
+      <input type="checkbox" id="master-toggle">
+      <span class="switch" aria-hidden="true"></span>
+      <span class="master-label" data-i18n="toggleEnabled">Enabled</span>
+    </label>
+  </header>
+
+  <main>
+    <p class="notice" role="note" data-i18n="scopeNotice">Gazetteer renames places in the
+    sidebar, in search results, in the tab title, and on the map itself. If a label was
+    already on screen before you saved a change, it updates the next time the map redraws.
+    Pan, zoom, or reload the tab to see it right away.</p>
+
+    <section class="prefs">
+      <label class="pref">
+        <input type="checkbox" id="raster-toggle">
+        <span class="switch" aria-hidden="true"></span>
+        <span>
+          <strong data-i18n="rasterToggleLabel">Hide old names while loading</strong>
+          <span class="pref-hint" data-i18n="rasterToggleHint">While the map loads, Google briefly shows a preview image that
+          still has the old names. While enabled, you see a loading grid instead, and the first names to appear are your renamed ones. Disabled by default on
+          devices that can't run the full map.</span>
+        </span>
+      </label>
+      <label class="pref">
+        <input type="checkbox" id="search-field-toggle">
+        <span class="switch" aria-hidden="true"></span>
+        <span>
+          <strong data-i18n="searchToggleLabel">Show renamed places in the search box</strong>
+          <span class="pref-hint" data-i18n="searchToggleHint">After a search, Maps fills the search box with a place's old
+          name. While enabled, the box shows your renamed version instead.</span>
+        </span>
+      </label>
+    </section>
+
+    <section id="rules" aria-label="Renaming rules" data-i18n-arialabel="rulesRegionLabel"></section>
+
+    <div class="row-actions">
+      <button type="button" id="add-rule" class="btn primary" data-i18n="addPlace">Add a place</button>
+    </div>
+
+    <section class="danger-zone">
+      <h2 data-i18n="backupHeading">Backup</h2>
+      <p class="hint" data-i18n="backupHint">Export saves your renames to a file, for backup or for sharing. Import
+      replaces everything with the contents of a file.</p>
+      <div class="row-actions">
+        <button type="button" id="export" class="btn" data-i18n="exportJson">Export JSON</button>
+        <button type="button" id="import" class="btn" data-i18n="importJson">Import JSON</button>
+        <button type="button" id="reset" class="btn subtle" data-i18n="restoreDefaults">Restore defaults</button>
+      </div>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+      <p id="import-error" class="error" role="alert" hidden></p>
+    </section>
+  </main>
+
+  <div class="saved-pill" id="saved" role="status" aria-live="polite" hidden data-i18n="savedPill">Saved</div>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-message">
+    <p id="confirm-message"></p>
+    <div class="dialog-actions">
+      <button type="button" id="confirm-cancel" class="btn" data-i18n="dialogCancel">Cancel</button>
+      <button type="button" id="confirm-ok" class="btn danger">Delete</button>
+    </div>
+  </dialog>
+
+  <template id="rule-template">
+    <article class="rule">
+      <div class="rule-head">
+        <label class="rule-enable">
+          <input type="checkbox" class="js-enabled">
+          <span class="switch" aria-hidden="true"></span>
+        </label>
+        <div class="rule-titles">
+          <input type="text" class="js-description title-input" placeholder="What this restores" aria-label="Rule description" data-i18n-placeholder="phRuleDescription" data-i18n-arialabel="ariaRuleDescription">
+          <code class="js-id rule-id"></code>
+        </div>
+        <button type="button" class="btn icon js-delete-rule" aria-label="Delete this rule" title="Delete this rule" data-i18n-arialabel="ariaDeleteRule" data-i18n-title="ariaDeleteRule">&times;</button>
+      </div>
+      <p class="rule-note js-note" hidden></p>
+      <table class="subs">
+        <thead>
+          <tr><th scope="col" data-i18n="colLanguage">Language</th><th scope="col" data-i18n="colGoogleShows">Google shows</th><th scope="col" data-i18n="colShowInstead">Show instead</th><th><span class="sr-only" data-i18n="colRemove">Remove</span></th></tr>
+        </thead>
+        <tbody class="js-subs"></tbody>
+      </table>
+      <button type="button" class="btn small js-add-sub" data-i18n="addRename">Add a rename</button>
+    </article>
+  </template>
+
+  <template id="sub-template">
+    <tr class="sub">
+      <td class="lang-cell"><div class="js-locale"></div></td>
+      <td><input type="text" class="js-from" placeholder="Name as rendered" aria-label="Text to match" data-i18n-placeholder="phFrom" data-i18n-arialabel="ariaFrom"></td>
+      <td><input type="text" class="js-to" placeholder="Name to show" aria-label="Replacement text" data-i18n-placeholder="phTo" data-i18n-arialabel="ariaTo"></td>
+      <td><button type="button" class="btn icon js-delete-sub" aria-label="Remove this rename" title="Remove" data-i18n-arialabel="ariaRemoveRename" data-i18n-title="dialogRemove">&times;</button></td>
+    </tr>
+  </template>
+
+  <script src="options.js"></script>
+</body>
+</html>
