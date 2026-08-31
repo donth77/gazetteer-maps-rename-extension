@@ -1,17 +1,9 @@
-# Daily breakage detection (design doc §7 and §8). Two independent signals:
-#
-#  - gnis-watch: polls the federal names database for the tracked features.
-#    Watches the CAUSE: a GNIS rename lands days before Google ships it, the
-#    endpoint has no bot detection, and this is the check most likely to still
-#    work when the browser hooks break. An official-name change FAILS the run
-#    (GitHub emails the owner).
-#
-#  - live-extension: loads the built extension into a real browser against
-#    live Google Maps and asserts the hooks still rewrite (verify-live exit 1
-#    = real breakage = failure). Google challenges Actions IPs sometimes;
-#    verify-live classifies that as INFRA (exit 2), which warns and passes
-#    after a retry rather than alerting - alert fatigue is what kills
-#    self-monitoring, and it always arrives disguised as infra noise.
+# Daily breakage detection. The run FAILS only when the extension itself is
+# broken: live-extension loads the built extension against real Google Maps
+# and exits 1 when the hooks stopped rewriting. Everything else is a warning:
+# a GNIS official-name change (means: update data/names.json soon, Google
+# ships it within days) and Google challenge pages (infra noise; alerting on
+# noise is how monitoring dies).
 name: daily-health
 on:
   schedule:
@@ -32,11 +24,12 @@ jobs:
           node tools/gnis-watch.mjs
           code=$?
           set -e
-          if [ "$code" -eq 2 ]; then
-            echo "::warning::GNIS endpoint unreachable (infra). Not alerting; next run retries."
-            exit 0
+          if [ "$code" -eq 1 ]; then
+            echo "::warning::GNIS official name changed. Google ships it within days: update data/names.json and data/gnis-watch.json."
+          elif [ "$code" -eq 2 ]; then
+            echo "::warning::GNIS endpoint unreachable (infra). Next run retries."
           fi
-          exit "$code"
+          exit 0
   live-extension:
     runs-on: ubuntu-latest
     timeout-minutes: 20

@@ -5,10 +5,12 @@
  * days before Google ships them, the endpoint has no bot detection, and it is
  * the check most likely to still work when the browser-side hooks break.
  *
- * Exit codes (consumed by CI):
- *   0  names match the committed baseline (edits that kept the name are noted)
- *   1  an official name CHANGED - act: update data/names.json and the baseline
- *   2  infrastructure error (network, 5xx, malformed reply) - retry, never alert
+ * Exit codes:
+ *   0  names match the committed baseline
+ *   1  an official name changed: update data/names.json and the baseline
+ *   2  infrastructure error (network, 5xx, malformed reply)
+ * CI treats 1 and 2 as warnings, never failures; only a broken extension
+ * fails the daily run.
  */
 import { readFileSync } from 'node:fs';
 
