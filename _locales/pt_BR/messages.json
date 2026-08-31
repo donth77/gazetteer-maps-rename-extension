@@ -93,31 +93,13 @@
     "message": "Nenhum lugar configurado ainda. Adicione um abaixo."
   },
   "importError": {
-    "message": "Não foi possível importar: $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Não foi possível importar: $1"
   },
   "confirmDeleteRule": {
-    "message": "Excluir \"$1\" e suas renomeações?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Excluir \"$1\" e suas renomeações?"
   },
   "confirmRemoveRename": {
-    "message": "Remover a renomeação de \"$1\" para \"$2\"?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "Remover a renomeação de \"$1\" para \"$2\"?"
   },
   "confirmRestore": {
     "message": "Substituir todas as suas renomeações pelos padrões?"
@@ -147,31 +129,16 @@
     "message": "1 renomeação"
   },
   "popupRenameCountMany": {
-    "message": "$1 renomeações",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 renomeações"
   },
   "statusOff": {
     "message": "Desativado"
   },
   "statusRewritingPageMap": {
-    "message": "Renomeando a página e o mapa ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renomeando a página e o mapa ($1)"
   },
   "statusRewritingPage": {
-    "message": "Renomeando esta página ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renomeando esta página ($1)"
   },
   "statusNotInstalled": {
     "message": "O componente não foi instalado"
@@ -186,12 +153,7 @@
     "message": "1 nome reescrito aqui"
   },
   "summaryMany": {
-    "message": "$1 nomes reescritos aqui",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 nomes reescritos aqui"
   },
   "contestedWarning": {
     "message": "Dois dos seus lugares compartilham uma palavra no mapa, e um rótulo desenhado antes pode mostrar o errado. Recarregue a guia para redesenhar."
@@ -209,12 +171,7 @@
     "message": "Ativar ou desativar a renomeação"
   },
   "ariaEnableRule": {
-    "message": "Ativar $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Ativar $1"
   },
   "rulesRegionLabel": {
     "message": "Regras de renomeação"

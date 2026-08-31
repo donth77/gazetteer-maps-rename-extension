@@ -210,9 +210,9 @@ export function createResolutionStore(): ResolutionStore {
 /**
  * Decides whether a label-collision repair (a renderer rebuild) may run.
  * Two guards keep it from thrashing:
- *  - the overwritten resolution must have stood for a while (a quick flip-flop
- *    means both places are on screen at once — genuinely ambiguous, and a
- *    rebuild would just re-poison one of them);
+ *  - the overwritten resolution must have stood a few seconds (a rapid
+ *    flip-flop means both places are on screen at once, genuinely ambiguous,
+ *    where a rebuild would just re-poison one of them);
  *  - repairs are rate-limited and capped per page.
  */
 export interface RepairGovernor {
@@ -227,7 +227,7 @@ export function createRepairGovernor(options?: {
   cooldownMs?: number;
   maxRepairs?: number;
 }): RepairGovernor {
-  const minStableMs = options?.minStableMs ?? 15000;
+  const minStableMs = options?.minStableMs ?? 4000;
   const cooldownMs = options?.cooldownMs ?? 45000;
   const maxRepairs = options?.maxRepairs ?? 3;
   const touched = new Map<string, number>();

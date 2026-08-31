@@ -87,7 +87,7 @@ window.addEventListener('message', (event: MessageEvent) => {
   const data = event.data as { source?: string; type?: string; counters?: typeof mapCounters; contested?: boolean } | null;
   if (data?.source === 'gazetteer-main' && data.type === 'counters' && data.counters) {
     Object.assign(mapCounters, data.counters);
-    if (data.contested) mapContested = true;
+    if (typeof data.contested === 'boolean') mapContested = data.contested;
   }
 });
 

@@ -84,6 +84,9 @@ try {
       } else if (data?.type === 'gazetteer:contested') {
         contested = true;
         window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
+      } else if (data?.type === 'gazetteer:repaired') {
+        contested = false;
+        window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
       } else if (data?.type === 'gazetteer:resolved') {
         const r = data as { text?: string; to?: string; from?: string };
         if (typeof r.text === 'string' && typeof r.to === 'string' && r.from !== mainId) {
@@ -302,6 +305,7 @@ try {
       get workersFailed() { return handle.failed; },
       get rasterBlocked() { return rasterBlocked; },
       get loadingTheme() { return lockedTheme; },
+      get contested() { return contested; },
       counters,
     },
     configurable: true,

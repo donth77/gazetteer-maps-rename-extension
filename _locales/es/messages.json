@@ -93,31 +93,13 @@
     "message": "Aún no hay lugares configurados. Añade uno abajo."
   },
   "importError": {
-    "message": "No se pudo importar: $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "No se pudo importar: $1"
   },
   "confirmDeleteRule": {
-    "message": "¿Eliminar «$1» y sus cambios de nombre?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "¿Eliminar «$1» y sus cambios de nombre?"
   },
   "confirmRemoveRename": {
-    "message": "¿Quitar el cambio de nombre de «$1» a «$2»?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "¿Quitar el cambio de nombre de «$1» a «$2»?"
   },
   "confirmRestore": {
     "message": "¿Reemplazar todos tus cambios de nombre por los valores predeterminados?"
@@ -147,31 +129,16 @@
     "message": "1 cambio de nombre"
   },
   "popupRenameCountMany": {
-    "message": "$1 cambios de nombre",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 cambios de nombre"
   },
   "statusOff": {
     "message": "Desactivado"
   },
   "statusRewritingPageMap": {
-    "message": "Renombrando la página y el mapa ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renombrando la página y el mapa ($1)"
   },
   "statusRewritingPage": {
-    "message": "Renombrando esta página ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renombrando esta página ($1)"
   },
   "statusNotInstalled": {
     "message": "El componente no se instaló"
@@ -186,12 +153,7 @@
     "message": "1 nombre reescrito aquí"
   },
   "summaryMany": {
-    "message": "$1 nombres reescritos aquí",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 nombres reescritos aquí"
   },
   "contestedWarning": {
     "message": "Dos de tus lugares comparten una palabra en el mapa, y una etiqueta dibujada antes puede mostrar la incorrecta. Recarga la pestaña para redibujar."
@@ -209,12 +171,7 @@
     "message": "Activar o desactivar el renombrado"
   },
   "ariaEnableRule": {
-    "message": "Activar $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Activar $1"
   },
   "rulesRegionLabel": {
     "message": "Reglas de renombrado"

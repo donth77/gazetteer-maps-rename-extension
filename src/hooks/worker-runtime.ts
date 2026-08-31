@@ -111,11 +111,17 @@ declare const __GZ_DEBUG__: boolean;
           // every label under the now-current resolution. Guarded so the
           // genuinely ambiguous case (both places on screen, resolutions
           // flip-flopping) cannot thrash; the popup warning remains for that.
-          try { channel?.postMessage({ type: 'gazetteer:contested', text: data.text }); } catch { /* ignore */ }
           if (governor.allow(prevAt, now)) {
+            // Self-heal: rebuild the renderer, then tell the page the
+            // collision is handled so no warning lingers after a repair.
             repaintForRepair();
             try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
+            try { channel?.postMessage({ type: 'gazetteer:repaired', text: data.text }); } catch { /* ignore */ }
             if (__GZ_DEBUG__) debug.push({ ev: 'repair-trigger', w: workerId, text: data.text, at: now });
+          } else {
+            // Repair is guarded off (ambiguous flip-flop, cooldown, or cap):
+            // this is the only case the user needs to be told about.
+            try { channel?.postMessage({ type: 'gazetteer:contested', text: data.text }); } catch { /* ignore */ }
           }
         }
         if (__GZ_DEBUG__) debug.push({ ev: 'resolved-in', w: workerId, text: data.text, to: data.to, at: Date.now(), from: data.from });

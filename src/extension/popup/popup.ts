@@ -72,10 +72,8 @@ function renderStatus(status: Status | null): void {
   const summary = $<HTMLElement>('#summary');
   summary.hidden = total === 0;
   summary.textContent = total === 1 ? '1 name rewritten' : `${total} names rewritten`;
-  if (status.mapContested) {
-    $<HTMLElement>('#contested').hidden = false;
-    $<HTMLButtonElement>('#reload').hidden = false;
-  }
+  $<HTMLElement>('#contested').hidden = !status.mapContested;
+  if (status.mapContested) $<HTMLButtonElement>('#reload').hidden = false;
 
   const state = healthOf(status.counters);
   const dot = $<HTMLElement>('#state-dot');

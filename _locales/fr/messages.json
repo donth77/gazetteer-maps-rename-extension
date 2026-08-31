@@ -93,31 +93,13 @@
     "message": "Aucun lieu configuré pour le moment. Ajoutez-en un ci-dessous."
   },
   "importError": {
-    "message": "Impossible d'importer : $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Impossible d'importer : $1"
   },
   "confirmDeleteRule": {
-    "message": "Supprimer « $1 » et ses renommages ?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Supprimer « $1 » et ses renommages ?"
   },
   "confirmRemoveRename": {
-    "message": "Retirer le renommage de « $1 » en « $2 » ?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "Retirer le renommage de « $1 » en « $2 » ?"
   },
   "confirmRestore": {
     "message": "Remplacer tous vos renommages par les valeurs par défaut ?"
@@ -147,31 +129,16 @@
     "message": "1 renommage"
   },
   "popupRenameCountMany": {
-    "message": "$1 renommages",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 renommages"
   },
   "statusOff": {
     "message": "Désactivé"
   },
   "statusRewritingPageMap": {
-    "message": "Renommage de la page et de la carte ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renommage de la page et de la carte ($1)"
   },
   "statusRewritingPage": {
-    "message": "Renommage de cette page ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Renommage de cette page ($1)"
   },
   "statusNotInstalled": {
     "message": "Le composant ne s’est pas installé"
@@ -186,12 +153,7 @@
     "message": "1 nom réécrit ici"
   },
   "summaryMany": {
-    "message": "$1 noms réécrits ici",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 noms réécrits ici"
   },
   "contestedWarning": {
     "message": "Deux de vos lieux partagent un mot sur la carte, et une étiquette déjà dessinée peut afficher le mauvais. Rechargez l'onglet pour redessiner."
@@ -209,12 +171,7 @@
     "message": "Activer ou désactiver le renommage"
   },
   "ariaEnableRule": {
-    "message": "Activer $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Activer $1"
   },
   "rulesRegionLabel": {
     "message": "Règles de renommage"

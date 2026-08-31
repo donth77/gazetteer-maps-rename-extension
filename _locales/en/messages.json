@@ -93,31 +93,13 @@
     "message": "No places configured yet. Add one below."
   },
   "importError": {
-    "message": "Could not import: $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Could not import: $1"
   },
   "confirmDeleteRule": {
-    "message": "Delete \"$1\" and its renames?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Delete \"$1\" and its renames?"
   },
   "confirmRemoveRename": {
-    "message": "Remove the rename \"$1\" to \"$2\"?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "Remove the rename \"$1\" to \"$2\"?"
   },
   "confirmRestore": {
     "message": "Replace all your renames with the shipped defaults?"
@@ -147,31 +129,16 @@
     "message": "1 rename"
   },
   "popupRenameCountMany": {
-    "message": "$1 renames",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 renames"
   },
   "statusOff": {
     "message": "Turned off"
   },
   "statusRewritingPageMap": {
-    "message": "Rewriting page and map ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Rewriting page and map ($1)"
   },
   "statusRewritingPage": {
-    "message": "Rewriting this page ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Rewriting this page ($1)"
   },
   "statusNotInstalled": {
     "message": "Hook did not install"
@@ -186,12 +153,7 @@
     "message": "1 name rewritten here"
   },
   "summaryMany": {
-    "message": "$1 names rewritten here",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 names rewritten here"
   },
   "contestedWarning": {
     "message": "Two of your places share a word on the map, and a label drawn earlier may show the wrong one. Reload the tab to redraw."
@@ -209,12 +171,7 @@
     "message": "Turn renaming on or off"
   },
   "ariaEnableRule": {
-    "message": "Enable $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Enable $1"
   },
   "rulesRegionLabel": {
     "message": "Renaming rules"

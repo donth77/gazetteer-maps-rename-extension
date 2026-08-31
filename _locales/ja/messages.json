@@ -93,31 +93,13 @@
     "message": "まだ場所が設定されていません。下から追加してください。"
   },
   "importError": {
-    "message": "インポートできませんでした: $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "インポートできませんでした: $1"
   },
   "confirmDeleteRule": {
-    "message": "「$1」とその名前変更を削除しますか?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "「$1」とその名前変更を削除しますか?"
   },
   "confirmRemoveRename": {
-    "message": "「$1」から「$2」への名前変更を削除しますか?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "「$1」から「$2」への名前変更を削除しますか?"
   },
   "confirmRestore": {
     "message": "すべての名前変更を初期設定に置き換えますか?"
@@ -147,31 +129,16 @@
     "message": "1 件の名前変更"
   },
   "popupRenameCountMany": {
-    "message": "$1 件の名前変更",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 件の名前変更"
   },
   "statusOff": {
     "message": "オフ"
   },
   "statusRewritingPageMap": {
-    "message": "ページと地図を書き換え中 ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "ページと地図を書き換え中 ($1)"
   },
   "statusRewritingPage": {
-    "message": "このページを書き換え中 ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "このページを書き換え中 ($1)"
   },
   "statusNotInstalled": {
     "message": "コンポーネントがインストールされませんでした"
@@ -186,12 +153,7 @@
     "message": "ここで 1 件の名前を書き換えました"
   },
   "summaryMany": {
-    "message": "ここで $1 件の名前を書き換えました",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "ここで $1 件の名前を書き換えました"
   },
   "contestedWarning": {
     "message": "2 つの場所が地図上で同じ単語を共有しているため、先に描画されたラベルが誤った名前を表示している可能性があります。タブを再読み込みすると再描画されます。"
@@ -209,12 +171,7 @@
     "message": "名前変更のオン/オフ"
   },
   "ariaEnableRule": {
-    "message": "$1 を有効にする",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 を有効にする"
   },
   "rulesRegionLabel": {
     "message": "名前変更ルール"

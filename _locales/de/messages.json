@@ -93,31 +93,13 @@
     "message": "Noch keine Orte konfiguriert. Fügen Sie unten einen hinzu."
   },
   "importError": {
-    "message": "Import fehlgeschlagen: $1",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Import fehlgeschlagen: $1"
   },
   "confirmDeleteRule": {
-    "message": "„$1“ und seine Umbenennungen löschen?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "„$1“ und seine Umbenennungen löschen?"
   },
   "confirmRemoveRename": {
-    "message": "Die Umbenennung von „$1“ zu „$2“ entfernen?",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      },
-      "2": {
-        "content": "$2"
-      }
-    }
+    "message": "Die Umbenennung von „$1“ zu „$2“ entfernen?"
   },
   "confirmRestore": {
     "message": "Alle Ihre Umbenennungen durch die Standardwerte ersetzen?"
@@ -147,31 +129,16 @@
     "message": "1 Umbenennung"
   },
   "popupRenameCountMany": {
-    "message": "$1 Umbenennungen",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 Umbenennungen"
   },
   "statusOff": {
     "message": "Deaktiviert"
   },
   "statusRewritingPageMap": {
-    "message": "Seite und Karte werden umbenannt ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Seite und Karte werden umbenannt ($1)"
   },
   "statusRewritingPage": {
-    "message": "Diese Seite wird umbenannt ($1)",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "Diese Seite wird umbenannt ($1)"
   },
   "statusNotInstalled": {
     "message": "Komponente wurde nicht installiert"
@@ -186,12 +153,7 @@
     "message": "1 Name hier umgeschrieben"
   },
   "summaryMany": {
-    "message": "$1 Namen hier umgeschrieben",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 Namen hier umgeschrieben"
   },
   "contestedWarning": {
     "message": "Zwei Ihrer Orte teilen sich ein Wort auf der Karte, und eine früher gezeichnete Beschriftung zeigt möglicherweise das falsche. Laden Sie den Tab neu, um neu zu zeichnen."
@@ -209,12 +171,7 @@
     "message": "Umbenennen ein- oder ausschalten"
   },
   "ariaEnableRule": {
-    "message": "$1 aktivieren",
-    "placeholders": {
-      "1": {
-        "content": "$1"
-      }
-    }
+    "message": "$1 aktivieren"
   },
   "rulesRegionLabel": {
     "message": "Umbenennungsregeln"
