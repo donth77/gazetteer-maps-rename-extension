@@ -36,14 +36,14 @@ then `"America"`, a few decodes apart and in either order. `src/core/lines.ts` r
 the line that differs, and only when another line of the same name was decoded in the last few
 calls. That gating is what keeps "North America" intact.
 
-Measurement, including the mistakes made getting there, is in
-[`docs/M0-spike.md`](docs/M0-spike.md).
+The measurement notes live with the code, in the headers of
+`src/hooks/worker-inject.ts` and `src/hooks/worker-runtime.ts`.
 
 Wrapped labels ("Gulf of" / "America" on two lines) work too. Google runs two map workers —
 one decodes label lines in reading order and can resolve the name with context, the other
 draws the glyphs but often decodes the changed word first, out of context. The context-aware
-worker broadcasts its result to the drawing worker, which applies it. Details and the measured
-timeline are in [`docs/M0-spike.md`](docs/M0-spike.md).
+worker broadcasts its result to the drawing worker, which applies it; the mechanism and its
+guards are documented in `src/hooks/worker-runtime.ts`.
 
 No flash on load, in either place it could come from. Page text: the DOM hook rewrites
 synchronously inside the mutation callback — before the browser paints — and every hook
@@ -231,7 +231,7 @@ src/extension/  manifest.json, background, options/, popup/
 data/           names.json                         ← the name table
 test/unit/      engine + rules tests               ← the merge gate
 tools/          make-icons.mjs, verify-live.mjs
-docs/           M0-spike.md                        ← why there is no canvas hook
+docs/           local planning notes (not committed)
 ```
 
 `src/core/` is dependency-free and runs under plain Node. No place name appears anywhere in
@@ -245,7 +245,9 @@ the specific cases without the name going stale when those cases shift.
 The extension UI (settings page and popup) ships in English, Spanish, French, German,
 Brazilian Portuguese, and Japanese via Chrome's standard `_locales` mechanism; Chrome picks
 the catalog matching the browser's UI language, and English is the fallback. Store-listing
-text per language is prepared in [`docs/store-listing.md`](docs/store-listing.md).
+text per language is the `extDescription` entry in each `_locales/<lang>/messages.json`;
+paste those into the store dashboards at publish time, and translate the "What it does"
+paragraph above for the long description. The name stays "Gazetteer" in every language.
 
 The settings page and popup are keyboard-first and screen-reader friendly: the language
 picker is a proper ARIA combobox (arrow keys, Enter, Escape, `aria-activedescendant`), native

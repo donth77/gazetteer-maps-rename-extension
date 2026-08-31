@@ -1,7 +1,7 @@
 /**
  * Runs INSIDE Google's map worker, injected ahead of their bundle.
  *
- * Map labels never reach a 2D text API (see docs/M0-spike.md), but they do pass
+ * Map labels never reach a 2D text API, but they do pass
  * through `TextDecoder.prototype.decode` on their way out of WASM as ordinary
  * strings. That is a browser API rather than Google's minified code, so it is
  * the stable place to intervene — the same argument the design doc made for

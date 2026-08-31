@@ -20,9 +20,8 @@ Gazetteer demo
 ──────────────
 extension id : ${id ?? '(service worker asleep — this is normal)'}
 
-Look at the LEFT sidebar, and at the browser tab title.
-  Restored     sidebar heading, place card, search results, tab title
-  NOT restored the label painted on the map itself (see docs/M0-spike.md)
+Look at the LEFT sidebar, the browser tab title, and the label on the map.
+  All of them should show the restored name (Gulf of Mexico).
 
 Try these:
   · search "Lake Ontario"  — sidebar says Lake Ontario, the map pin says Lake America
