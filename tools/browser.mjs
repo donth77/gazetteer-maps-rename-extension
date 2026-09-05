@@ -3,6 +3,7 @@
  */
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, mkdtempSync } from 'node:fs';
 import { homedir, tmpdir } from 'node:os';
 
@@ -67,9 +68,19 @@ export async function launchWithExtension({ headless = true, viewport, extraArgs
   return context;
 }
 
-/** MV3 workers are lazy, so absence is not proof of failure — just informational. */
-export async function extensionId(context, timeout = 10000) {
+/**
+ * The id Chrome gives an unpacked extension: the first 128 bits of the SHA-256
+ * of its absolute path, written in the letters a-p. Computed rather than read
+ * off the service worker, which is lazy and may already be asleep.
+ */
+export function unpackedExtensionId(dir = path.resolve(process.env.GZ_DIST ?? 'dist')) {
+  const hash = createHash('sha256').update(dir).digest('hex').slice(0, 32);
+  return [...hash].map((h) => String.fromCharCode(97 + parseInt(h, 16))).join('');
+}
+
+/** Prefer the live worker's id when one is awake; fall back to computing it. */
+export async function extensionId(context, timeout = 3000) {
   const worker = context.serviceWorkers()[0]
     ?? await context.waitForEvent('serviceworker', { timeout }).catch(() => null);
-  return worker ? worker.url().split('/')[2] : null;
+  return worker ? worker.url().split('/')[2] : unpackedExtensionId();
 }
