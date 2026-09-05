@@ -51,9 +51,13 @@ export async function launchWithExtension({ headless = true, viewport, extraArgs
   const { chromium } = loadPlaywright();
   const ext = path.resolve(process.env.GZ_DIST ?? 'dist');
   if (!existsSync(path.join(ext, 'manifest.json'))) {
-    throw new Error('dist/manifest.json not found — run `npm run build` first.');
+    throw new Error('dist/manifest.json not found — run `pnpm run build` first.');
   }
-  const exe = findChromeForTesting();
+  // Playwright's own Chromium (the full build, not the headless shell) loads
+  // extensions on every platform; it is what `playwright install chromium`
+  // puts on a CI runner, where the cache paths above do not apply.
+  const playwrightChromium = (() => { try { return chromium.executablePath(); } catch { return null; } })();
+  const exe = findChromeForTesting() ?? (playwrightChromium && existsSync(playwrightChromium) ? playwrightChromium : null);
   const context = await chromium.launchPersistentContext(mkdtempSync(path.join(tmpdir(), 'gazetteer-')), {
     ...(exe ? { executablePath: exe } : { channel: process.env.CHANNEL ?? 'chrome' }),
     headless,
