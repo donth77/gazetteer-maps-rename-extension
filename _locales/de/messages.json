@@ -24,7 +24,7 @@
     "message": "Umbenannte Orte im Suchfeld anzeigen"
   },
   "searchToggleHint": {
-    "message": "Nach einer Suche trägt Maps den alten Namen des Ortes ins Suchfeld ein. Mit dieser Option zeigt das Feld stattdessen Ihre umbenannte Version. Zu beachten: Eine erneute Suche sucht nach dem umbenannten Text, und ein erfundener Name findet möglicherweise nichts. Selbst eingegebener Text wird nie verändert."
+    "message": "Nach einer Suche trägt Maps den alten Namen des Ortes ins Suchfeld ein. Mit dieser Option zeigt das Feld stattdessen Ihre umbenannte Version. Erneut suchen funktioniert weiterhin: Maps erhält den Namen, den es kennt."
   },
   "colLanguage": {
     "message": "Sprache"

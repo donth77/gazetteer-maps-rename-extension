@@ -30,8 +30,8 @@ JSON import/export. Things to know:
   changes.
 - A rename can apply in one language or all of them. The UI itself ships in
   six.
-- The search box gets your name too. Toggle that off in Settings if you use
-  invented names, since searching again would search for them.
+- The search box shows your name too. Searching again still works, because
+  Maps is sent the name it knows.
 
 ## How it works
 

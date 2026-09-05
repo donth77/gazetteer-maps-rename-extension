@@ -24,7 +24,7 @@
     "message": "Mostrar lugares renomeados na caixa de pesquisa"
   },
   "searchToggleHint": {
-    "message": "Após uma pesquisa, o Maps preenche a caixa de pesquisa com o nome antigo do lugar. Com esta opção ativada, a caixa mostra a sua versão renomeada. Atenção: pesquisar novamente buscará o texto renomeado, e um nome inventado pode não encontrar nada. O texto que você mesmo digita nunca é alterado."
+    "message": "Após uma pesquisa, o Maps preenche a caixa de pesquisa com o nome antigo do lugar. Com esta opção ativada, a caixa mostra a sua versão renomeada. Pesquisar de novo continua funcionando: o Maps recebe o nome que ele conhece."
   },
   "colLanguage": {
     "message": "Idioma"

@@ -24,7 +24,7 @@
     "message": "Mostrar los lugares renombrados en el cuadro de búsqueda"
   },
   "searchToggleHint": {
-    "message": "Tras una búsqueda, Maps escribe el nombre antiguo del lugar en el cuadro de búsqueda. Con esta opción activada, el cuadro muestra tu versión renombrada. Ten en cuenta: si vuelves a buscar, se buscará el texto renombrado, y un nombre inventado puede no dar resultados. El texto que escribas tú nunca se modifica."
+    "message": "Tras una búsqueda, Maps escribe el nombre antiguo del lugar en el cuadro de búsqueda. Con esta opción activada, el cuadro muestra tu versión renombrada. Volver a buscar sigue funcionando: Maps recibe el nombre que conoce."
   },
   "colLanguage": {
     "message": "Idioma"

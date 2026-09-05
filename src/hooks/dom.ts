@@ -52,9 +52,17 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
    */
   let written = new WeakMap<Node, Map<string, string>>();
 
-  /** If Maps keeps resetting a field, stop fighting it rather than loop forever. */
+  /**
+   * If Maps keeps resetting a field, stop fighting it rather than loop forever.
+   * The bound is on writes in quick succession: a write war is many per
+   * second, while one search box legitimately gets a write per search for
+   * the whole session.
+   */
   const MAX_INPUT_WRITES = 3;
-  let inputWrites = new WeakMap<Element, number>();
+  const INPUT_WRITE_WINDOW_MS = 1000;
+  let inputWrites = new WeakMap<Element, { count: number; at: number }>();
+  /** Google's own text behind a rewritten field, for searching again. */
+  const inputOriginal = new WeakMap<Element, string>();
 
   function alreadyOurs(node: Node, key: string, value: string): boolean {
     return written.get(node)?.get(key) === value;
@@ -103,7 +111,9 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     if (!doSearchField) return;
     if (el.type && el.type !== 'text' && el.type !== 'search') return;
     if (doc.activeElement === el) return;
-    const attempts = inputWrites.get(el) ?? 0;
+    const now = Date.now();
+    const recent = inputWrites.get(el);
+    const attempts = recent && now - recent.at < INPUT_WRITE_WINDOW_MS ? recent.count : 0;
     if (attempts >= MAX_INPUT_WRITES) return;
     const value = el.value;
     if (!value || alreadyOurs(el, '#value', value)) return;
@@ -113,9 +123,42 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     if (!result.changed) return;
     el.value = result.text;
     remember(el, '#value', result.text);
-    inputWrites.set(el, attempts + 1);
+    inputOriginal.set(el, value);
+    inputWrites.set(el, { count: attempts + 1, at: now });
     counters.substitutionsMade++;
-    counters.lastSubstitutionAt = Date.now();
+    counters.lastSubstitutionAt = now;
+  }
+
+  /**
+   * Searching again. Maps reads the box while it handles the Enter key or the
+   * search button, synchronously, and it only knows its own name for a place;
+   * a renamed one, invented or not, would be searched for as typed. So for
+   * that one dispatch the box holds Google's text again, and has the renamed
+   * text back before anything paints. Only a value this hook wrote is
+   * reversed; whatever the user typed is searched for as is.
+   */
+  function revealForSubmit(el: HTMLInputElement): void {
+    const original = inputOriginal.get(el);
+    if (original === undefined || !alreadyOurs(el, '#value', el.value)) return;
+    const shown = el.value;
+    el.value = original;
+    setTimeout(() => { if (el.value === original) el.value = shown; }, 0);
+  }
+
+  function onSubmitKey(event: KeyboardEvent): void {
+    if (event.key !== 'Enter') return;
+    const target = event.target;
+    if (target instanceof HTMLInputElement && inputs.has(target)) revealForSubmit(target);
+  }
+
+  function onSubmitClick(event: MouseEvent): void {
+    const button = (event.target as Element | null)?.closest?.('button');
+    if (!button) return;
+    for (const el of inputs) {
+      // The search button is not inside the box's form; it sits beside it.
+      const scope = (el.form ?? el).parentElement;
+      if (scope?.contains(button)) revealForSubmit(el);
+    }
   }
 
   /**
@@ -196,6 +239,12 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     collectInputs();
     // Re-check once a field loses focus, in case the user was mid-edit.
     try { doc.addEventListener('focusout', collectInputs, true); } catch { /* ignore */ }
+    if (doSearchField) {
+      try {
+        doc.addEventListener('keydown', onSubmitKey, true);
+        doc.addEventListener('click', onSubmitClick, true);
+      } catch { /* ignore */ }
+    }
 
     observer = new MutationObserver((records) => {
       for (const record of records) {
@@ -227,6 +276,12 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
 
   return {
     rescan() {
+      // Fields first get Google's text back, so the new rules see the real
+      // value rather than a rename made under the old ones.
+      for (const el of inputs) {
+        const original = inputOriginal.get(el);
+        if (original !== undefined && doc.activeElement !== el && alreadyOurs(el, '#value', el.value)) el.value = original;
+      }
       // The config changed, so what we wrote before is no longer authoritative.
       // A WeakMap cannot be cleared, so swap in a fresh one to force every node
       // to be re-examined against the new rules.
@@ -240,6 +295,10 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     disconnect() {
       try { observer?.disconnect(); } catch { /* ignore */ }
       try { doc.removeEventListener('focusout', collectInputs, true); } catch { /* ignore */ }
+      try {
+        doc.removeEventListener('keydown', onSubmitKey, true);
+        doc.removeEventListener('click', onSubmitClick, true);
+      } catch { /* ignore */ }
       observer = null;
     },
   };

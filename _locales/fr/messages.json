@@ -24,7 +24,7 @@
     "message": "Afficher les lieux renommés dans la barre de recherche"
   },
   "searchToggleHint": {
-    "message": "Après une recherche, Maps inscrit l'ancien nom du lieu dans la barre de recherche. Avec cette option, la barre affiche votre version renommée. À savoir : une nouvelle recherche portera sur le texte renommé, et un nom inventé peut ne rien trouver. Le texte que vous saisissez vous-même n'est jamais modifié."
+    "message": "Après une recherche, Maps inscrit l'ancien nom du lieu dans la barre de recherche. Avec cette option, la barre affiche votre version renommée. Relancer la recherche fonctionne toujours : Maps reçoit le nom qu'il connaît."
   },
   "colLanguage": {
     "message": "Langue"
