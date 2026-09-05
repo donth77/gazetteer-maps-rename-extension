@@ -26,10 +26,7 @@ function canonical(value: unknown): string {
  * changes: a region that appears and disappears is not reliably announced.
  */
 function markSaved(): void {
-  const pill = $<HTMLElement>('#saved');
-  pill.textContent = t('savedPill');
-  window.clearTimeout(Number(pill.dataset.timer));
-  pill.dataset.timer = String(window.setTimeout(() => { pill.textContent = ''; }, 1200));
+  notify(t('savedPill'));
 }
 
 async function write(): Promise<void> {
@@ -405,14 +402,53 @@ function render(): void {
   $<HTMLInputElement>('#raster-toggle').checked = config.suppressRasterPreview;
 }
 
-function download(): void {
+/** The File System Access API is not in TypeScript's DOM library yet. */
+interface SaveFilePicker {
+  (options: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }): Promise<FileSystemFileHandle>;
+}
+
+function notify(message: string): void {
+  const pill = $<HTMLElement>('#saved');
+  pill.textContent = message;
+  window.clearTimeout(Number(pill.dataset.timer));
+  pill.dataset.timer = String(window.setTimeout(() => { pill.textContent = ''; }, 1800));
+}
+
+/**
+ * Export goes through the native save dialog where the browser has one, so
+ * the user picks the folder and the name and sees it happen. Without it, a
+ * download link drops the file in the downloads folder; the confirmation
+ * pill is what tells the user that this was the export.
+ */
+async function exportRules(): Promise<void> {
   const payload = JSON.stringify({ version: 1, rules: config.rules }, null, 2);
+  const suggestedName = 'gazetteer-names.json';
+  const picker = (window as { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker;
+  if (typeof picker === 'function') {
+    try {
+      const handle = await picker.call(window, {
+        suggestedName,
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(payload);
+      await writable.close();
+      notify(t('exportedPill'));
+      return;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') return; // user closed the dialog
+      // Anything else (a policy blocking the API, an unwritable location): fall back.
+    }
+  }
   const url = URL.createObjectURL(new Blob([payload], { type: 'application/json' }));
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'gazetteer-names.json';
+  a.download = suggestedName;
+  document.body.append(a);
   a.click();
+  a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 5000);
+  notify(t('exportedPill'));
 }
 
 /** Far above any real rules file; stops a stray multi-megabyte pick cold. */
@@ -500,7 +536,7 @@ async function init(): Promise<void> {
     persist();
   });
 
-  $<HTMLButtonElement>('#export').addEventListener('click', download);
+  $<HTMLButtonElement>('#export').addEventListener('click', () => { void exportRules(); });
   $<HTMLButtonElement>('#import').addEventListener('click', () => $<HTMLInputElement>('#import-file').click());
   $<HTMLInputElement>('#import-file').addEventListener('change', (event) => {
     const file = (event.target as HTMLInputElement).files?.[0];

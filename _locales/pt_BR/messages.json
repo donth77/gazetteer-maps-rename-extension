@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "Não foi possível salvar as renomeações. O Chrome pode estar sem espaço de armazenamento."
+  },
+  "exportedPill": {
+    "message": "Exportado"
   }
 }

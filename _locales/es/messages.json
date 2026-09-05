@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "No se pudieron guardar los renombrados. Puede que Chrome no tenga espacio de almacenamiento."
+  },
+  "exportedPill": {
+    "message": "Exportado"
   }
 }

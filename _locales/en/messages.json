@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "The renames could not be saved. Chrome may be out of storage space."
+  },
+  "exportedPill": {
+    "message": "Exported"
   }
 }

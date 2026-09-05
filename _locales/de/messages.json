@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "Die Umbenennungen konnten nicht gespeichert werden. Möglicherweise hat Chrome keinen Speicherplatz mehr."
+  },
+  "exportedPill": {
+    "message": "Exportiert"
   }
 }

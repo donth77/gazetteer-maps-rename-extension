@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "Les renommages n'ont pas pu être enregistrés. Chrome manque peut-être d'espace de stockage."
+  },
+  "exportedPill": {
+    "message": "Exporté"
   }
 }

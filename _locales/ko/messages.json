@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "이름 변경을 저장하지 못했습니다. Chrome의 저장 공간이 부족할 수 있습니다."
+  },
+  "exportedPill": {
+    "message": "내보냈습니다"
   }
 }

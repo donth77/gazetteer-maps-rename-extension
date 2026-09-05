@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "名前変更を保存できませんでした。Chrome の保存領域が不足している可能性があります。"
+  },
+  "exportedPill": {
+    "message": "エクスポートしました"
   }
 }

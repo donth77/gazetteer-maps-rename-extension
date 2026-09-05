@@ -202,5 +202,8 @@
   },
   "importErrNotSaved": {
     "message": "無法儲存改名。Chrome 的儲存空間可能已滿。"
+  },
+  "exportedPill": {
+    "message": "已匯出"
   }
 }
