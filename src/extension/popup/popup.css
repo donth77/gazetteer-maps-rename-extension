@@ -1,11 +1,13 @@
 :root {
   color-scheme: light dark;
   --bg: #ffffff; --ink: #16191d; --muted: #626b75; --line: #e2e6ea;
-  --accent: #0b6b5e; --ok: #1a8a4b; --warn: #b8860b; --bad: #a4232b;
+  --accent: #0b6b5e; --ok: #1a8a4b; --warn: #8a6508; --bad: #a4232b;
+  --control: #7f8894;
 }
 @media (prefers-color-scheme: dark) {
   :root { --bg: #1c2024; --ink: #e8eaed; --muted: #9aa4af; --line: #2f353b;
-          --accent: #4bbfa8; --ok: #4ac07a; --warn: #d9a441; --bad: #f08a90; }
+          --accent: #4bbfa8; --ok: #4ac07a; --warn: #d9a441; --bad: #f08a90;
+          --control: #5f6974; }
 }
 * { box-sizing: border-box; }
 body {
@@ -20,7 +22,7 @@ h1 { font-size: .95rem; margin: 0; letter-spacing: -0.01em; }
 
 .master { display: inline-flex; cursor: pointer; }
 .master input { position: absolute; opacity: 0; width: 0; height: 0; }
-.switch { width: 34px; height: 20px; border-radius: 999px; background: var(--line); position: relative; transition: background .15s; }
+.switch { width: 34px; height: 20px; border-radius: 999px; background: var(--control); position: relative; transition: background .15s; }
 .switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
   border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgb(0 0 0 / .3); }
 input:checked + .switch { background: var(--accent); }
@@ -52,3 +54,4 @@ footer { display: flex; gap: .9rem; padding: .55rem .9rem; border-top: 1px solid
   margin: 0; padding: .6rem .9rem; border-top: 1px solid var(--line);
   color: var(--warn); font-size: .82rem;
 }
+.contested:empty { display: none; }

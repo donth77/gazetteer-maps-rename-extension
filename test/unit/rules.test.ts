@@ -89,7 +89,7 @@ test('validateRules rejects malformed payloads with a usable message', () => {
   }
   const dup = validateRules({ rules: [{ id: 'a', substitutions: [] }, { id: 'a', substitutions: [] }] });
   assert.equal(dup.ok, false);
-  if (!dup.ok) assert.match(dup.error, /[Dd]uplicate/);
+  if (!dup.ok) assert.match(dup.error, /share the id "a"/);
 });
 
 test('the shipped names.json is valid and its default rule is enabled', async () => {
@@ -100,7 +100,7 @@ test('the shipped names.json is valid and its default rule is enabled', async ()
   for (const id of ['gulf-of-mexico', 'lake-ontario']) {
     const shippedRule: Rule | undefined = res.rules.find((r) => r.id === id);
     assert.ok(shippedRule, `${id} rule must ship`);
-    assert.equal(shippedRule.enabled, true, 'design §6: it must work without visiting settings');
+    assert.equal(shippedRule.enabled, true, 'it must work without visiting settings');
     assert.ok(shippedRule.substitutions.length > 0, `${id} must ship at least one substitution`);
   }
   assert.ok(compile(res.rules, 'en').length > 0, 'must compile to at least one active substitution');
@@ -148,4 +148,21 @@ test('mergeDefaults honours tombstones for deleted shipped rules', () => {
 test('a tombstoned rule the user re-adds themselves is kept', () => {
   const merged = mergeDefaults([rule({ id: 'gulf' })], [rule({ id: 'gulf' })], ['gulf']);
   assert.equal(merged.length, 1);
+});
+
+test('validation failures carry a code and parameters a UI can phrase', () => {
+  const fail = (value: unknown) => {
+    const r = validateRules(value);
+    assert.equal(r.ok, false);
+    return r.ok ? null : r;
+  };
+  assert.equal(fail(null)?.code, 'notObject');
+  assert.equal(fail({})?.code, 'missingRules');
+  assert.deepEqual([fail({ rules: [null] })?.code, fail({ rules: [null] })?.params], ['ruleNotObject', ['1']]);
+  assert.deepEqual(fail({ rules: [{ substitutions: [] }] })?.params, ['1']);
+  assert.deepEqual([fail({ rules: [rule(), rule()] })?.code, fail({ rules: [rule(), rule()] })?.params], ['duplicateId', ['r']]);
+  assert.equal(fail({ rules: [{ id: 'x' }] })?.code, 'ruleNeedsRenames');
+  assert.deepEqual(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A' }] }] })?.params, ['x', '1']);
+  assert.equal(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A' }] }] })?.code, 'renameNeedsText');
+  assert.equal(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A', to: 'B' }, 3] }] })?.code, 'renameNotObject');
 });

@@ -10,7 +10,7 @@
  * Bundled separately and injected as source text, so it must not assume any
  * DOM or extension API.
  */
-import { createLineMatcher, createRepairGovernor, createResolutionStore, type LineMatcher, type NearbyProbe } from '../core/lines.ts';
+import { createLineMatcher, createResolutionStore, type LineMatcher, type NearbyProbe } from '../core/lines.ts';
 import type { CompiledSubstitution } from '../core/types.ts';
 
 declare const __GZ: {
@@ -44,7 +44,6 @@ declare const __GZ_DEBUG__: boolean;
   const lastAnnounced = new Map<string, string>();
   let channel: BroadcastChannel | null = null;
   function announce(text: string, to: string): void {
-    governor.touch(text, Date.now());
     // Re-announce whenever the resolution differs from what this worker last
     // sent for the token. The same token resolves differently as the viewport
     // moves — "America" is Mexico's under the Gulf label and Ontario's under
@@ -64,7 +63,13 @@ declare const __GZ_DEBUG__: boolean;
    * correct it. The one lever that clears that cache: losing and restoring the
    * WebGL context, which Maps answers by rebuilding its renderer — fresh
    * workers, fresh caches, every label re-laid-out under the now-current
-   * resolution. Contexts are captured here; the repair below cycles them.
+   * resolution. Contexts are captured here; the repair below cycles them. The
+   * decision to repair lives in the page, which outlives the workers a repair
+   * replaces, so its budget cannot be reset by the repair itself.
+   *
+   * The first context is also reported to the page: it is the proof that the
+   * vector map is really being drawn, which the raster-preview suppression
+   * waits for before committing to hide the preview tiles.
    */
   const glContexts: unknown[] = [];
   try {
@@ -73,12 +78,16 @@ declare const __GZ_DEBUG__: boolean;
       const orig = OC.prototype.getContext;
       OC.prototype.getContext = function (...a: unknown[]) {
         const ctx = orig.apply(this, a);
-        if (ctx && (a[0] === 'webgl' || a[0] === 'webgl2') && glContexts.length < 8) glContexts.push(ctx);
+        if (ctx && (a[0] === 'webgl' || a[0] === 'webgl2')) {
+          if (glContexts.length === 0) {
+            try { channel?.postMessage({ type: 'gazetteer:gl', from: workerId }); } catch { /* ignore */ }
+          }
+          if (glContexts.length < 8) glContexts.push(ctx);
+        }
         return ctx;
       };
     }
   } catch { /* ignore */ }
-  const governor = createRepairGovernor();
   function repaintForRepair(): void {
     for (const ctx of glContexts) {
       try {
@@ -102,28 +111,11 @@ declare const __GZ_DEBUG__: boolean;
         return;
       }
       if (data?.type === 'gazetteer:resolved' && typeof data.text === 'string' && typeof data.to === 'string') {
-        const now = Date.now();
-        const prevAt = governor.touch(data.text, now);
-        if (data.from !== workerId && resolved.publish(data.text, data.to)) {
-          // A different name just claimed this word. Anything already rendered
-          // from the old value is beyond the reach of any decode — but cycling
-          // the WebGL context makes Maps rebuild its renderer, which redraws
-          // every label under the now-current resolution. Guarded so the
-          // genuinely ambiguous case (both places on screen, resolutions
-          // flip-flopping) cannot thrash; the popup warning remains for that.
-          if (governor.allow(prevAt, now)) {
-            // Self-heal: rebuild the renderer, then tell the page the
-            // collision is handled so no warning lingers after a repair.
-            repaintForRepair();
-            try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
-            try { channel?.postMessage({ type: 'gazetteer:repaired', text: data.text }); } catch { /* ignore */ }
-            if (__GZ_DEBUG__) debug.push({ ev: 'repair-trigger', w: workerId, text: data.text, at: now });
-          } else {
-            // Repair is guarded off (ambiguous flip-flop, cooldown, or cap):
-            // this is the only case the user needs to be told about.
-            try { channel?.postMessage({ type: 'gazetteer:contested', text: data.text }); } catch { /* ignore */ }
-          }
-        }
+        // Take the other worker's resolution. Whether a changed value means a
+        // label already drawn is now wrong, and whether that warrants a
+        // renderer rebuild, is judged by the page, which sees every
+        // resolution and keeps the repair budget across rebuilds.
+        if (data.from !== workerId) resolved.publish(data.text, data.to);
         if (__GZ_DEBUG__) debug.push({ ev: 'resolved-in', w: workerId, text: data.text, to: data.to, at: Date.now(), from: data.from });
         return;
       }

@@ -1,25 +1,58 @@
-import { defaultConfig, defaultRules, loadConfig, saveConfig, type GazetteerConfig } from '../config.ts';
-import { validateRules } from '../../core/rules.ts';
+import { defaultConfig, defaultRules, loadConfig, onConfigChanged, saveConfig, type GazetteerConfig } from '../config.ts';
+import { validateRules, type RuleError } from '../../core/rules.ts';
 import type { Rule, Substitution } from '../../core/types.ts';
 
 const $ = <T extends Element>(sel: string): T => document.querySelector<T>(sel)!;
 
 let config: GazetteerConfig = { enabled: true, searchField: true, suppressRasterPreview: true, rules: [] };
 let saveTimer: number | undefined;
+/** What this page last wrote, so its own storage events can be told from others'. */
+let lastSaved = '';
 
+/** JSON with sorted keys: storage hands objects back in its own key order. */
+function canonical(value: unknown): string {
+  return JSON.stringify(value, (_key, v: unknown) => {
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const sorted: Record<string, unknown> = {};
+      for (const k of Object.keys(v as object).sort()) sorted[k] = (v as Record<string, unknown>)[k];
+      return sorted;
+    }
+    return v;
+  });
+}
+
+/**
+ * The pill is a live region, so it stays in the document and only its text
+ * changes: a region that appears and disappears is not reliably announced.
+ */
 function markSaved(): void {
   const pill = $<HTMLElement>('#saved');
-  pill.hidden = false;
+  pill.textContent = t('savedPill');
   window.clearTimeout(Number(pill.dataset.timer));
-  pill.dataset.timer = String(window.setTimeout(() => { pill.hidden = true; }, 1200));
+  pill.dataset.timer = String(window.setTimeout(() => { pill.textContent = ''; }, 1200));
+}
+
+async function write(): Promise<void> {
+  lastSaved = canonical(config);
+  await saveConfig(config);
+  markSaved();
 }
 
 /** Debounced so typing in a text field does not hammer storage. */
 function persist(): void {
   window.clearTimeout(saveTimer);
   saveTimer = window.setTimeout(() => {
-    saveConfig(config).then(markSaved).catch(() => { /* ignore */ });
+    saveTimer = undefined;
+    write().catch(() => { /* ignore */ });
   }, 300);
+}
+
+/** A tab closed mid-debounce must not lose the last keystrokes. */
+function flushPending(): void {
+  if (saveTimer === undefined) return;
+  window.clearTimeout(saveTimer);
+  saveTimer = undefined;
+  write().catch(() => { /* ignore */ });
 }
 
 /**
@@ -44,6 +77,17 @@ function confirmDialog(message: string, confirmLabel: string): Promise<boolean> 
     dialog.showModal();
     cancel.focus();
   });
+}
+
+/**
+ * Where focus goes after a delete re-renders the list: the dialog returns it
+ * to the button that opened it, but that button is gone with its row.
+ */
+function focusAfterDelete(candidates: (Element | null | undefined)[]): void {
+  for (const el of candidates) {
+    if (el instanceof HTMLElement && el.isConnected) { el.focus(); return; }
+  }
+  $<HTMLButtonElement>('#add-rule').focus();
 }
 
 function slugify(text: string, taken: Set<string>): string {
@@ -116,7 +160,11 @@ function createLanguagePicker(initial: string, onPick: (code: string) => void): 
   panel.className = 'lang-panel';
   panel.id = uid + '-list';
   panel.setAttribute('role', 'listbox');
+  panel.setAttribute('aria-label', t('colLanguage'));
   panel.hidden = true;
+  // Clicking the list (its scrollbar included) must not blur the input, which
+  // would close the list under the pointer.
+  panel.addEventListener('mousedown', (event) => event.preventDefault());
   root.append(input, panel);
 
   let current = initial && initial !== '' ? initial : '*';
@@ -167,7 +215,7 @@ function createLanguagePicker(initial: string, onPick: (code: string) => void): 
       // mousedown, so the pick lands before the input's blur closes the panel.
       row.addEventListener('mousedown', (event) => {
         event.preventDefault();
-        pick(entry.code);
+        pick(entry.code, true);
       });
       row.addEventListener('mousemove', () => {
         if (activeIndex !== index) {
@@ -188,23 +236,29 @@ function createLanguagePicker(initial: string, onPick: (code: string) => void): 
   const close = (): void => {
     panel.hidden = true;
     input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
     input.value = languageLabel(current);
   };
-  const pick = (code: string): void => {
+  // Picking with the keyboard keeps focus in the field, where a keyboard user
+  // expects it; a mouse pick releases it, as clicking elsewhere would.
+  const pick = (code: string, viaPointer = false): void => {
     current = code;
     onPick(code);
     close();
-    input.blur();
+    if (viaPointer) input.blur();
   };
 
   input.addEventListener('focus', () => {
     input.select();
     open();
   });
-  input.addEventListener('input', () => renderPanel(input.value));
+  input.addEventListener('input', () => {
+    if (panel.hidden) open();
+    renderPanel(input.value);
+  });
   input.addEventListener('blur', () => close());
   input.addEventListener('keydown', (event) => {
-    if (panel.hidden && (event.key === 'ArrowDown' || event.key === 'Enter')) {
+    if (panel.hidden && (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === 'ArrowUp')) {
       open();
       event.preventDefault();
       return;
@@ -226,7 +280,6 @@ function createLanguagePicker(initial: string, onPick: (code: string) => void): 
     } else if (event.key === 'Escape') {
       event.preventDefault();
       close();
-      input.blur();
     }
   });
   return root;
@@ -258,9 +311,14 @@ function renderSub(sub: Substitution, rule: Rule, onChange: () => void): HTMLTab
     // Only ask when there is something to lose; a half-empty row goes quietly.
     const filled = sub.from.trim() !== '' && sub.to.trim() !== '';
     if (filled && !(await confirmDialog(t('confirmRemoveRename', [sub.from, sub.to]), t('dialogRemove')))) return;
-    rule.substitutions.splice(rule.substitutions.indexOf(sub), 1);
+    const index = rule.substitutions.indexOf(sub);
+    const article = row.closest('article');
+    rule.substitutions.splice(index, 1);
     persist();
     onChange();
+    const rows = article?.querySelectorAll<HTMLElement>('.sub') ?? [];
+    const next = rows[Math.min(index, rows.length - 1)];
+    focusAfterDelete([next?.querySelector('.js-from'), article?.querySelector('.js-add-sub')]);
   });
   return row;
 }
@@ -318,9 +376,13 @@ function renderRule(rule: Rule): HTMLElement {
       // A deleted shipped rule must not come back at the next update merge.
       config.removedDefaults = [...new Set([...(config.removedDefaults ?? []), rule.id])];
     }
-    config.rules.splice(config.rules.indexOf(rule), 1);
+    const index = config.rules.indexOf(rule);
+    config.rules.splice(index, 1);
     persist();
     render();
+    const articles = $<HTMLElement>('#rules').querySelectorAll<HTMLElement>('.rule');
+    const next = articles[Math.min(index, articles.length - 1)];
+    focusAfterDelete([next?.querySelector('.js-description')]);
   });
 
   refreshSubs();
@@ -354,31 +416,66 @@ function download(): void {
   setTimeout(() => URL.revokeObjectURL(url), 5000);
 }
 
+/** Far above any real rules file; stops a stray multi-megabyte pick cold. */
+const IMPORT_LIMIT_BYTES = 1024 * 1024;
+
+function ruleErrorMessage(error: RuleError): string {
+  const key = 'importErr' + error.code[0]!.toUpperCase() + error.code.slice(1);
+  return t(key, error.params);
+}
+
 async function importFile(file: File): Promise<void> {
   const error = $<HTMLElement>('#import-error');
-  error.hidden = true;
-  try {
-    const parsed = validateRules(JSON.parse(await file.text()));
-    if (!parsed.ok) {
-      error.textContent = t('importError', [parsed.error]);
-      error.hidden = false;
-      return;
-    }
-    config.rules = parsed.rules;
-    await saveConfig(config);
-    markSaved();
-    render();
-  } catch (e) {
-    error.textContent = t('importError', [e instanceof Error ? e.message : 'unreadable file']);
+  const fail = (message: string) => {
+    error.textContent = t('importError', [message]);
     error.hidden = false;
+  };
+  error.hidden = true;
+  if (file.size > IMPORT_LIMIT_BYTES) return fail(t('importErrTooLarge'));
+  let data: unknown;
+  try {
+    data = JSON.parse(await file.text());
+  } catch {
+    return fail(t('importErrNotJson'));
   }
+  const parsed = validateRules(data);
+  if (!parsed.ok) return fail(ruleErrorMessage(parsed));
+
+  // Import replaces everything, so a shipped rule the file leaves out is a
+  // deletion and must stay deleted across updates, while one the file brings
+  // back is no longer deleted.
+  const imported = new Set(parsed.rules.map((r) => r.id));
+  const removedDefaults = defaultRules().map((d) => d.id).filter((id) => !imported.has(id));
+  const next: GazetteerConfig = { ...config, rules: parsed.rules, removedDefaults };
+  try {
+    // Only adopt the new rules once they are safely stored; a failed save
+    // (quota, say) must not leave the page editing something storage never got.
+    lastSaved = canonical(next);
+    await saveConfig(next);
+  } catch {
+    return fail(t('importErrNotSaved'));
+  }
+  config = next;
+  markSaved();
+  render();
 }
 
 async function init(): Promise<void> {
-  try { document.documentElement.lang = chrome.i18n.getUILanguage(); } catch { /* keep en */ }
+  // The page is in whichever language the catalogs could serve, which is not
+  // always the browser's; assistive tech reads the attribute, so say which.
+  document.documentElement.lang = t('uiLang');
   localizeDocument();
   config = await loadConfig();
   render();
+
+  window.addEventListener('pagehide', flushPending);
+  // Another surface (the popup, another settings tab) may rewrite the config
+  // while this page is open. Take it, unless it is this page's own write.
+  onConfigChanged((next, stored) => {
+    if (canonical(stored) === lastSaved) return;
+    config = next;
+    render();
+  });
 
   $<HTMLInputElement>('#master-toggle').addEventListener('change', (event) => {
     config.enabled = (event.target as HTMLInputElement).checked;
@@ -419,9 +516,11 @@ async function init(): Promise<void> {
 
   $<HTMLButtonElement>('#reset').addEventListener('click', async () => {
     if (!(await confirmDialog(t('confirmRestore'), t('dialogRestore')))) return;
-    config = defaultConfig();
-    await saveConfig(config);
-    markSaved();
+    // The button promises to restore the renames; the preferences are the
+    // user's and stay as they are.
+    const { enabled, searchField, suppressRasterPreview } = config;
+    config = { ...defaultConfig(), enabled, searchField, suppressRasterPreview };
+    await write().catch(() => { /* ignore */ });
     render();
   });
 }

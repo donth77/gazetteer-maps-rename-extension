@@ -71,8 +71,10 @@ function renderStatus(status: Status | null): void {
   const total = status.counters.substitutionsMade + (status.mapCounters?.substitutions ?? 0);
   const summary = $<HTMLElement>('#summary');
   summary.hidden = total === 0;
-  summary.textContent = total === 1 ? '1 name rewritten' : `${total} names rewritten`;
-  $<HTMLElement>('#contested').hidden = !status.mapContested;
+  summary.textContent = total === 1 ? t('summaryOne') : t('summaryMany', [String(total)]);
+  // A live region: keep it in the document and change its text, so the
+  // warning is announced when it appears.
+  $<HTMLElement>('#contested').textContent = status.mapContested ? t('contestedWarning') : '';
   if (status.mapContested) $<HTMLButtonElement>('#reload').hidden = false;
 
   const state = healthOf(status.counters);
@@ -113,7 +115,7 @@ async function fetchStatus(): Promise<Status | null> {
 }
 
 async function init(): Promise<void> {
-  try { document.documentElement.lang = chrome.i18n.getUILanguage(); } catch { /* keep en */ }
+  document.documentElement.lang = t('uiLang');
   localizeDocument();
   try {
     const manifest = chrome.runtime.getManifest();
@@ -128,8 +130,10 @@ async function init(): Promise<void> {
   master.addEventListener('change', async () => {
     config.enabled = master.checked;
     await saveConfig(config);
-    renderStatus(await fetchStatus());
-    $<HTMLButtonElement>('#reload').hidden = false;
+    const status = await fetchStatus();
+    renderStatus(status);
+    // Only offer a reload where it would do something: on a Maps tab.
+    if (status) $<HTMLButtonElement>('#reload').hidden = false;
   });
 
   $<HTMLButtonElement>('#open-options').addEventListener('click', () => {

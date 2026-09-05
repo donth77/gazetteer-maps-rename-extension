@@ -144,7 +144,7 @@
     "message": "Hook did not install"
   },
   "statusNoLocaleRules": {
-    "message": "No rules active for this locale"
+    "message": "No rules active for this language"
   },
   "statusNothingHere": {
     "message": "Installed, nothing to change here"
@@ -175,5 +175,41 @@
   },
   "rulesRegionLabel": {
     "message": "Renaming rules"
+  },
+  "uiLang": {
+    "message": "en"
+  },
+  "importErrNotObject": {
+    "message": "The file is not a JSON object."
+  },
+  "importErrMissingRules": {
+    "message": "The file has no \"rules\" list."
+  },
+  "importErrRuleNotObject": {
+    "message": "Place $1 is not an object."
+  },
+  "importErrRuleNeedsId": {
+    "message": "Place $1 needs an id."
+  },
+  "importErrDuplicateId": {
+    "message": "Two places share the id \"$1\"."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "Place \"$1\" needs a \"substitutions\" list."
+  },
+  "importErrRenameNotObject": {
+    "message": "Rename $2 in \"$1\" is not an object."
+  },
+  "importErrRenameNeedsText": {
+    "message": "Rename $2 in \"$1\" needs \"from\" and \"to\" text."
+  },
+  "importErrTooLarge": {
+    "message": "The file is larger than 1 MB."
+  },
+  "importErrNotJson": {
+    "message": "The file is not valid JSON."
+  },
+  "importErrNotSaved": {
+    "message": "The renames could not be saved. Chrome may be out of storage space."
   }
 }

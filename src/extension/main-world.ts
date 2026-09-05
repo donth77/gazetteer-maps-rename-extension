@@ -7,14 +7,17 @@
  */
 import { installWorkerHook } from '../hooks/worker-inject.ts';
 import { compile, validateRules } from '../core/rules.ts';
-import { createLineMatcher, createResolutionStore, type LineMatcher } from '../core/lines.ts';
-import shipped from '../../data/names.json';
+import { createLineMatcher, createRepairGovernor, createResolutionStore, type LineMatcher } from '../core/lines.ts';
+import shipped from '../../data/names.json' with { type: 'json' };
 import { LOADING_TILE_DARK, LOADING_TILE_LIGHT } from './loading-tile.ts';
 import type { CompiledSubstitution } from '../core/types.ts';
 
 declare const __WORKER_RUNTIME__: string;
 
-const CHANNEL = 'gazetteer';
+// A BroadcastChannel is shared by every page on the origin, so a fixed name
+// would have one Maps tab's workers answering another's. Each page load gets
+// its own; the workers learn it from their preamble.
+const CHANNEL = 'gazetteer-' + Math.random().toString(36).slice(2, 10);
 
 try {
   // Starts with no substitutions: until the user's config arrives the hook is
@@ -71,6 +74,39 @@ try {
   const counters = { decodes: 0, substitutions: 0, whole: 0, lines: 0, shared: 0 };
   let contested = false;
   const perWorker = new Map<string, typeof counters>();
+  function postCounters(): void {
+    window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
+  }
+
+  /**
+   * Every resolution any worker announces passes through here. When a
+   * different name claims a word already resolved the other way, anything
+   * drawn from the old value is beyond the reach of any decode, but cycling
+   * the WebGL contexts makes Maps rebuild its renderer, which redraws every
+   * label under the now-current resolution. The governor stops that from
+   * thrashing in the genuinely ambiguous case (both places on screen,
+   * resolutions flip-flopping) and caps it per page. It lives here, not in
+   * the workers, because a rebuild replaces the workers and would hand a
+   * fresh budget to each repair.
+   */
+  const governor = createRepairGovernor();
+  let repairs = 0;
+  function onResolution(text: string, to: string): void {
+    const now = Date.now();
+    const prevAt = governor.touch(text, now);
+    if (!mainStore.publish(text, to)) return;
+    if (governor.allow(prevAt, now)) {
+      contested = false;
+      repairs++;
+      try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
+    } else {
+      // Repair is guarded off (ambiguous flip-flop, cooldown, or cap): the
+      // only case the user needs to be told about.
+      contested = true;
+    }
+    postCounters();
+  }
+
   if (channel) {
     channel.onmessage = (event: MessageEvent) => {
       const data = event.data as { type?: string; id?: string; counters?: typeof counters } | null;
@@ -80,21 +116,12 @@ try {
           counters[key] = 0;
           for (const c of perWorker.values()) counters[key] += c[key] ?? 0;
         }
-        window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
-      } else if (data?.type === 'gazetteer:contested') {
-        contested = true;
-        window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
-      } else if (data?.type === 'gazetteer:repaired') {
-        contested = false;
-        window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
+        postCounters();
       } else if (data?.type === 'gazetteer:resolved') {
         const r = data as { text?: string; to?: string; from?: string };
-        if (typeof r.text === 'string' && typeof r.to === 'string' && r.from !== mainId) {
-          if (mainStore.publish(r.text, r.to)) {
-            contested = true;
-            window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
-          }
-        }
+        if (typeof r.text === 'string' && typeof r.to === 'string' && r.from !== mainId) onResolution(r.text, r.to);
+      } else if (data?.type === 'gazetteer:gl') {
+        vectorIsAlive();
       } else if (data?.type === 'gazetteer:hello' && currentSubs.length > 0) {
         // A worker started before the config landed; hand it the table.
         try { channel?.postMessage({ type: 'gazetteer:rules', subs: currentSubs }); } catch { /* ignore */ }
@@ -107,27 +134,80 @@ try {
    * (`/maps/vt/pb=…!2sm!…`) with the served names baked into the pixels — they
    * paint a quarter second before the first vector label is even decoded, which
    * is the flash. There is no label-less variant of these tiles to swap in
-   * (measured: style and layer parameters are ignored), so matching loads are
-   * failed instead; the vector renderer, whose text this extension rewrites,
-   * fills the map moments later. Gated on WebGL, because without it the raster
-   * tiles are the only map Maps will ever draw.
+   * (measured: style and layer parameters are ignored), so matching loads get
+   * a placeholder instead; the vector renderer, whose text this extension
+   * rewrites, fills the map moments later. Gated on WebGL, because without it
+   * the raster tiles are the only map Maps will ever draw.
    */
   let suppressRaster = true; // safe boot default; real config arrives in ms
   let rasterBlocked = 0;
   let webglOk: boolean | null = null;
+  const nativeGetContext = HTMLCanvasElement.prototype.getContext;
   function vectorModeAvailable(): boolean {
     if (webglOk === null) {
       try {
         const probe = document.createElement('canvas');
-        webglOk = !!(probe.getContext('webgl2') ?? probe.getContext('webgl'));
+        const ctx = (nativeGetContext.call(probe, 'webgl2') ?? nativeGetContext.call(probe, 'webgl')) as WebGLRenderingContext | null;
+        webglOk = !!ctx;
+        // Release the probe context: browsers cap live contexts per page.
+        try { ctx?.getExtension('WEBGL_lose_context')?.loseContext(); } catch { /* ignore */ }
       } catch { webglOk = false; }
     }
     return webglOk;
   }
   const RASTER_TILE = /\/maps\/vt\/pb=.*!2sm!/;
   function isSuppressedTileUrl(url: string): boolean {
-    return suppressRaster && RASTER_TILE.test(url) && vectorModeAvailable();
+    return suppressRaster && !rasterAbandoned && RASTER_TILE.test(url) && vectorModeAvailable();
   }
+
+  /**
+   * WebGL being available is not the same as Maps using it: it can still pick
+   * the raster map (lite mode, its own performance fallback), and then these
+   * placeholders would be the only map the user ever sees. So the real URL of
+   * every replaced tile is kept, and unless the vector renderer proves it is
+   * alive within a grace period (a worker, or the page itself, creating a
+   * WebGL context), the previews are put back and suppression stops for the
+   * rest of the page's life.
+   */
+  const RASTER_GRACE_MS = 12000;
+  const realTileSrc = new WeakMap<HTMLImageElement, string>();
+  let held: HTMLImageElement[] = [];
+  let vectorAlive = false;
+  let rasterAbandoned = false;
+  let graceTimer: number | null = null;
+  function vectorIsAlive(): void {
+    vectorAlive = true;
+    if (graceTimer !== null) { clearTimeout(graceTimer); graceTimer = null; }
+    held = [];
+  }
+  function abandonSuppression(): void {
+    graceTimer = null;
+    if (vectorAlive) return;
+    rasterAbandoned = true;
+    for (const img of held) {
+      const real = realTileSrc.get(img);
+      if (real !== undefined) { try { nativeSetImageSrc?.call(img, real); } catch { /* ignore */ } }
+    }
+    held = [];
+  }
+  function holdForRestore(img: Element, real: string): void {
+    if (vectorAlive || !(img instanceof HTMLImageElement)) return;
+    realTileSrc.set(img, real);
+    if (held.length < 600) held.push(img);
+    if (graceTimer === null) graceTimer = window.setTimeout(abandonSuppression, RASTER_GRACE_MS);
+  }
+  try {
+    // A WebGL context on a canvas in the document is the page-side proof.
+    // (Capability probes, ours included, use detached canvases.)
+    (HTMLCanvasElement.prototype as unknown as { getContext: (...a: unknown[]) => unknown }).getContext =
+      function (this: HTMLCanvasElement, ...args: unknown[]): unknown {
+        const ctx = (nativeGetContext as unknown as (...a: unknown[]) => unknown).apply(this, args);
+        try {
+          if (ctx && (args[0] === 'webgl' || args[0] === 'webgl2') && this.isConnected) vectorIsAlive();
+        } catch { /* ignore */ }
+        return ctx;
+      };
+  } catch { /* the worker-side signal still stands */ }
   // The replacement is an opaque loading grid rather than a transparent pixel:
   // the vector canvas goes through ugly boot phases (bare grid on black, then
   // unlabeled fills) that Google's own preview tiles normally cover, and an
@@ -220,6 +300,7 @@ try {
             if (typeof value === 'string' && isSuppressedTileUrl(value)) {
               rasterBlocked++;
               nativeSet.call(this, loadingTile(this));
+              holdForRestore(this, value);
               return;
             }
           } catch { /* fall through to the native setter */ }
@@ -237,20 +318,40 @@ try {
         if (name === 'src' && typeof value === 'string'
           && this instanceof HTMLImageElement && isSuppressedTileUrl(value)) {
           rasterBlocked++;
-          return nativeSetAttribute.call(this, 'src', loadingTile(this));
+          const result = nativeSetAttribute.call(this, 'src', loadingTile(this));
+          holdForRestore(this, value);
+          return result;
         }
       } catch { /* fall through to the native call */ }
       return nativeSetAttribute.call(this, name, value);
     };
   } catch { /* ignore */ }
 
+  /** Only well-formed entries reach the workers, whatever posted the message. */
+  function sanitizeSubs(input: unknown): CompiledSubstitution[] {
+    if (!Array.isArray(input)) return [];
+    const out: CompiledSubstitution[] = [];
+    for (const entry of input) {
+      const s = entry as Partial<CompiledSubstitution> | null;
+      if (!s || typeof s !== 'object' || typeof s.from !== 'string' || typeof s.to !== 'string' || s.from === '') continue;
+      out.push({
+        from: s.from,
+        to: s.to,
+        locale: typeof s.locale === 'string' ? s.locale : '*',
+        ruleId: typeof s.ruleId === 'string' ? s.ruleId : '',
+      });
+    }
+    return out;
+  }
+
   window.addEventListener('message', (event: MessageEvent) => {
     if (event.source !== window) return;
-    const data = event.data as { source?: string; type?: string; subs?: CompiledSubstitution[]; suppressRaster?: boolean } | null;
+    const data = event.data as { source?: string; type?: string; subs?: unknown; suppressRaster?: boolean } | null;
     if (data?.source !== 'gazetteer-isolated' || data.type !== 'rules') return;
     if (typeof data.suppressRaster === 'boolean') suppressRaster = data.suppressRaster;
-    currentSubs = data.subs ?? [];
-    setMainRules(currentSubs);
+    const subs = sanitizeSubs(data.subs);
+    try { setMainRules(subs); } catch { return; }
+    currentSubs = subs;
     try { channel?.postMessage({ type: 'gazetteer:rules', subs: currentSubs }); } catch { /* ignore */ }
   });
 
@@ -260,13 +361,14 @@ try {
       counters[key] = 0;
       for (const c of perWorker.values()) counters[key] += c[key] ?? 0;
     }
-    window.postMessage({ source: 'gazetteer-main', type: 'counters', counters, contested }, '*');
+    postCounters();
   }
 
   function announceMain(text: string, to: string): void {
     if (lastAnnouncedMain.get(text) === to) return;
     lastAnnouncedMain.set(text, to);
     try { channel?.postMessage({ type: 'gazetteer:resolved', text, to, from: mainId }); } catch { /* ignore */ }
+    onResolution(text, to); // a channel never echoes to its sender
   }
 
   try {
@@ -304,8 +406,11 @@ try {
       get workersWrapped() { return handle.wrapped; },
       get workersFailed() { return handle.failed; },
       get rasterBlocked() { return rasterBlocked; },
+      get rasterAbandoned() { return rasterAbandoned; },
+      get vectorAlive() { return vectorAlive; },
       get loadingTheme() { return lockedTheme; },
       get contested() { return contested; },
+      get repairs() { return repairs; },
       counters,
     },
     configurable: true,

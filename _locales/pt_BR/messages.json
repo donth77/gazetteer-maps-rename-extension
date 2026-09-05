@@ -175,5 +175,41 @@
   },
   "rulesRegionLabel": {
     "message": "Regras de renomeação"
+  },
+  "uiLang": {
+    "message": "pt-BR"
+  },
+  "importErrNotObject": {
+    "message": "O arquivo não é um objeto JSON."
+  },
+  "importErrMissingRules": {
+    "message": "O arquivo não tem uma lista \"rules\"."
+  },
+  "importErrRuleNotObject": {
+    "message": "O lugar $1 não é um objeto."
+  },
+  "importErrRuleNeedsId": {
+    "message": "O lugar $1 precisa de um id."
+  },
+  "importErrDuplicateId": {
+    "message": "Dois lugares têm o mesmo id \"$1\"."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "O lugar \"$1\" precisa de uma lista \"substitutions\"."
+  },
+  "importErrRenameNotObject": {
+    "message": "A renomeação $2 em \"$1\" não é um objeto."
+  },
+  "importErrRenameNeedsText": {
+    "message": "A renomeação $2 em \"$1\" precisa de texto em \"from\" e \"to\"."
+  },
+  "importErrTooLarge": {
+    "message": "O arquivo tem mais de 1 MB."
+  },
+  "importErrNotJson": {
+    "message": "O arquivo não é um JSON válido."
+  },
+  "importErrNotSaved": {
+    "message": "Não foi possível salvar as renomeações. O Chrome pode estar sem espaço de armazenamento."
   }
 }

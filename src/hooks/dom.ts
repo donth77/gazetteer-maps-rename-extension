@@ -3,8 +3,8 @@ import type { Counters } from '../core/types.ts';
 
 /**
  * DOM hook — sidebar, search results, place cards, autocomplete, tab title.
- * Runs in the ISOLATED world. Per design §5 it installs defensively and must
- * never throw into Google's code.
+ * Runs in the ISOLATED world. It installs defensively and must never throw
+ * into Google's code.
  */
 
 /** Never walk into these: their text is not user-visible prose. */
@@ -118,11 +118,24 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     counters.lastSubstitutionAt = Date.now();
   }
 
+  /**
+   * Every input the walk has met. `input.value` changes fire no mutation
+   * record, so these are swept on every flush; a registry keeps that sweep
+   * from being a document-wide query each time Maps touches the DOM.
+   */
+  const inputs = new Set<HTMLInputElement>();
+
+  function noteElement(el: Element): void {
+    if (doSearchField && el.tagName === 'INPUT') inputs.add(el as HTMLInputElement);
+    processElement(el);
+  }
+
   function collectInputs(): void {
     if (!doSearchField) return;
-    try {
-      for (const el of doc.querySelectorAll<HTMLInputElement>('input')) processInput(el);
-    } catch { /* ignore */ }
+    for (const el of inputs) {
+      if (!el.isConnected) { inputs.delete(el); continue; }
+      try { processInput(el); } catch { /* ignore */ }
+    }
   }
 
   function skipped(node: Node): boolean {
@@ -132,7 +145,7 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   function walk(root: Node): void {
     if (skipped(root)) return;
     if (root.nodeType === Node.TEXT_NODE) return processText(root as Text);
-    if (root.nodeType === Node.ELEMENT_NODE) processElement(root as Element);
+    if (root.nodeType === Node.ELEMENT_NODE) noteElement(root as Element);
     if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE
       && root.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) return;
 
@@ -142,7 +155,7 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     let n: Node | null;
     while ((n = walker.nextNode()) !== null) {
       if (n.nodeType === Node.TEXT_NODE) processText(n as Text);
-      else processElement(n as Element);
+      else noteElement(n as Element);
     }
   }
 

@@ -43,7 +43,7 @@ function applyConfig(config: GazetteerConfig): void {
 }
 
 function install(): void {
-  // Design §5: every hook installs inside try/catch and degrades independently.
+  // Every hook installs inside try/catch and degrades independently.
   try {
     handle = installDomHook({ matcher: live, counters, searchField });
   } catch {
@@ -74,7 +74,7 @@ function boot(): void {
   onConfigChanged(reconcile);
 }
 
-// Well-known global for the health check (design §5). ISOLATED world, so the
+// Well-known global for the health check. ISOLATED world, so the
 // page cannot see or tamper with it.
 (globalThis as Record<string, unknown>).__GAZETTEER__ = {
   counters,

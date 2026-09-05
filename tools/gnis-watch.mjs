@@ -1,5 +1,5 @@
 /**
- * GNIS watcher (design doc §8): polls the federal Geographic Names Information
+ * GNIS watcher: polls the federal Geographic Names Information
  * System for the features this extension renames, and alarms when an official
  * name changes. This watches the CAUSE rather than the symptom: GNIS changes
  * days before Google ships them, the endpoint has no bot detection, and it is

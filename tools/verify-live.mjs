@@ -2,7 +2,7 @@
  * End-to-end check: load the built extension into Chrome, open real Google Maps
  * pages, and assert the served names were rewritten in the DOM.
  *
- * This is MONITORING, not a gating test (design §10). It talks to Google, it is
+ * This is MONITORING, not a gating test. It talks to Google, it is
  * non-deterministic, and it must never run in a blocking CI path.
  */
 import { launchWithExtension, extensionId } from './browser.mjs';
@@ -48,7 +48,7 @@ try {
     // Give Maps time to render the sidebar, then the hook a frame to rewrite it.
     await page.waitForTimeout(15000);
 
-    // Design §7: a challenge page is INFRA_ERROR, never a hook failure. Google
+    // A challenge page is INFRA_ERROR, never a hook failure. Google
     // challenges datacenter IPs aggressively; alerting on that noise is how
     // self-monitoring dies.
     const blocked = await page.evaluate(() => {
@@ -67,6 +67,8 @@ try {
       text: document.body.innerText,
       main: window.__GAZETTEER_MAIN__
         ? { wrapped: window.__GAZETTEER_MAIN__.workersWrapped, failed: window.__GAZETTEER_MAIN__.workersFailed,
+            rasterBlocked: window.__GAZETTEER_MAIN__.rasterBlocked, vectorAlive: window.__GAZETTEER_MAIN__.vectorAlive,
+            rasterAbandoned: window.__GAZETTEER_MAIN__.rasterAbandoned, contested: window.__GAZETTEER_MAIN__.contested,
             counters: { ...window.__GAZETTEER_MAIN__.counters } }
         : null,
     }));
@@ -77,7 +79,7 @@ try {
     console.log('  map hook:', JSON.stringify(observed.main));
     console.log(`  "${STALE}" left in visible text:`, staleCount, `| "${EXPECT}" present:`, freshCount);
 
-    // Design §7: assert against our own instrumentation, not against pixels.
+    // Assert against our own instrumentation, not against pixels.
     if (!observed.main) failures.push(`${EXPECT}: MAIN-world hook never installed`);
     else if (observed.main.wrapped === 0) failures.push(`${EXPECT}: no workers were wrapped`);
     else if (observed.main.failed > 0) failures.push(`${EXPECT}: ${observed.main.failed} worker(s) failed to wrap`);
@@ -87,6 +89,12 @@ try {
     if (observed.main) {
       const c = observed.main.counters;
       console.log(`  map counters: subs=${c.substitutions} whole=${c.whole} lines=${c.lines} shared=${c.shared} decodes=${c.decodes}`);
+      // The preview suppression gives up if the vector map never proves it is
+      // drawing. On a healthy run it must have proven it; giving up here means
+      // the proof signal broke, and users would see the old names flash.
+      if (observed.main.rasterBlocked > 0 && !observed.main.vectorAlive) {
+        failures.push(`${EXPECT}: previews were suppressed but the vector renderer never reported in`);
+      }
     }
     if (observed.title.includes(STALE)) failures.push(`${EXPECT}: document.title still contains "${STALE}"`);
     if (staleCount > 0) failures.push(`${EXPECT}: ${staleCount} occurrence(s) of "${STALE}" left in visible text`);
@@ -103,7 +111,7 @@ try {
     console.log('\nPASS — every visible occurrence was rewritten.');
   }
 } catch (error) {
-  // Design §7: a page that would not load is INFRA_ERROR, not a hook failure.
+  // A page that would not load is INFRA_ERROR, not a hook failure.
   console.error('INFRA_ERROR:', error.message);
   exitCode = 2;
 } finally {

@@ -4,7 +4,7 @@ import { mergeDefaults } from '../core/rules.ts';
 /**
  * The extension works with no background activity at all; this exists only to
  * seed defaults on first install so a new user gets a working extension without
- * opening the options page (design §6).
+ * opening the options page.
  */
 chrome.runtime.onInstalled.addListener(async () => {
   try {

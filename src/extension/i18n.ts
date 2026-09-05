@@ -2,7 +2,7 @@
  * Thin wrapper over chrome.i18n for the extension's own pages. English lives
  * in _locales/en and is the fallback for everything (default_locale).
  */
-import en from '../../_locales/en/messages.json';
+import en from '../../_locales/en/messages.json' with { type: 'json' };
 
 export function t(key: string, substitutions?: string | string[]): string {
   try {

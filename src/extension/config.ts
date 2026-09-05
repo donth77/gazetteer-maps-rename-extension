@@ -1,4 +1,4 @@
-import shipped from '../../data/names.json';
+import shipped from '../../data/names.json' with { type: 'json' };
 import { validateRules } from '../core/rules.ts';
 import type { Rule } from '../core/types.ts';
 
@@ -30,9 +30,9 @@ export interface GazetteerConfig {
 }
 
 /**
- * Storage area is deliberately `local`, never `sync`: design §3 lists config
- * sync as a non-goal, and `chrome.storage.sync` would upload the user's config
- * to Google. The privacy claim is "it talks to nothing" — keep it true.
+ * Storage area is deliberately `local`, never `sync`: syncing config is a
+ * non-goal, and `chrome.storage.sync` would upload the user's config to
+ * Google. The privacy claim is "it talks to nothing" — keep it true.
  */
 const area = () => chrome.storage.local;
 
@@ -50,7 +50,6 @@ export async function loadConfig(): Promise<GazetteerConfig> {
     const stored = await area().get(STORAGE_KEY);
     const raw = stored?.[STORAGE_KEY] as Partial<GazetteerConfig> | undefined;
     if (!raw) return defaultConfig();
-    const parsed = validateRules({ rules: raw.rules ?? [] });
     return {
       v: typeof raw.v === 'number' ? raw.v : 1,
       enabled: raw.enabled !== false,
@@ -61,21 +60,46 @@ export async function loadConfig(): Promise<GazetteerConfig> {
         : [],
       // Deliberately no default-merging here: new shipped rules are merged once
       // per update by the background worker, so deleting a rule sticks.
-      rules: parsed.ok ? parsed.rules : [],
+      rules: salvageRules(raw.rules),
     };
   } catch {
     return defaultConfig();
   }
 }
 
+/**
+ * Stored rules are read leniently: one damaged entry (a future schema change,
+ * a rolled-back version) must not empty the table, because the next save from
+ * any surface would then persist that emptiness.
+ */
+export function salvageRules(raw: unknown): Rule[] {
+  if (!Array.isArray(raw)) return [];
+  const whole = validateRules({ rules: raw });
+  if (whole.ok) return whole.rules;
+  const rules: Rule[] = [];
+  const ids = new Set<string>();
+  for (const entry of raw) {
+    const one = validateRules({ rules: [entry] });
+    if (!one.ok || ids.has(one.rules[0]!.id)) continue;
+    ids.add(one.rules[0]!.id);
+    rules.push(one.rules[0]!);
+  }
+  return rules;
+}
+
 export async function saveConfig(config: GazetteerConfig): Promise<void> {
   await area().set({ [STORAGE_KEY]: config });
 }
 
-/** Fires whenever any surface (options, popup, another tab) rewrites the config. */
-export function onConfigChanged(callback: (config: GazetteerConfig) => void): void {
+/**
+ * Fires whenever any surface (options, popup, another tab) rewrites the config.
+ * `stored` is the value exactly as written, for callers that need to tell
+ * their own writes from everyone else's.
+ */
+export function onConfigChanged(callback: (config: GazetteerConfig, stored: unknown) => void): void {
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== 'local' || !changes[STORAGE_KEY]) return;
-    loadConfig().then(callback).catch(() => { /* ignore */ });
+    const stored = changes[STORAGE_KEY].newValue;
+    loadConfig().then((config) => callback(config, stored)).catch(() => { /* ignore */ });
   });
 }

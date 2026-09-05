@@ -38,8 +38,14 @@ export function installWorkerHook(options: WorkerInjectOptions): WorkerInjectHan
   const NativeWorker = self.Worker;
   const nativeCreateObjectURL = URL.createObjectURL.bind(URL);
 
+  // The runtime must never take Google's worker down with it: a throw before
+  // the trailing importScripts would leave a worker that loads nothing. Wrapped
+  // here, at the one place every injected copy passes through.
+  const runtime = `try {\n${options.runtime}\n} catch (e) {}\n`;
+
   // Blob-backed workers are handed to us as an opaque URL; remember the Blob so
-  // we can rebuild it with our runtime in front.
+  // we can rebuild it with our runtime in front, and forget it when the page
+  // revokes the URL so a long session does not accumulate them.
   const blobsByUrl = new Map<string, Blob>();
   try {
     const original = URL.createObjectURL;
@@ -47,6 +53,11 @@ export function installWorkerHook(options: WorkerInjectOptions): WorkerInjectHan
       const url = original.call(URL, object);
       try { if (object instanceof Blob) blobsByUrl.set(url, object); } catch { /* ignore */ }
       return url;
+    };
+    const originalRevoke = URL.revokeObjectURL;
+    URL.revokeObjectURL = function (url: string): void {
+      try { blobsByUrl.delete(url); } catch { /* ignore */ }
+      return originalRevoke.call(URL, url);
     };
   } catch { /* ignore */ }
 
@@ -56,14 +67,14 @@ export function installWorkerHook(options: WorkerInjectOptions): WorkerInjectHan
       if (!source) return null;
       // blob -> blob keeps the URL shape the worker's own code expects.
       const blob = new Blob(
-        [preamble(raw, name), options.runtime, '\n', source],
+        [preamble(raw, name), runtime, '\n', source],
         { type: source.type || 'text/javascript' },
       );
       return nativeCreateObjectURL(blob);
     }
     const absolute = new URL(raw, location.href).href;
     const blob = new Blob(
-      [preamble(absolute, name), options.runtime, `\nimportScripts(${JSON.stringify(absolute)});\n`],
+      [preamble(absolute, name), runtime, `\nimportScripts(${JSON.stringify(absolute)});\n`],
       { type: 'text/javascript' },
     );
     return nativeCreateObjectURL(blob);
@@ -71,18 +82,24 @@ export function installWorkerHook(options: WorkerInjectOptions): WorkerInjectHan
 
   try {
     self.Worker = new Proxy(NativeWorker, {
-      construct(target, args: [string | URL, WorkerOptions?]) {
+      construct(target, args: [string | URL, WorkerOptions?], newTarget) {
         try {
-          const patched = patchedUrlFor(String(args[0]), args[1]?.name);
+          // importScripts does not exist in module workers, so the rewrite
+          // would never load Google's code, and it would fail asynchronously,
+          // past the fallback below. Leave those workers untouched: the map
+          // keeps working, labels just go unrenamed, and the health check
+          // notices.
+          const isModule = args[1]?.type === 'module';
+          const patched = isModule ? null : patchedUrlFor(String(args[0]), args[1]?.name);
           if (patched !== null) {
             state.wrapped++;
-            return Reflect.construct(target, [patched, args[1]]);
+            return Reflect.construct(target, [patched, args[1]], newTarget);
           }
         } catch {
           state.failed++;
         }
         // Never prevent the page from creating its worker.
-        return Reflect.construct(target, args);
+        return Reflect.construct(target, args, newTarget);
       },
     });
   } catch {

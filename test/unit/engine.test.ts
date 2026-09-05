@@ -33,7 +33,7 @@ test('substitutes inside a longer sentence, preserving both sides', () => {
   assert.equal(r.text, 'west of B, near the coast');
 });
 
-// The case design §6 calls out by name.
+// The compound form the shipped rules rely on.
 test('compound form is matched before the bare form (no "X (X)")', () => {
   const rules: Rule[] = [{
     id: 'gulf', enabled: true, substitutions: [
@@ -93,7 +93,35 @@ test('unicode replacements survive intact', () => {
 });
 
 test('adjacent matches with no separator are both replaced', () => {
-  assert.equal(substitute('AA', [sub('A', 'B')]).matches, 2);
+  assert.equal(substitute('(A)(A)', [sub('(A)', '(B)')]).matches, 2);
+});
+
+test('does not rewrite a name that is part of a longer word', () => {
+  const gulf = [sub('Gulf of America', 'Gulf of Mexico')];
+  assert.equal(substitute('Gulf of American Shrimp Co', gulf).changed, false);
+  assert.equal(substitute('Lake Americas', [sub('Lake America', 'Lake Ontario')]).changed, false);
+  assert.equal(substitute('TheGulf of America', gulf).changed, false);
+  // Two letters make one word, not two names.
+  assert.equal(substitute('AA', [sub('A', 'B')]).changed, false);
+});
+
+test('punctuation, spaces, and string edges count as word boundaries', () => {
+  const gulf = [sub('Gulf of America', 'Gulf of Mexico')];
+  assert.equal(substitute('Gulf of America', gulf).text, 'Gulf of Mexico');
+  assert.equal(substitute('(Gulf of America)', gulf).text, '(Gulf of Mexico)');
+  assert.equal(substitute("Gulf of America's coast", gulf).text, "Gulf of Mexico's coast");
+  assert.equal(substitute('Gulf of America, USA', gulf).text, 'Gulf of Mexico, USA');
+  assert.equal(substitute('Gulf of America\u00e9', gulf).changed, false); // accented letter is still a letter
+});
+
+test('scripts without word spacing are exempt from the boundary check', () => {
+  assert.equal(substitute('アメリカ湾岸', [sub('アメリカ湾', 'メキシコ湾')]).text, 'メキシコ湾岸');
+  assert.equal(substitute('墨西哥湾沿岸', [sub('墨西哥湾', '墨西哥灣')]).text, '墨西哥灣沿岸');
+});
+
+test('boundary check is code-point aware', () => {
+  // An emoji next to the name is not a letter, so the name still matches.
+  assert.equal(substitute('\u{1F30A}Gulf of America\u{1F30A}', [sub('Gulf of America', 'Gulf of Mexico')]).changed, true);
 });
 
 test('a match at the very end of the string is replaced', () => {

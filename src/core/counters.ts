@@ -12,7 +12,7 @@ export function createCounters(): Counters {
 
 /**
  * Collapse a set of hook counters into the four states the health check
- * distinguishes (design §7). INFRA_ERROR is decided by the caller, not here —
+ * distinguishes. INFRA_ERROR is decided by the caller, not here —
  * this function only sees what the hooks reported.
  */
 export type HealthState = 'OK' | 'HOOK_NOT_INSTALLED' | 'INSTALLED_NO_MATCH';

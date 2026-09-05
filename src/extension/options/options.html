@@ -35,8 +35,8 @@
         <span>
           <strong data-i18n="rasterToggleLabel">Hide old names while loading</strong>
           <span class="pref-hint" data-i18n="rasterToggleHint">While the map loads, Google briefly shows a preview image that
-          still has the old names. While enabled, you see a loading grid instead, and the first names to appear are your renamed ones. Disabled by default on
-          devices that can't run the full map.</span>
+          still has the old names on it. With this on, you see a plain gray loading grid instead, and the first names to appear
+          are your renamed ones. Turns itself off on computers that can't run the full map.</span>
         </span>
       </label>
       <label class="pref">
@@ -45,7 +45,8 @@
         <span>
           <strong data-i18n="searchToggleLabel">Show renamed places in the search box</strong>
           <span class="pref-hint" data-i18n="searchToggleHint">After a search, Maps fills the search box with a place's old
-          name. While enabled, the box shows your renamed version instead.</span>
+          name. With this on, the box shows your renamed version instead. One thing to know: searching again will look up the
+          renamed text, and an invented name may find nothing. Text you type yourself is never changed.</span>
         </span>
       </label>
     </section>
@@ -70,13 +71,13 @@
     </section>
   </main>
 
-  <div class="saved-pill" id="saved" role="status" aria-live="polite" hidden data-i18n="savedPill">Saved</div>
+  <div class="saved-pill" id="saved" role="status" aria-live="polite"></div>
 
   <dialog id="confirm-dialog" aria-labelledby="confirm-message">
     <p id="confirm-message"></p>
     <div class="dialog-actions">
       <button type="button" id="confirm-cancel" class="btn" data-i18n="dialogCancel">Cancel</button>
-      <button type="button" id="confirm-ok" class="btn danger">Delete</button>
+      <button type="button" id="confirm-ok" class="btn danger" data-i18n="dialogDelete">Delete</button>
     </div>
   </dialog>
 

@@ -175,5 +175,41 @@
   },
   "rulesRegionLabel": {
     "message": "Umbenennungsregeln"
+  },
+  "uiLang": {
+    "message": "de"
+  },
+  "importErrNotObject": {
+    "message": "Die Datei ist kein JSON-Objekt."
+  },
+  "importErrMissingRules": {
+    "message": "Die Datei hat keine \"rules\"-Liste."
+  },
+  "importErrRuleNotObject": {
+    "message": "Ort $1 ist kein Objekt."
+  },
+  "importErrRuleNeedsId": {
+    "message": "Ort $1 braucht eine id."
+  },
+  "importErrDuplicateId": {
+    "message": "Zwei Orte haben dieselbe id \"$1\"."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "Ort \"$1\" braucht eine \"substitutions\"-Liste."
+  },
+  "importErrRenameNotObject": {
+    "message": "Umbenennung $2 in \"$1\" ist kein Objekt."
+  },
+  "importErrRenameNeedsText": {
+    "message": "Umbenennung $2 in \"$1\" braucht Text in \"from\" und \"to\"."
+  },
+  "importErrTooLarge": {
+    "message": "Die Datei ist größer als 1 MB."
+  },
+  "importErrNotJson": {
+    "message": "Die Datei ist kein gültiges JSON."
+  },
+  "importErrNotSaved": {
+    "message": "Die Umbenennungen konnten nicht gespeichert werden. Möglicherweise hat Chrome keinen Speicherplatz mehr."
   }
 }

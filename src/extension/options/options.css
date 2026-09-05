@@ -8,7 +8,10 @@
   --accent: #0b6b5e;
   --accent-ink: #ffffff;
   --danger: #a4232b;
+  --danger-ink: #ffffff;
   --note-bg: #eef4f3;
+  /* Boundaries of controls (switch tracks, text fields): 3:1 against the page. */
+  --control: #7f8894;
   --radius: 10px;
 }
 @media (prefers-color-scheme: dark) {
@@ -21,8 +24,13 @@
     --accent: #4bbfa8;
     --accent-ink: #10221f;
     --danger: #f08a90;
+    --danger-ink: #2a0b0e;
     --note-bg: #1b2624;
+    --control: #5f6974;
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
 }
 
 * { box-sizing: border-box; }
@@ -57,7 +65,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .
 .master, .rule-enable { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
 .master input, .rule-enable input { position: absolute; opacity: 0; width: 0; height: 0; }
 .switch {
-  width: 38px; height: 22px; border-radius: 999px; background: var(--line);
+  width: 38px; height: 22px; border-radius: 999px; background: var(--control);
   position: relative; transition: background .15s ease; flex: none;
 }
 .switch::after {
@@ -74,7 +82,9 @@ input:focus-visible + .switch { outline: 2px solid var(--accent); outline-offset
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 1rem; margin-bottom: .9rem;
 }
-.rule.disabled { opacity: .62; }
+/* Off: visibly set aside, without dimming text below readable contrast. */
+.rule.disabled { border-style: dashed; background: transparent; }
+.rule.disabled .title-input, .rule.disabled .subs th { color: var(--muted); }
 .rule-head { display: flex; align-items: flex-start; gap: .75rem; }
 .rule-titles { flex: 1; min-width: 0; }
 .title-input {
@@ -96,7 +106,7 @@ table.subs { width: 100%; border-collapse: collapse; margin: .75rem 0 .5rem; }
 .subs td { padding: .18rem .25rem; }
 .subs tbody:empty + * { margin-top: 0; }
 .subs input {
-  width: 100%; padding: .4rem .5rem; border: 1px solid var(--line);
+  width: 100%; padding: .4rem .5rem; border: 1px solid var(--control);
   border-radius: 6px; background: var(--bg); color: var(--ink); font: inherit;
 }
 .subs input:focus-visible, .title-input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
@@ -147,6 +157,7 @@ table.subs { width: 100%; border-collapse: collapse; margin: .75rem 0 .5rem; }
   background: var(--accent); color: var(--accent-ink); font-weight: 600;
   padding: .45rem 1rem; border-radius: 999px; box-shadow: 0 4px 14px rgb(0 0 0 / .18);
 }
+.saved-pill:empty { display: none; }
 .empty { color: var(--muted); text-align: center; padding: 2rem 1rem; }
 
 .prefs { margin: 0 0 1.25rem; display: grid; gap: .6rem; }
@@ -167,4 +178,4 @@ dialog {
 dialog::backdrop { background: rgb(0 0 0 / .35); }
 dialog p { margin: 0; }
 .dialog-actions { display: flex; gap: .5rem; justify-content: flex-end; margin-top: 1.1rem; }
-.btn.danger { background: var(--danger); color: #fff; border-color: transparent; font-weight: 600; }
+.btn.danger { background: var(--danger); color: var(--danger-ink); border-color: transparent; font-weight: 600; }

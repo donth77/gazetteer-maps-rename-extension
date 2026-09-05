@@ -175,5 +175,41 @@
   },
   "rulesRegionLabel": {
     "message": "名前変更ルール"
+  },
+  "uiLang": {
+    "message": "ja"
+  },
+  "importErrNotObject": {
+    "message": "ファイルが JSON オブジェクトではありません。"
+  },
+  "importErrMissingRules": {
+    "message": "ファイルに \"rules\" のリストがありません。"
+  },
+  "importErrRuleNotObject": {
+    "message": "$1 番目の場所がオブジェクトではありません。"
+  },
+  "importErrRuleNeedsId": {
+    "message": "$1 番目の場所に id が必要です。"
+  },
+  "importErrDuplicateId": {
+    "message": "2 つの場所が同じ id \"$1\" を使っています。"
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "場所 \"$1\" に \"substitutions\" のリストが必要です。"
+  },
+  "importErrRenameNotObject": {
+    "message": "\"$1\" の $2 番目の名前変更がオブジェクトではありません。"
+  },
+  "importErrRenameNeedsText": {
+    "message": "\"$1\" の $2 番目の名前変更に \"from\" と \"to\" のテキストが必要です。"
+  },
+  "importErrTooLarge": {
+    "message": "ファイルが 1 MB を超えています。"
+  },
+  "importErrNotJson": {
+    "message": "ファイルが有効な JSON ではありません。"
+  },
+  "importErrNotSaved": {
+    "message": "名前変更を保存できませんでした。Chrome の保存領域が不足している可能性があります。"
   }
 }

@@ -1,4 +1,4 @@
-# Gating checks (design doc §10): deterministic, offline, fast. The live health
+# Gating checks: deterministic, offline, fast. The live health
 # check deliberately does NOT run here — monitoring never blocks a merge.
 name: ci
 on:

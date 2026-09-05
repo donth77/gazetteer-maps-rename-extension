@@ -175,5 +175,41 @@
   },
   "rulesRegionLabel": {
     "message": "Règles de renommage"
+  },
+  "uiLang": {
+    "message": "fr"
+  },
+  "importErrNotObject": {
+    "message": "Le fichier n'est pas un objet JSON."
+  },
+  "importErrMissingRules": {
+    "message": "Le fichier n'a pas de liste \"rules\"."
+  },
+  "importErrRuleNotObject": {
+    "message": "Le lieu $1 n'est pas un objet."
+  },
+  "importErrRuleNeedsId": {
+    "message": "Le lieu $1 a besoin d'un id."
+  },
+  "importErrDuplicateId": {
+    "message": "Deux lieux partagent l'id \"$1\"."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "Le lieu \"$1\" a besoin d'une liste \"substitutions\"."
+  },
+  "importErrRenameNotObject": {
+    "message": "Le renommage $2 de \"$1\" n'est pas un objet."
+  },
+  "importErrRenameNeedsText": {
+    "message": "Le renommage $2 de \"$1\" a besoin d'un texte \"from\" et \"to\"."
+  },
+  "importErrTooLarge": {
+    "message": "Le fichier dépasse 1 Mo."
+  },
+  "importErrNotJson": {
+    "message": "Le fichier n'est pas du JSON valide."
+  },
+  "importErrNotSaved": {
+    "message": "Les renommages n'ont pas pu être enregistrés. Chrome manque peut-être d'espace de stockage."
   }
 }

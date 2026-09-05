@@ -36,7 +36,7 @@ export interface CompiledSubstitution {
 }
 
 /**
- * Per-hook instrumentation (design §5). The health check asserts against these
+ * Per-hook instrumentation. The health check asserts against these
  * rather than against pixels.
  */
 export interface Counters {
