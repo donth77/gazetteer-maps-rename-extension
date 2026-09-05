@@ -132,7 +132,7 @@
     "message": "Diese Seite wird umbenannt ($1)"
   },
   "statusNotInstalled": {
-    "message": "Komponente wurde nicht installiert"
+    "message": "Läuft auf dieser Seite nicht"
   },
   "statusNoLocaleRules": {
     "message": "Keine aktiven Regeln für diese Sprache"

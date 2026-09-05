@@ -132,7 +132,7 @@
     "message": "Rewriting this page ($1)"
   },
   "statusNotInstalled": {
-    "message": "Hook did not install"
+    "message": "Not running on this page"
   },
   "statusNoLocaleRules": {
     "message": "No rules active for this language"

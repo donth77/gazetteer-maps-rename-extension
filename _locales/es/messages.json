@@ -132,7 +132,7 @@
     "message": "Renombrando esta página ($1)"
   },
   "statusNotInstalled": {
-    "message": "El componente no se instaló"
+    "message": "No se está ejecutando en esta página"
   },
   "statusNoLocaleRules": {
     "message": "No hay reglas activas para este idioma"

@@ -1,0 +1,206 @@
+{
+  "extDescription": {
+    "message": "在 Google 地图上恢复墨西哥湾、安大略湖以及任何其他被改名的地点。"
+  },
+  "settingsTitle": {
+    "message": "Gazetteer 设置"
+  },
+  "tagline": {
+    "message": "由你决定 Google 地图怎么称呼各个地方。"
+  },
+  "toggleEnabled": {
+    "message": "已启用"
+  },
+  "rasterToggleLabel": {
+    "message": "加载时隐藏旧名称"
+  },
+  "rasterToggleHint": {
+    "message": "地图加载时，Google 会短暂显示一张仍带有旧名称的预览图。开启后，你会看到一个灰色的加载网格，最先出现的名称就是你改过的名称。在无法运行完整地图的电脑上会自动关闭。"
+  },
+  "colLanguage": {
+    "message": "语言"
+  },
+  "colGoogleShows": {
+    "message": "Google 显示为"
+  },
+  "colShowInstead": {
+    "message": "改为显示"
+  },
+  "colRemove": {
+    "message": "移除"
+  },
+  "phRuleDescription": {
+    "message": "这条规则恢复什么"
+  },
+  "phFrom": {
+    "message": "地图上显示的名称"
+  },
+  "phTo": {
+    "message": "要显示的名称"
+  },
+  "ariaRuleDescription": {
+    "message": "规则说明"
+  },
+  "ariaFrom": {
+    "message": "要匹配的文字"
+  },
+  "ariaTo": {
+    "message": "替换后的文字"
+  },
+  "ariaLanguage": {
+    "message": "此改名适用的语言"
+  },
+  "ariaDeleteRule": {
+    "message": "删除此规则"
+  },
+  "ariaRemoveRename": {
+    "message": "移除此改名"
+  },
+  "addRename": {
+    "message": "添加改名"
+  },
+  "addPlace": {
+    "message": "添加地点"
+  },
+  "backupHeading": {
+    "message": "备份"
+  },
+  "backupHint": {
+    "message": "导出会把你的改名保存为文件，便于备份或分享。导入会用文件内容替换全部内容。"
+  },
+  "exportJson": {
+    "message": "导出 JSON"
+  },
+  "importJson": {
+    "message": "导入 JSON"
+  },
+  "restoreDefaults": {
+    "message": "恢复默认"
+  },
+  "savedPill": {
+    "message": "已保存"
+  },
+  "emptyRules": {
+    "message": "还没有设置任何地点。在下方添加一个。"
+  },
+  "importError": {
+    "message": "无法导入：$1"
+  },
+  "confirmDeleteRule": {
+    "message": "删除“$1”及其所有改名？"
+  },
+  "confirmRemoveRename": {
+    "message": "移除“$1”改为“$2”这条改名？"
+  },
+  "confirmRestore": {
+    "message": "用自带的默认设置替换你的全部改名？"
+  },
+  "dialogCancel": {
+    "message": "取消"
+  },
+  "dialogDelete": {
+    "message": "删除"
+  },
+  "dialogRemove": {
+    "message": "移除"
+  },
+  "dialogRestore": {
+    "message": "恢复"
+  },
+  "allLanguages": {
+    "message": "所有语言"
+  },
+  "noMatchingLanguage": {
+    "message": "没有匹配的语言"
+  },
+  "popupNoRules": {
+    "message": "尚未设置规则。"
+  },
+  "popupRenameCountOne": {
+    "message": "1 条改名"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 条改名"
+  },
+  "statusOff": {
+    "message": "已关闭"
+  },
+  "statusRewritingPageMap": {
+    "message": "正在改写页面和地图（$1）"
+  },
+  "statusRewritingPage": {
+    "message": "正在改写此页面（$1）"
+  },
+  "statusNotInstalled": {
+    "message": "未在此页面运行"
+  },
+  "statusNoLocaleRules": {
+    "message": "没有适用于此语言的规则"
+  },
+  "statusNothingHere": {
+    "message": "已运行，此处无需更改"
+  },
+  "summaryOne": {
+    "message": "此处已改写 1 个名称"
+  },
+  "summaryMany": {
+    "message": "此处已改写 $1 个名称"
+  },
+  "contestedWarning": {
+    "message": "你的两个地点在地图上共用同一个词，先前绘制的标签可能显示了错误的名称。重新加载标签页即可重绘。"
+  },
+  "offsite": {
+    "message": "打开 Google 地图即可在此查看状态。"
+  },
+  "openSettings": {
+    "message": "设置"
+  },
+  "reloadTab": {
+    "message": "重新加载标签页"
+  },
+  "ariaMasterToggle": {
+    "message": "开启或关闭改名"
+  },
+  "ariaEnableRule": {
+    "message": "启用 $1"
+  },
+  "rulesRegionLabel": {
+    "message": "改名规则"
+  },
+  "uiLang": {
+    "message": "zh-CN"
+  },
+  "importErrNotObject": {
+    "message": "文件不是 JSON 对象。"
+  },
+  "importErrMissingRules": {
+    "message": "文件中没有 \"rules\" 列表。"
+  },
+  "importErrRuleNotObject": {
+    "message": "第 $1 个地点不是对象。"
+  },
+  "importErrRuleNeedsId": {
+    "message": "第 $1 个地点需要 id。"
+  },
+  "importErrDuplicateId": {
+    "message": "两个地点使用了同一个 id \"$1\"。"
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "地点 \"$1\" 需要 \"substitutions\" 列表。"
+  },
+  "importErrRenameNotObject": {
+    "message": "\"$1\" 中的第 $2 条改名不是对象。"
+  },
+  "importErrRenameNeedsText": {
+    "message": "\"$1\" 中的第 $2 条改名需要 \"from\" 和 \"to\" 文字。"
+  },
+  "importErrTooLarge": {
+    "message": "文件大于 1 MB。"
+  },
+  "importErrNotJson": {
+    "message": "文件不是有效的 JSON。"
+  },
+  "importErrNotSaved": {
+    "message": "无法保存改名。Chrome 的存储空间可能已满。"
+  }
+}

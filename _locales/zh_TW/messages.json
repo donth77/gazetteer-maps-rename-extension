@@ -1,0 +1,206 @@
+{
+  "extDescription": {
+    "message": "在 Google 地圖上恢復墨西哥灣、安大略湖以及任何其他被改名的地點。"
+  },
+  "settingsTitle": {
+    "message": "Gazetteer 設定"
+  },
+  "tagline": {
+    "message": "由你決定 Google 地圖怎麼稱呼各個地方。"
+  },
+  "toggleEnabled": {
+    "message": "已啟用"
+  },
+  "rasterToggleLabel": {
+    "message": "載入時隱藏舊名稱"
+  },
+  "rasterToggleHint": {
+    "message": "地圖載入時，Google 會短暫顯示一張仍帶有舊名稱的預覽圖。開啟後，你會看到灰色的載入格線，最先出現的名稱就是你改過的名稱。在無法執行完整地圖的電腦上會自動關閉。"
+  },
+  "colLanguage": {
+    "message": "語言"
+  },
+  "colGoogleShows": {
+    "message": "Google 顯示為"
+  },
+  "colShowInstead": {
+    "message": "改為顯示"
+  },
+  "colRemove": {
+    "message": "移除"
+  },
+  "phRuleDescription": {
+    "message": "這條規則恢復什麼"
+  },
+  "phFrom": {
+    "message": "地圖上顯示的名稱"
+  },
+  "phTo": {
+    "message": "要顯示的名稱"
+  },
+  "ariaRuleDescription": {
+    "message": "規則說明"
+  },
+  "ariaFrom": {
+    "message": "要比對的文字"
+  },
+  "ariaTo": {
+    "message": "取代後的文字"
+  },
+  "ariaLanguage": {
+    "message": "此改名適用的語言"
+  },
+  "ariaDeleteRule": {
+    "message": "刪除此規則"
+  },
+  "ariaRemoveRename": {
+    "message": "移除此改名"
+  },
+  "addRename": {
+    "message": "新增改名"
+  },
+  "addPlace": {
+    "message": "新增地點"
+  },
+  "backupHeading": {
+    "message": "備份"
+  },
+  "backupHint": {
+    "message": "匯出會把你的改名儲存為檔案，方便備份或分享。匯入會用檔案內容取代全部內容。"
+  },
+  "exportJson": {
+    "message": "匯出 JSON"
+  },
+  "importJson": {
+    "message": "匯入 JSON"
+  },
+  "restoreDefaults": {
+    "message": "還原預設值"
+  },
+  "savedPill": {
+    "message": "已儲存"
+  },
+  "emptyRules": {
+    "message": "還沒有設定任何地點。請在下方新增。"
+  },
+  "importError": {
+    "message": "無法匯入：$1"
+  },
+  "confirmDeleteRule": {
+    "message": "刪除「$1」及其所有改名？"
+  },
+  "confirmRemoveRename": {
+    "message": "移除「$1」改為「$2」這條改名？"
+  },
+  "confirmRestore": {
+    "message": "用內建的預設值取代你的全部改名？"
+  },
+  "dialogCancel": {
+    "message": "取消"
+  },
+  "dialogDelete": {
+    "message": "刪除"
+  },
+  "dialogRemove": {
+    "message": "移除"
+  },
+  "dialogRestore": {
+    "message": "還原"
+  },
+  "allLanguages": {
+    "message": "所有語言"
+  },
+  "noMatchingLanguage": {
+    "message": "沒有相符的語言"
+  },
+  "popupNoRules": {
+    "message": "尚未設定規則。"
+  },
+  "popupRenameCountOne": {
+    "message": "1 條改名"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 條改名"
+  },
+  "statusOff": {
+    "message": "已關閉"
+  },
+  "statusRewritingPageMap": {
+    "message": "正在改寫頁面和地圖（$1）"
+  },
+  "statusRewritingPage": {
+    "message": "正在改寫此頁面（$1）"
+  },
+  "statusNotInstalled": {
+    "message": "未在此頁面執行"
+  },
+  "statusNoLocaleRules": {
+    "message": "沒有適用於此語言的規則"
+  },
+  "statusNothingHere": {
+    "message": "已執行，此處無需變更"
+  },
+  "summaryOne": {
+    "message": "此處已改寫 1 個名稱"
+  },
+  "summaryMany": {
+    "message": "此處已改寫 $1 個名稱"
+  },
+  "contestedWarning": {
+    "message": "你的兩個地點在地圖上共用同一個詞，先前繪製的標籤可能顯示了錯誤的名稱。重新載入分頁即可重繪。"
+  },
+  "offsite": {
+    "message": "開啟 Google 地圖即可在此查看狀態。"
+  },
+  "openSettings": {
+    "message": "設定"
+  },
+  "reloadTab": {
+    "message": "重新載入分頁"
+  },
+  "ariaMasterToggle": {
+    "message": "開啟或關閉改名"
+  },
+  "ariaEnableRule": {
+    "message": "啟用 $1"
+  },
+  "rulesRegionLabel": {
+    "message": "改名規則"
+  },
+  "uiLang": {
+    "message": "zh-TW"
+  },
+  "importErrNotObject": {
+    "message": "檔案不是 JSON 物件。"
+  },
+  "importErrMissingRules": {
+    "message": "檔案中沒有 \"rules\" 清單。"
+  },
+  "importErrRuleNotObject": {
+    "message": "第 $1 個地點不是物件。"
+  },
+  "importErrRuleNeedsId": {
+    "message": "第 $1 個地點需要 id。"
+  },
+  "importErrDuplicateId": {
+    "message": "兩個地點使用了同一個 id \"$1\"。"
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "地點 \"$1\" 需要 \"substitutions\" 清單。"
+  },
+  "importErrRenameNotObject": {
+    "message": "\"$1\" 中的第 $2 條改名不是物件。"
+  },
+  "importErrRenameNeedsText": {
+    "message": "\"$1\" 中的第 $2 條改名需要 \"from\" 和 \"to\" 文字。"
+  },
+  "importErrTooLarge": {
+    "message": "檔案大於 1 MB。"
+  },
+  "importErrNotJson": {
+    "message": "檔案不是有效的 JSON。"
+  },
+  "importErrNotSaved": {
+    "message": "無法儲存改名。Chrome 的儲存空間可能已滿。"
+  }
+}

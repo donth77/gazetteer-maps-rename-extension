@@ -132,7 +132,7 @@
     "message": "Renommage de cette page ($1)"
   },
   "statusNotInstalled": {
-    "message": "Le composant ne s’est pas installé"
+    "message": "Ne fonctionne pas sur cette page"
   },
   "statusNoLocaleRules": {
     "message": "Aucune règle active pour cette langue"

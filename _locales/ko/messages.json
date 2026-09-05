@@ -1,0 +1,206 @@
+{
+  "extDescription": {
+    "message": "Google 지도에서 멕시코만, 온타리오호 등 이름이 바뀐 장소를 원래 이름으로 되돌립니다."
+  },
+  "settingsTitle": {
+    "message": "Gazetteer 설정"
+  },
+  "tagline": {
+    "message": "Google 지도가 장소를 무엇이라고 부를지 직접 정하세요."
+  },
+  "toggleEnabled": {
+    "message": "사용"
+  },
+  "rasterToggleLabel": {
+    "message": "로딩 중에 이전 이름 숨기기"
+  },
+  "rasterToggleHint": {
+    "message": "지도가 로딩되는 동안 Google은 이전 이름이 그대로 적힌 미리보기 이미지를 잠깐 보여줍니다. 이 설정을 켜면 대신 회색 로딩 격자가 표시되고, 처음 나타나는 이름은 바꾼 이름입니다. 전체 지도를 실행할 수 없는 컴퓨터에서는 자동으로 꺼집니다."
+  },
+  "colLanguage": {
+    "message": "언어"
+  },
+  "colGoogleShows": {
+    "message": "Google 표시 이름"
+  },
+  "colShowInstead": {
+    "message": "대신 표시할 이름"
+  },
+  "colRemove": {
+    "message": "삭제"
+  },
+  "phRuleDescription": {
+    "message": "무엇을 되돌리는지"
+  },
+  "phFrom": {
+    "message": "지도에 표시되는 이름"
+  },
+  "phTo": {
+    "message": "표시할 이름"
+  },
+  "ariaRuleDescription": {
+    "message": "규칙 설명"
+  },
+  "ariaFrom": {
+    "message": "찾을 텍스트"
+  },
+  "ariaTo": {
+    "message": "바꿀 텍스트"
+  },
+  "ariaLanguage": {
+    "message": "이 이름 변경을 적용할 언어"
+  },
+  "ariaDeleteRule": {
+    "message": "이 규칙 삭제"
+  },
+  "ariaRemoveRename": {
+    "message": "이 이름 변경 삭제"
+  },
+  "addRename": {
+    "message": "이름 변경 추가"
+  },
+  "addPlace": {
+    "message": "장소 추가"
+  },
+  "backupHeading": {
+    "message": "백업"
+  },
+  "backupHint": {
+    "message": "내보내기는 이름 변경 목록을 파일로 저장합니다. 백업하거나 공유할 때 사용하세요. 가져오기는 파일 내용으로 전부 교체합니다."
+  },
+  "exportJson": {
+    "message": "JSON 내보내기"
+  },
+  "importJson": {
+    "message": "JSON 가져오기"
+  },
+  "restoreDefaults": {
+    "message": "기본값 복원"
+  },
+  "savedPill": {
+    "message": "저장됨"
+  },
+  "emptyRules": {
+    "message": "아직 설정한 장소가 없습니다. 아래에서 추가하세요."
+  },
+  "importError": {
+    "message": "가져오지 못했습니다: $1"
+  },
+  "confirmDeleteRule": {
+    "message": "\"$1\"과(와) 그 이름 변경을 삭제할까요?"
+  },
+  "confirmRemoveRename": {
+    "message": "\"$1\"에서 \"$2\"(으)로 바꾸는 이름 변경을 삭제할까요?"
+  },
+  "confirmRestore": {
+    "message": "모든 이름 변경을 기본 제공 값으로 교체할까요?"
+  },
+  "dialogCancel": {
+    "message": "취소"
+  },
+  "dialogDelete": {
+    "message": "삭제"
+  },
+  "dialogRemove": {
+    "message": "삭제"
+  },
+  "dialogRestore": {
+    "message": "복원"
+  },
+  "allLanguages": {
+    "message": "모든 언어"
+  },
+  "noMatchingLanguage": {
+    "message": "일치하는 언어가 없습니다"
+  },
+  "popupNoRules": {
+    "message": "설정된 규칙이 없습니다."
+  },
+  "popupRenameCountOne": {
+    "message": "이름 변경 1개"
+  },
+  "popupRenameCountMany": {
+    "message": "이름 변경 $1개"
+  },
+  "statusOff": {
+    "message": "꺼짐"
+  },
+  "statusRewritingPageMap": {
+    "message": "페이지와 지도를 바꾸는 중 ($1)"
+  },
+  "statusRewritingPage": {
+    "message": "이 페이지를 바꾸는 중 ($1)"
+  },
+  "statusNotInstalled": {
+    "message": "이 페이지에서 실행되지 않음"
+  },
+  "statusNoLocaleRules": {
+    "message": "이 언어에 적용되는 규칙이 없습니다"
+  },
+  "statusNothingHere": {
+    "message": "실행 중, 바꿀 내용 없음"
+  },
+  "summaryOne": {
+    "message": "여기서 이름 1개를 바꿨습니다"
+  },
+  "summaryMany": {
+    "message": "여기서 이름 $1개를 바꿨습니다"
+  },
+  "contestedWarning": {
+    "message": "장소 두 곳이 지도에서 같은 단어를 공유하고 있어, 먼저 그려진 라벨이 잘못된 이름을 표시할 수 있습니다. 탭을 새로고침하면 다시 그려집니다."
+  },
+  "offsite": {
+    "message": "상태를 보려면 Google 지도를 여세요."
+  },
+  "openSettings": {
+    "message": "설정"
+  },
+  "reloadTab": {
+    "message": "탭 새로고침"
+  },
+  "ariaMasterToggle": {
+    "message": "이름 변경 켜기 또는 끄기"
+  },
+  "ariaEnableRule": {
+    "message": "$1 사용"
+  },
+  "rulesRegionLabel": {
+    "message": "이름 변경 규칙"
+  },
+  "uiLang": {
+    "message": "ko"
+  },
+  "importErrNotObject": {
+    "message": "파일이 JSON 객체가 아닙니다."
+  },
+  "importErrMissingRules": {
+    "message": "파일에 \"rules\" 목록이 없습니다."
+  },
+  "importErrRuleNotObject": {
+    "message": "$1번째 장소가 객체가 아닙니다."
+  },
+  "importErrRuleNeedsId": {
+    "message": "$1번째 장소에 id가 필요합니다."
+  },
+  "importErrDuplicateId": {
+    "message": "두 장소가 같은 id \"$1\"을(를) 사용합니다."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "장소 \"$1\"에 \"substitutions\" 목록이 필요합니다."
+  },
+  "importErrRenameNotObject": {
+    "message": "\"$1\"의 $2번째 이름 변경이 객체가 아닙니다."
+  },
+  "importErrRenameNeedsText": {
+    "message": "\"$1\"의 $2번째 이름 변경에 \"from\"과 \"to\" 텍스트가 필요합니다."
+  },
+  "importErrTooLarge": {
+    "message": "파일이 1 MB보다 큽니다."
+  },
+  "importErrNotJson": {
+    "message": "파일이 올바른 JSON이 아닙니다."
+  },
+  "importErrNotSaved": {
+    "message": "이름 변경을 저장하지 못했습니다. Chrome의 저장 공간이 부족할 수 있습니다."
+  }
+}

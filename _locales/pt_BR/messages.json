@@ -132,7 +132,7 @@
     "message": "Renomeando esta página ($1)"
   },
   "statusNotInstalled": {
-    "message": "O componente não foi instalado"
+    "message": "Não está em execução nesta página"
   },
   "statusNoLocaleRules": {
     "message": "Nenhuma regra ativa para este idioma"

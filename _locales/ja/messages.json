@@ -132,7 +132,7 @@
     "message": "このページを書き換え中 ($1)"
   },
   "statusNotInstalled": {
-    "message": "コンポーネントがインストールされませんでした"
+    "message": "このページでは動作していません"
   },
   "statusNoLocaleRules": {
     "message": "この言語で有効なルールはありません"
