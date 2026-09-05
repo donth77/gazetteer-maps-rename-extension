@@ -63,8 +63,9 @@ export async function launchWithExtension({ headless = true, viewport, extraArgs
     headless,
     ...(viewport ? { viewport } : {}),
     // Playwright turns this into the browser's own --lang; passing the switch
-    // directly loses to the one Playwright appends.
-    ...(locale ? { locale } : {}),
+    // directly loses to the one Playwright appends. Chrome picks the locale
+    // for extension catalogs from the environment on Linux, so set that too.
+    ...(locale ? { locale, env: { ...process.env, LANGUAGE: locale, LANG: `${locale.replace('-', '_')}.UTF-8` } } : {}),
     args: [
       '--enable-unsafe-extension-debugging',
       `--disable-extensions-except=${ext}`,

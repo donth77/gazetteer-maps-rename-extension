@@ -98,3 +98,32 @@ test('locale aliases point at real catalogs and never shadow one', () => {
   assert.equal(aliases.zh, 'zh_CN');
   assert.equal(aliases.zh_HK, 'zh_TW');
 });
+
+/**
+ * Chrome picks an extension's catalog by trying the UI locale, then its parent
+ * language, then default_locale. This walks that algorithm over the directories
+ * the build actually ships, so the aliases are checked without a browser.
+ */
+test('every UI locale resolves to the intended catalog', () => {
+  const { aliases } = JSON.parse(read('data/locale-aliases.json')) as { aliases: Record<string, string> };
+  const shipped = new Set([...LOCALES, ...Object.keys(aliases)]);
+  const resolve = (ui: string): string => {
+    const dir = ui.replace('-', '_');
+    for (const candidate of [dir, dir.split('_')[0]!]) {
+      if (shipped.has(candidate)) return (aliases[candidate] ?? candidate).replace('_', '-');
+    }
+    return 'en';
+  };
+  const expected: Record<string, string> = {
+    'en': 'en', 'en-GB': 'en',
+    'es': 'es', 'es-419': 'es', 'es-MX': 'es',
+    'fr': 'fr', 'fr-CA': 'fr',
+    'de': 'de', 'de-AT': 'de',
+    'ja': 'ja', 'ko': 'ko', 'ko-KR': 'ko',
+    'pt': 'pt-BR', 'pt-BR': 'pt-BR', 'pt-PT': 'pt-PT',
+    'zh': 'zh-CN', 'zh-CN': 'zh-CN', 'zh-SG': 'zh-CN',
+    'zh-TW': 'zh-TW', 'zh-HK': 'zh-TW',
+    'it': 'en', 'ru': 'en', // no catalog: default_locale
+  };
+  for (const [ui, want] of Object.entries(expected)) assert.equal(resolve(ui), want, `${ui} should use ${want}`);
+});
