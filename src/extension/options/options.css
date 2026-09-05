@@ -55,12 +55,6 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .
 .brand img { border-radius: 8px; }
 .tagline { margin: .1rem 0 0; color: var(--muted); font-size: .85rem; }
 
-.notice {
-  background: var(--note-bg); border: 1px solid var(--line); border-left: 3px solid var(--accent);
-  border-radius: var(--radius); padding: .8rem 1rem; margin: 0 0 1.25rem; color: var(--muted);
-}
-.notice strong { color: var(--ink); }
-
 /* toggle switch */
 .master, .rule-enable { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
 .master input, .rule-enable input { position: absolute; opacity: 0; width: 0; height: 0; }

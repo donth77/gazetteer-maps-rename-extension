@@ -8,9 +8,6 @@
   "tagline": {
     "message": "Contrôlez comment Google Maps nomme les lieux."
   },
-  "scopeNotice": {
-    "message": "Gazetteer renomme les lieux dans le panneau latéral, dans les résultats de recherche, dans le titre de l'onglet et sur la carte elle-même. Si une étiquette était déjà affichée avant l'enregistrement d'une modification, elle sera mise à jour au prochain redessin de la carte. Déplacez la carte, zoomez ou rechargez l'onglet pour le voir immédiatement."
-  },
   "toggleEnabled": {
     "message": "Activé"
   },

@@ -8,9 +8,6 @@
   "tagline": {
     "message": "Controle como o Google Maps chama os lugares."
   },
-  "scopeNotice": {
-    "message": "O Gazetteer renomeia lugares na barra lateral, nos resultados de pesquisa, no título da guia e no próprio mapa. Se um rótulo já estava na tela antes de você salvar uma alteração, ele será atualizado na próxima vez que o mapa for redesenhado. Mova o mapa, aplique zoom ou recarregue a guia para ver imediatamente."
-  },
   "toggleEnabled": {
     "message": "Ativado"
   },

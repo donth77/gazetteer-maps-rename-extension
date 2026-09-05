@@ -8,9 +8,6 @@
   "tagline": {
     "message": "Bestimmen Sie, wie Google Maps Orte nennt."
   },
-  "scopeNotice": {
-    "message": "Gazetteer benennt Orte in der Seitenleiste, in Suchergebnissen, im Tab-Titel und auf der Karte selbst um. Wenn eine Beschriftung bereits sichtbar war, bevor Sie eine Änderung gespeichert haben, wird sie beim nächsten Neuzeichnen der Karte aktualisiert. Verschieben, zoomen oder laden Sie den Tab neu, um es sofort zu sehen."
-  },
   "toggleEnabled": {
     "message": "Aktiviert"
   },

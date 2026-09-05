@@ -8,9 +8,6 @@
   "tagline": {
     "message": "Controla cómo Google Maps llama a los lugares."
   },
-  "scopeNotice": {
-    "message": "Gazetteer renombra lugares en la barra lateral, en los resultados de búsqueda, en el título de la pestaña y en el propio mapa. Si una etiqueta ya estaba en pantalla antes de guardar un cambio, se actualiza la próxima vez que el mapa se redibuje. Desplázate, haz zoom o recarga la pestaña para verlo de inmediato."
-  },
   "toggleEnabled": {
     "message": "Activado"
   },

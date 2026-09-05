@@ -344,6 +344,33 @@ try {
     return out;
   }
 
+  /**
+   * A label already drawn does not notice a rules change; only a redraw
+   * applies it. The same context cycle that heals collisions makes Maps
+   * rebuild its renderer, so a saved change shows on the map within a second
+   * instead of at the next pan. Debounced, because the settings page saves
+   * as the user types; skipped while the page is booting, when the table is
+   * only settling from the shipped defaults to the user's own and nothing
+   * stale has been drawn yet; and capped, since each cycle is real work.
+   */
+  const REDRAW_DEBOUNCE_MS = 1000;
+  const REDRAW_BOOT_GRACE_MS = 3000;
+  const MAX_CONFIG_REDRAWS = 12;
+  let tableKey = JSON.stringify(currentSubs);
+  let redraws = 0;
+  let redrawTimer: number | null = null;
+  function redrawForNewRules(): void {
+    if (redrawTimer !== null) clearTimeout(redrawTimer);
+    redrawTimer = window.setTimeout(() => {
+      redrawTimer = null;
+      if (redraws >= MAX_CONFIG_REDRAWS) return;
+      redraws++;
+      contested = false; // everything is being redrawn under one table
+      try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
+      postCounters();
+    }, REDRAW_DEBOUNCE_MS);
+  }
+
   window.addEventListener('message', (event: MessageEvent) => {
     if (event.source !== window) return;
     const data = event.data as { source?: string; type?: string; subs?: unknown; suppressRaster?: boolean } | null;
@@ -353,6 +380,11 @@ try {
     try { setMainRules(subs); } catch { return; }
     currentSubs = subs;
     try { channel?.postMessage({ type: 'gazetteer:rules', subs: currentSubs }); } catch { /* ignore */ }
+    const key = JSON.stringify(subs);
+    if (key !== tableKey) {
+      tableKey = key;
+      if (performance.now() > REDRAW_BOOT_GRACE_MS) redrawForNewRules();
+    }
   });
 
   function reportMain(): void {
@@ -411,6 +443,7 @@ try {
       get loadingTheme() { return lockedTheme; },
       get contested() { return contested; },
       get repairs() { return repairs; },
+      get redraws() { return redraws; },
       counters,
     },
     configurable: true,

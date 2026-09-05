@@ -8,9 +8,6 @@
   "tagline": {
     "message": "Control what Google Maps calls things."
   },
-  "scopeNotice": {
-    "message": "Gazetteer renames places in the sidebar, in search results, in the tab title, and on the map itself. If a label was already on screen before you saved a change, it updates the next time the map redraws. Pan, zoom, or reload the tab to see it right away."
-  },
   "toggleEnabled": {
     "message": "Enabled"
   },

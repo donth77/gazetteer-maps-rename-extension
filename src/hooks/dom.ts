@@ -44,12 +44,17 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   const reverse = options.reverse ?? null;
 
   /**
-   * The last value *we* wrote for a given node+key. Our own writes re-enter the
-   * MutationObserver; without this, a rule whose output feeds another rule
-   * would cascade across observer ticks, defeating the engine's single-pass
-   * guarantee. It also skips redundant work on every re-render.
+   * What *we* wrote for a given node+key, and what Google had put there. Our
+   * own writes re-enter the MutationObserver; without the memo, a rule whose
+   * output feeds another rule would cascade across observer ticks, defeating
+   * the engine's single-pass guarantee. The original is kept so a rules
+   * change can start over from Google's text rather than from a rename made
+   * under the old rules, and so a search can be sent the name Google knows.
    */
-  let written = new WeakMap<Node, Map<string, string>>();
+  interface Written { wrote: string; original: string }
+  const written = new WeakMap<Node, Map<string, Written>>();
+  /** While a rescan runs, rewritten text is re-derived from its original. */
+  let rescanning = false;
 
   /**
    * If Maps keeps resetting a field, stop fighting it rather than loop forever.
@@ -60,27 +65,47 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   const MAX_INPUT_WRITES = 3;
   const INPUT_WRITE_WINDOW_MS = 1000;
   let inputWrites = new WeakMap<Element, { count: number; at: number }>();
-  /** Google's own text behind a rewritten field, for searching again. */
-  const inputOriginal = new WeakMap<Element, string>();
 
-  function alreadyOurs(node: Node, key: string, value: string): boolean {
-    return written.get(node)?.get(key) === value;
+  function memoOf(node: Node, key: string): Written | undefined {
+    return written.get(node)?.get(key);
   }
 
-  function remember(node: Node, key: string, value: string): void {
+  function remember(node: Node, key: string, wrote: string, original: string): void {
     let m = written.get(node);
     if (!m) written.set(node, (m = new Map()));
-    m.set(key, value);
+    m.set(key, { wrote, original });
+  }
+
+  function forget(node: Node, key: string): void {
+    written.get(node)?.delete(key);
+  }
+
+  /**
+   * The text to run the rules over, or null when there is nothing to do.
+   * Text we wrote ourselves is left alone, except during a rescan, when it
+   * stands in for the original it was made from.
+   */
+  function source(node: Node, key: string, current: string): string | null {
+    if (!current) return null;
+    const memo = memoOf(node, key);
+    if (memo === undefined || memo.wrote !== current) return current;
+    return rescanning ? memo.original : null;
   }
 
   function apply(node: Node, key: string, current: string, write: (next: string) => void): void {
-    if (!current || alreadyOurs(node, key, current)) return;
+    const text = source(node, key, current);
+    if (text === null) return;
     counters.callsObserved++;
-    const result = matcher.substitute(current);
+    const result = matcher.substitute(text);
     if (result.matches > 0) counters.matchesFound += result.matches;
-    if (!result.changed) return;
+    if (!result.changed) {
+      // The new rules leave this text alone; put Google's back if ours is showing.
+      if (text !== current) { write(text); forget(node, key); }
+      return;
+    }
+    if (result.text === current) return; // same rename under the new rules
     write(result.text);
-    remember(node, key, result.text);
+    remember(node, key, result.text, text);
     counters.substitutionsMade++;
     counters.lastSubstitutionAt = Date.now();
   }
@@ -116,14 +141,18 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     const attempts = recent && now - recent.at < INPUT_WRITE_WINDOW_MS ? recent.count : 0;
     if (attempts >= MAX_INPUT_WRITES) return;
     const value = el.value;
-    if (!value || alreadyOurs(el, '#value', value)) return;
+    const text = source(el, '#value', value);
+    if (text === null) return;
     counters.callsObserved++;
-    const result = matcher.substitute(value);
+    const result = matcher.substitute(text);
     if (result.matches > 0) counters.matchesFound += result.matches;
-    if (!result.changed) return;
+    if (!result.changed) {
+      if (text !== value) { el.value = text; forget(el, '#value'); }
+      return;
+    }
+    if (result.text === value) return;
     el.value = result.text;
-    remember(el, '#value', result.text);
-    inputOriginal.set(el, value);
+    remember(el, '#value', result.text, text);
     inputWrites.set(el, { count: attempts + 1, at: now });
     counters.substitutionsMade++;
     counters.lastSubstitutionAt = now;
@@ -141,9 +170,9 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   function revealForSubmit(el: HTMLInputElement): void {
     const shown = el.value;
     let query: string | null = null;
-    const original = inputOriginal.get(el);
-    if (original !== undefined && alreadyOurs(el, '#value', shown)) {
-      query = original;
+    const memo = memoOf(el, '#value');
+    if (memo !== undefined && memo.wrote === shown) {
+      query = memo.original;
     } else if (reverse !== null) {
       const result = reverse.substitute(shown);
       if (result.changed) query = result.text;
@@ -281,21 +310,16 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
 
   return {
     rescan() {
-      // Fields first get Google's text back, so the new rules see the real
-      // value rather than a rename made under the old ones.
-      for (const el of inputs) {
-        const original = inputOriginal.get(el);
-        if (original !== undefined && doc.activeElement !== el && alreadyOurs(el, '#value', el.value)) el.value = original;
-      }
-      // The config changed, so what we wrote before is no longer authoritative.
-      // A WeakMap cannot be cleared, so swap in a fresh one to force every node
-      // to be re-examined against the new rules.
-      written = new WeakMap();
+      // The config changed: every text we rewrote is re-derived from the
+      // original Google gave us, so a rename made under the old rules
+      // cannot survive, or hide the text from the new ones.
       inputWrites = new WeakMap();
       pending.clear();
       pendingAttrs.clear();
+      rescanning = true;
       try { walk(doc.documentElement); } catch { /* ignore */ }
-      collectInputs();
+      try { collectInputs(); } catch { /* ignore */ }
+      rescanning = false;
     },
     disconnect() {
       try { observer?.disconnect(); } catch { /* ignore */ }
