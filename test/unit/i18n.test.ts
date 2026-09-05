@@ -85,3 +85,16 @@ test('t() falls back to bundled English with placeholders filled, never to the r
   (globalThis as { chrome?: unknown }).chrome = { i18n: { getMessage: (key: string) => (key === 'savedPill' ? 'Gespeichert' : '') } };
   assert.equal(t('savedPill'), 'Gespeichert');
 });
+
+test('locale aliases point at real catalogs and never shadow one', () => {
+  const { aliases } = JSON.parse(read('data/locale-aliases.json')) as { aliases: Record<string, string> };
+  for (const [alias, source] of Object.entries(aliases)) {
+    assert.match(alias, /^[a-z]{2,3}(_[A-Za-z0-9]{2,8})?$/, `alias ${alias} is not a Chrome locale directory name`);
+    assert.ok(LOCALES.includes(source), `alias ${alias} points at missing catalog ${source}`);
+    assert.ok(!LOCALES.includes(alias), `alias ${alias} would overwrite a real catalog`);
+  }
+  // The parents Chrome falls back to for the variants we do not ship directly.
+  assert.equal(aliases.pt, 'pt_BR');
+  assert.equal(aliases.zh, 'zh_CN');
+  assert.equal(aliases.zh_HK, 'zh_TW');
+});

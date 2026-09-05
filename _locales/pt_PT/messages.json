@@ -1,0 +1,209 @@
+{
+  "extDescription": {
+    "message": "Restaure o Golfo do México, o Lago Ontário e qualquer outro lugar renomeado no Google Maps."
+  },
+  "settingsTitle": {
+    "message": "Definições do Gazetteer"
+  },
+  "tagline": {
+    "message": "Controle como o Google Maps chama os lugares."
+  },
+  "toggleEnabled": {
+    "message": "Ativado"
+  },
+  "rasterToggleLabel": {
+    "message": "Ocultar nomes antigos durante o carregamento"
+  },
+  "rasterToggleHint": {
+    "message": "Enquanto o mapa carrega, o Google mostra por instantes uma imagem de pré-visualização que ainda tem os nomes antigos. Com esta opção ativada, vê em vez disso uma grelha cinzenta de carregamento, e os primeiros nomes a aparecer são os seus. Desativa-se sozinha em computadores que não conseguem executar o mapa completo."
+  },
+  "colLanguage": {
+    "message": "Idioma"
+  },
+  "colGoogleShows": {
+    "message": "O Google mostra"
+  },
+  "colShowInstead": {
+    "message": "Mostrar em vez disso"
+  },
+  "colRemove": {
+    "message": "Remover"
+  },
+  "phRuleDescription": {
+    "message": "O que isto restaura"
+  },
+  "phFrom": {
+    "message": "Nome como aparece"
+  },
+  "phTo": {
+    "message": "Nome a mostrar"
+  },
+  "ariaRuleDescription": {
+    "message": "Descrição da regra"
+  },
+  "ariaFrom": {
+    "message": "Texto a localizar"
+  },
+  "ariaTo": {
+    "message": "Texto de substituição"
+  },
+  "ariaLanguage": {
+    "message": "Idioma a que esta renomeação se aplica"
+  },
+  "ariaDeleteRule": {
+    "message": "Eliminar esta regra"
+  },
+  "ariaRemoveRename": {
+    "message": "Remover esta renomeação"
+  },
+  "addRename": {
+    "message": "Adicionar uma renomeação"
+  },
+  "addPlace": {
+    "message": "Adicionar um lugar"
+  },
+  "backupHeading": {
+    "message": "Cópia de segurança"
+  },
+  "backupHint": {
+    "message": "Exportar guarda as suas renomeações num ficheiro, para cópia de segurança ou para partilhar. Importar substitui tudo pelo conteúdo de um ficheiro."
+  },
+  "exportJson": {
+    "message": "Exportar JSON"
+  },
+  "importJson": {
+    "message": "Importar JSON"
+  },
+  "restoreDefaults": {
+    "message": "Repor predefinições"
+  },
+  "savedPill": {
+    "message": "Guardado"
+  },
+  "emptyRules": {
+    "message": "Ainda não há lugares configurados. Adicione um abaixo."
+  },
+  "importError": {
+    "message": "Não foi possível importar: $1"
+  },
+  "confirmDeleteRule": {
+    "message": "Eliminar \"$1\" e as suas renomeações?"
+  },
+  "confirmRemoveRename": {
+    "message": "Remover a renomeação de \"$1\" para \"$2\"?"
+  },
+  "confirmRestore": {
+    "message": "Substituir todas as suas renomeações pelas predefinições?"
+  },
+  "dialogCancel": {
+    "message": "Cancelar"
+  },
+  "dialogDelete": {
+    "message": "Eliminar"
+  },
+  "dialogRemove": {
+    "message": "Remover"
+  },
+  "dialogRestore": {
+    "message": "Repor"
+  },
+  "allLanguages": {
+    "message": "Todos os idiomas"
+  },
+  "noMatchingLanguage": {
+    "message": "Nenhum idioma correspondente"
+  },
+  "popupNoRules": {
+    "message": "Nenhuma regra configurada."
+  },
+  "popupRenameCountOne": {
+    "message": "1 renomeação"
+  },
+  "popupRenameCountMany": {
+    "message": "$1 renomeações"
+  },
+  "statusOff": {
+    "message": "Desativado"
+  },
+  "statusRewritingPageMap": {
+    "message": "A renomear a página e o mapa ($1)"
+  },
+  "statusRewritingPage": {
+    "message": "A renomear esta página ($1)"
+  },
+  "statusNotInstalled": {
+    "message": "Não está em execução nesta página"
+  },
+  "statusNoLocaleRules": {
+    "message": "Nenhuma regra ativa para este idioma"
+  },
+  "statusNothingHere": {
+    "message": "Instalado, nada a mudar aqui"
+  },
+  "summaryOne": {
+    "message": "1 nome reescrito aqui"
+  },
+  "summaryMany": {
+    "message": "$1 nomes reescritos aqui"
+  },
+  "contestedWarning": {
+    "message": "Dois dos seus lugares partilham uma palavra no mapa, e uma etiqueta desenhada antes pode mostrar a errada. Recarregue o separador para redesenhar."
+  },
+  "offsite": {
+    "message": "Abra o Google Maps para ver o estado aqui."
+  },
+  "openSettings": {
+    "message": "Definições"
+  },
+  "reloadTab": {
+    "message": "Recarregar separador"
+  },
+  "ariaMasterToggle": {
+    "message": "Ativar ou desativar a renomeação"
+  },
+  "ariaEnableRule": {
+    "message": "Ativar $1"
+  },
+  "rulesRegionLabel": {
+    "message": "Regras de renomeação"
+  },
+  "uiLang": {
+    "message": "pt-PT"
+  },
+  "importErrNotObject": {
+    "message": "O ficheiro não é um objeto JSON."
+  },
+  "importErrMissingRules": {
+    "message": "O ficheiro não tem uma lista \"rules\"."
+  },
+  "importErrRuleNotObject": {
+    "message": "O lugar $1 não é um objeto."
+  },
+  "importErrRuleNeedsId": {
+    "message": "O lugar $1 precisa de um id."
+  },
+  "importErrDuplicateId": {
+    "message": "Dois lugares têm o mesmo id \"$1\"."
+  },
+  "importErrRuleNeedsRenames": {
+    "message": "O lugar \"$1\" precisa de uma lista \"substitutions\"."
+  },
+  "importErrRenameNotObject": {
+    "message": "A renomeação $2 em \"$1\" não é um objeto."
+  },
+  "importErrRenameNeedsText": {
+    "message": "A renomeação $2 em \"$1\" precisa de texto em \"from\" e \"to\"."
+  },
+  "importErrTooLarge": {
+    "message": "O ficheiro tem mais de 1 MB."
+  },
+  "importErrNotJson": {
+    "message": "O ficheiro não é um JSON válido."
+  },
+  "importErrNotSaved": {
+    "message": "Não foi possível guardar as renomeações. O Chrome pode estar sem espaço de armazenamento."
+  },
+  "exportedPill": {
+    "message": "Exportado"
+  }
+}

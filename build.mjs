@@ -49,6 +49,13 @@ async function copyStatic() {
   }
   if (existsSync('_locales')) {
     await cp('_locales', path.join(OUT, '_locales'), { recursive: true });
+    // Chrome resolves a UI locale to its exact catalog, then the parent
+    // language (zh_HK -> zh), then default_locale. Variants with no catalog
+    // of their own get a copy of the closest one rather than English.
+    const { aliases } = JSON.parse(await readFile('data/locale-aliases.json', 'utf8'));
+    for (const [alias, source] of Object.entries(aliases)) {
+      await cp(path.join('_locales', source), path.join(OUT, '_locales', alias), { recursive: true });
+    }
   }
   if (existsSync('assets/icons')) {
     await cp('assets/icons', path.join(OUT, 'icons'), { recursive: true });

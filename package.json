@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "check": "pnpm run typecheck && pnpm test",
     "verify": "node tools/verify-live.mjs",
+    "check:locales": "node tools/check-locales.mjs",
     "demo": "node tools/demo.mjs"
   },
   "devDependencies": {

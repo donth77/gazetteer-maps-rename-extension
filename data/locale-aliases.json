@@ -1,0 +1,8 @@
+{
+  "_comment": "Catalog directories the build adds as copies, so Chrome UI locales with no catalog of their own resolve to the closest one instead of English. Chrome tries the exact locale, then its parent (zh_HK -> zh), then default_locale.",
+  "aliases": {
+    "pt": "pt_BR",
+    "zh": "zh_CN",
+    "zh_HK": "zh_TW"
+  }
+}

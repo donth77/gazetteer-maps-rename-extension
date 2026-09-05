@@ -19,3 +19,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run check
       - run: pnpm run build
+  locales:
+    # Which catalog Chrome serves for each UI language. Offline, but it needs
+    # a browser whose --lang works, which rules out macOS.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: xvfb-run -a node tools/check-locales.mjs
