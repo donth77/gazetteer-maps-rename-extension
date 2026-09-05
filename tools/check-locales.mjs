@@ -2,8 +2,9 @@
  * Which catalog does Chrome pick for each UI language? Launches the built
  * extension once per language with the UI forced to it and reads the
  * `uiLang` message, which every catalog sets to its own name. Offline and
- * deterministic, but needs a browser that honours --lang (Linux and Windows;
- * macOS takes the language from the system, so the check skips there).
+ * deterministic, but needs a browser whose UI language can be set from the
+ * command line (Linux and Windows; macOS takes it from the system, so the
+ * check skips there).
  */
 import { launchWithExtension, extensionId } from './browser.mjs';
 
@@ -17,7 +18,7 @@ const EXPECT = {
 let failures = 0;
 for (const [lang, expected] of Object.entries(EXPECT)) {
   // Headed: Playwright's headless build is a shell that cannot load extensions.
-  const context = await launchWithExtension({ headless: false, extraArgs: [`--lang=${lang}`] });
+  const context = await launchWithExtension({ headless: false, locale: lang });
   try {
     const page = await context.newPage();
     await page.goto('about:blank');
@@ -26,7 +27,7 @@ for (const [lang, expected] of Object.entries(EXPECT)) {
     await page.goto(`chrome-extension://${id}/options.html`);
     const r = await page.evaluate(() => ({ ui: chrome.i18n.getUILanguage(), catalog: chrome.i18n.getMessage('uiLang') || 'en' }));
     if (r.ui.toLowerCase() !== lang.toLowerCase()) {
-      console.log(`--lang=${lang} was ignored (UI is ${r.ui}); this platform cannot run the check.`);
+      console.log(`The browser ignored the requested UI language ${lang} (UI is ${r.ui}); this platform cannot run the check.`);
       process.exit(0);
     }
     const ok = r.catalog === expected;

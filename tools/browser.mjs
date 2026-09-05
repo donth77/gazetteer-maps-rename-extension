@@ -47,7 +47,7 @@ export function findChromeForTesting() {
   return null;
 }
 
-export async function launchWithExtension({ headless = true, viewport, extraArgs = [] } = {}) {
+export async function launchWithExtension({ headless = true, viewport, extraArgs = [], locale } = {}) {
   const { chromium } = loadPlaywright();
   const ext = path.resolve(process.env.GZ_DIST ?? 'dist');
   if (!existsSync(path.join(ext, 'manifest.json'))) {
@@ -62,6 +62,9 @@ export async function launchWithExtension({ headless = true, viewport, extraArgs
     ...(exe ? { executablePath: exe } : { channel: process.env.CHANNEL ?? 'chrome' }),
     headless,
     ...(viewport ? { viewport } : {}),
+    // Playwright turns this into the browser's own --lang; passing the switch
+    // directly loses to the one Playwright appends.
+    ...(locale ? { locale } : {}),
     args: [
       '--enable-unsafe-extension-debugging',
       `--disable-extensions-except=${ext}`,
