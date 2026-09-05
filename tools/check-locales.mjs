@@ -16,7 +16,8 @@ const EXPECT = {
 
 let failures = 0;
 for (const [lang, expected] of Object.entries(EXPECT)) {
-  const context = await launchWithExtension({ extraArgs: [`--lang=${lang}`] });
+  // Headed: Playwright's headless build is a shell that cannot load extensions.
+  const context = await launchWithExtension({ headless: false, extraArgs: [`--lang=${lang}`] });
   try {
     const page = await context.newPage();
     await page.goto('about:blank');
