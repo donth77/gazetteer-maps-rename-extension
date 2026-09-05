@@ -4,7 +4,7 @@ import type { Rule, Substitution } from '../../core/types.ts';
 
 const $ = <T extends Element>(sel: string): T => document.querySelector<T>(sel)!;
 
-let config: GazetteerConfig = { enabled: true, searchField: true, suppressRasterPreview: true, rules: [] };
+let config: GazetteerConfig = { enabled: true, suppressRasterPreview: true, rules: [] };
 let saveTimer: number | undefined;
 /** What this page last wrote, so its own storage events can be told from others'. */
 let lastSaved = '';
@@ -402,7 +402,6 @@ function render(): void {
   }
   const master = $<HTMLInputElement>('#master-toggle');
   master.checked = config.enabled;
-  $<HTMLInputElement>('#search-field-toggle').checked = config.searchField;
   $<HTMLInputElement>('#raster-toggle').checked = config.suppressRasterPreview;
 }
 
@@ -501,11 +500,6 @@ async function init(): Promise<void> {
     persist();
   });
 
-  $<HTMLInputElement>('#search-field-toggle').addEventListener('change', (event) => {
-    config.searchField = (event.target as HTMLInputElement).checked;
-    persist();
-  });
-
   $<HTMLButtonElement>('#export').addEventListener('click', download);
   $<HTMLButtonElement>('#import').addEventListener('click', () => $<HTMLInputElement>('#import-file').click());
   $<HTMLInputElement>('#import-file').addEventListener('change', (event) => {
@@ -518,8 +512,8 @@ async function init(): Promise<void> {
     if (!(await confirmDialog(t('confirmRestore'), t('dialogRestore')))) return;
     // The button promises to restore the renames; the preferences are the
     // user's and stay as they are.
-    const { enabled, searchField, suppressRasterPreview } = config;
-    config = { ...defaultConfig(), enabled, searchField, suppressRasterPreview };
+    const { enabled, suppressRasterPreview } = config;
+    config = { ...defaultConfig(), enabled, suppressRasterPreview };
     await write().catch(() => { /* ignore */ });
     render();
   });

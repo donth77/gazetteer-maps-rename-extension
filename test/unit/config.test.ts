@@ -32,7 +32,6 @@ test('nothing stored yields the shipped defaults', async () => {
   const config = await loadConfig();
   assert.equal(config.v, 2);
   assert.equal(config.enabled, true);
-  assert.equal(config.searchField, true);
   assert.equal(config.suppressRasterPreview, true);
   assert.ok(config.rules.length >= 2);
 });
@@ -50,7 +49,6 @@ test('a v1 config reads with the newer preferences defaulted on', async () => {
   const config = await loadConfig();
   assert.equal(config.v, 1);
   assert.equal(config.enabled, false);
-  assert.equal(config.searchField, true);
   assert.equal(config.suppressRasterPreview, true);
   assert.deepEqual(config.removedDefaults, []);
   assert.equal(config.rules.length, 1);

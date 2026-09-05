@@ -20,12 +20,6 @@
   "rasterToggleHint": {
     "message": "Pendant le chargement, Google affiche brièvement un aperçu qui contient encore les anciens noms. Avec cette option, vous voyez à la place une grille grise de chargement, et les premiers noms affichés sont les vôtres. Se désactive automatiquement sur les ordinateurs qui ne peuvent pas exécuter la carte complète."
   },
-  "searchToggleLabel": {
-    "message": "Afficher les lieux renommés dans la barre de recherche"
-  },
-  "searchToggleHint": {
-    "message": "Après une recherche, Maps inscrit l'ancien nom du lieu dans la barre de recherche. Avec cette option, la barre affiche votre version renommée. Relancer la recherche fonctionne toujours : Maps reçoit le nom qu'il connaît."
-  },
   "colLanguage": {
     "message": "Langue"
   },

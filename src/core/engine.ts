@@ -13,6 +13,15 @@ export interface Matcher {
   readonly size: number;
 }
 
+export interface MatcherOptions {
+  /**
+   * Match regardless of letter case. Off for page text, where names are
+   * proper nouns and case is a signal; on for typed search queries, which are
+   * whatever the user felt like typing.
+   */
+  ignoreCase?: boolean;
+}
+
 const NO_MATCH = (text: string): SubstituteResult => ({ text, changed: false, matches: 0 });
 
 /**
@@ -42,6 +51,8 @@ function charBefore(text: string, index: number): string | undefined {
 
 interface Candidate {
   sub: CompiledSubstitution;
+  /** `from`, case-folded when matching ignores case. */
+  key: string;
   /** Whether the match's first/last character is itself a word character. */
   headWord: boolean;
   tailWord: boolean;
@@ -60,15 +71,21 @@ interface Candidate {
  * Matching is literal and case-sensitive: place names are proper nouns, and a
  * case-insensitive match risks rewriting unrelated prose.
  */
-export function createMatcher(subs: readonly CompiledSubstitution[]): Matcher {
+export function createMatcher(subs: readonly CompiledSubstitution[], options?: MatcherOptions): Matcher {
+  const ignoreCase = options?.ignoreCase === true;
+  const fold = (s: string) => (ignoreCase ? s.toLowerCase() : s);
+
   // Bucket by first character so the common case (no match here) is one Map hit.
   const byFirstChar = new Map<string, Candidate[]>();
   for (const sub of subs) {
-    const head = sub.from[0]!;
+    if (sub.from === '') continue;
+    const key = fold(sub.from);
+    const head = key[0]!;
     let bucket = byFirstChar.get(head);
     if (!bucket) byFirstChar.set(head, (bucket = []));
     bucket.push({ // inherits the caller's longest-first order
       sub,
+      key,
       headWord: isWordChar(charAt(sub.from, 0)),
       tailWord: isWordChar(charBefore(sub.from, sub.from.length)),
     });
@@ -77,6 +94,12 @@ export function createMatcher(subs: readonly CompiledSubstitution[]): Matcher {
   function substitute(text: string): SubstituteResult {
     if (!text || byFirstChar.size === 0) return NO_MATCH(text);
 
+    // Matching runs over the folded text; output is spliced from the original
+    // by the same indices. Case folding can change a string's length for a
+    // few characters (a dotted capital I), in which case fall back to exact.
+    let hay = fold(text);
+    if (hay.length !== text.length) hay = text;
+
     let out: string | null = null;
     let cursor = 0; // start of the not-yet-copied tail
     let i = 0;
@@ -84,21 +107,21 @@ export function createMatcher(subs: readonly CompiledSubstitution[]): Matcher {
     const n = text.length;
 
     while (i < n) {
-      const bucket = byFirstChar.get(text[i]!);
+      const bucket = byFirstChar.get(hay[i]!);
       if (bucket !== undefined) {
-        let hit: CompiledSubstitution | undefined;
-        for (const { sub, headWord, tailWord } of bucket) {
-          if (!text.startsWith(sub.from, i)) continue;
-          const end = i + sub.from.length;
-          if (headWord && isWordChar(charBefore(text, i))) continue;
-          if (tailWord && end < n && isWordChar(charAt(text, end))) continue;
-          hit = sub;
+        let hit: Candidate | undefined;
+        for (const candidate of bucket) {
+          if (!hay.startsWith(candidate.key, i)) continue;
+          const end = i + candidate.key.length;
+          if (candidate.headWord && isWordChar(charBefore(text, i))) continue;
+          if (candidate.tailWord && end < n && isWordChar(charAt(text, end))) continue;
+          hit = candidate;
           break;
         }
         if (hit !== undefined) {
           if (out === null) out = '';
-          out += text.slice(cursor, i) + hit.to;
-          i += hit.from.length;
+          out += text.slice(cursor, i) + hit.sub.to;
+          i += hit.key.length;
           cursor = i;
           matches++;
           continue;
@@ -116,6 +139,6 @@ export function createMatcher(subs: readonly CompiledSubstitution[]): Matcher {
 }
 
 /** Convenience wrapper for one-off use and tests. */
-export function substitute(text: string, subs: readonly CompiledSubstitution[]): SubstituteResult {
-  return createMatcher(subs).substitute(text);
+export function substitute(text: string, subs: readonly CompiledSubstitution[], options?: MatcherOptions): SubstituteResult {
+  return createMatcher(subs, options).substitute(text);
 }

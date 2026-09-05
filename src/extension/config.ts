@@ -15,7 +15,6 @@ export interface GazetteerConfig {
    * trade: re-running a query Maps filled in searches for the renamed text.
    * Never touched while focused.
    */
-  searchField: boolean;
   /**
    * While the vector map boots, Maps paints server-rendered raster tiles with
    * the served names baked into the pixels — nothing client-side can rewrite
@@ -42,7 +41,7 @@ export function defaultRules(): Rule[] {
 }
 
 export function defaultConfig(): GazetteerConfig {
-  return { v: 2, enabled: true, searchField: true, suppressRasterPreview: true, removedDefaults: [], rules: defaultRules() };
+  return { v: 2, enabled: true, suppressRasterPreview: true, removedDefaults: [], rules: defaultRules() };
 }
 
 export async function loadConfig(): Promise<GazetteerConfig> {
@@ -53,7 +52,6 @@ export async function loadConfig(): Promise<GazetteerConfig> {
     return {
       v: typeof raw.v === 'number' ? raw.v : 1,
       enabled: raw.enabled !== false,
-      searchField: raw.searchField !== false,
       suppressRasterPreview: raw.suppressRasterPreview !== false,
       removedDefaults: Array.isArray(raw.removedDefaults)
         ? raw.removedDefaults.filter((x): x is string => typeof x === 'string')

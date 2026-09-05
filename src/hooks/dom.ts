@@ -12,8 +12,7 @@ const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'T
 
 /**
  * Attributes worth rewriting. `value` is deliberately absent: the search box
- * holds the query, and rewriting it would make the user's next Enter search for
- * a string Google does not know.
+ * is live form state, handled separately below.
  */
 const ATTRS = ['aria-label', 'title', 'alt'] as const;
 
@@ -24,12 +23,12 @@ export interface DomHookOptions {
   /** Also rewrite aria-label/title/alt. Default true. */
   attributes?: boolean;
   /**
-   * Also rewrite the text sitting in the search box. Off by default: that value
-   * is live form state, not a label, and Maps may own it through a framework.
-   * Guarded three ways — never while focused, never more than MAX_INPUT_WRITES
-   * times per element, and only for text inputs.
+   * The renames turned around, applied to what the user typed when a search
+   * is submitted, so "hotels near Gulf of Bananas" asks Google about the
+   * place it knows by another name. Without it only the box's own rewritten
+   * value is reversed.
    */
-  searchField?: boolean;
+  reverse?: Matcher;
 }
 
 export interface DomHookHandle {
@@ -42,7 +41,7 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   const doc = options.doc ?? document;
   const { matcher, counters } = options;
   const doAttributes = options.attributes !== false;
-  const doSearchField = options.searchField === true;
+  const reverse = options.reverse ?? null;
 
   /**
    * The last value *we* wrote for a given node+key. Our own writes re-enter the
@@ -104,11 +103,12 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   }
 
   /**
-   * Search-box text. Skipped while focused so we never clobber typing, and
-   * bounded so a framework that rewrites the value cannot start a write war.
+   * Search-box text. The value is live form state that Maps may own through
+   * a framework, so it is handled with more care than a label: skipped while
+   * focused so typing is never clobbered, bounded so a framework that resets
+   * the value cannot start a write war, and only for text inputs.
    */
   function processInput(el: HTMLInputElement): void {
-    if (!doSearchField) return;
     if (el.type && el.type !== 'text' && el.type !== 'search') return;
     if (doc.activeElement === el) return;
     const now = Date.now();
@@ -130,19 +130,27 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   }
 
   /**
-   * Searching again. Maps reads the box while it handles the Enter key or the
-   * search button, synchronously, and it only knows its own name for a place;
-   * a renamed one, invented or not, would be searched for as typed. So for
-   * that one dispatch the box holds Google's text again, and has the renamed
-   * text back before anything paints. Only a value this hook wrote is
-   * reversed; whatever the user typed is searched for as is.
+   * Searching. Maps reads the box while it handles the Enter key or the search
+   * button, synchronously, and it only knows its own name for a place; a
+   * renamed one, invented or not, would be searched for as typed and find
+   * nothing. So for that one dispatch the box holds the name Google knows,
+   * and has the user's text back before anything paints. A value this hook
+   * wrote goes back to exactly what Maps put there; anything typed is run
+   * through the reversed renames.
    */
   function revealForSubmit(el: HTMLInputElement): void {
-    const original = inputOriginal.get(el);
-    if (original === undefined || !alreadyOurs(el, '#value', el.value)) return;
     const shown = el.value;
-    el.value = original;
-    setTimeout(() => { if (el.value === original) el.value = shown; }, 0);
+    let query: string | null = null;
+    const original = inputOriginal.get(el);
+    if (original !== undefined && alreadyOurs(el, '#value', shown)) {
+      query = original;
+    } else if (reverse !== null) {
+      const result = reverse.substitute(shown);
+      if (result.changed) query = result.text;
+    }
+    if (query === null) return;
+    el.value = query;
+    setTimeout(() => { if (el.value === query) el.value = shown; }, 0);
   }
 
   function onSubmitKey(event: KeyboardEvent): void {
@@ -169,12 +177,11 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
   const inputs = new Set<HTMLInputElement>();
 
   function noteElement(el: Element): void {
-    if (doSearchField && el.tagName === 'INPUT') inputs.add(el as HTMLInputElement);
+    if (el.tagName === 'INPUT') inputs.add(el as HTMLInputElement);
     processElement(el);
   }
 
   function collectInputs(): void {
-    if (!doSearchField) return;
     for (const el of inputs) {
       if (!el.isConnected) { inputs.delete(el); continue; }
       try { processInput(el); } catch { /* ignore */ }
@@ -239,12 +246,10 @@ export function installDomHook(options: DomHookOptions): DomHookHandle {
     collectInputs();
     // Re-check once a field loses focus, in case the user was mid-edit.
     try { doc.addEventListener('focusout', collectInputs, true); } catch { /* ignore */ }
-    if (doSearchField) {
-      try {
-        doc.addEventListener('keydown', onSubmitKey, true);
-        doc.addEventListener('click', onSubmitClick, true);
-      } catch { /* ignore */ }
-    }
+    try {
+      doc.addEventListener('keydown', onSubmitKey, true);
+      doc.addEventListener('click', onSubmitClick, true);
+    } catch { /* ignore */ }
 
     observer = new MutationObserver((records) => {
       for (const record of records) {

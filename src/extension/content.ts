@@ -1,5 +1,5 @@
 import { createMatcher, type Matcher } from '../core/engine.ts';
-import { compile } from '../core/rules.ts';
+import { compile, reverseSubs } from '../core/rules.ts';
 import { createCounters } from '../core/counters.ts';
 import { installDomHook, type DomHookHandle } from '../hooks/dom.ts';
 import { defaultConfig, loadConfig, onConfigChanged, type GazetteerConfig } from './config.ts';
@@ -15,13 +15,18 @@ const live: Matcher = {
   substitute: (text) => active.substitute(text),
   get size() { return active.size; },
 };
+/** The renames turned around, for what the user types into the search box. */
+let activeReverse: Matcher = createMatcher([]);
+const liveReverse: Matcher = {
+  substitute: (text) => activeReverse.substitute(text),
+  get size() { return activeReverse.size; },
+};
 
 function pageLocale(): string {
   return document.documentElement.getAttribute('lang') || navigator.language || 'en';
 }
 
 let handle: DomHookHandle | null = null;
-let searchField = false;
 
 /** Counters reported back by the in-worker hook, for the popup. */
 const mapCounters = { decodes: 0, substitutions: 0, whole: 0, lines: 0, shared: 0 };
@@ -30,7 +35,7 @@ let mapContested = false;
 function applyConfig(config: GazetteerConfig): void {
   const subs = config.enabled ? compile(config.rules, pageLocale()) : [];
   active = createMatcher(subs);
-  searchField = config.searchField === true;
+  activeReverse = createMatcher(reverseSubs(subs), { ignoreCase: true });
   // The MAIN-world hook cannot read storage; hand it the compiled table.
   try {
     window.postMessage({
@@ -45,21 +50,14 @@ function applyConfig(config: GazetteerConfig): void {
 function install(): void {
   // Every hook installs inside try/catch and degrades independently.
   try {
-    handle = installDomHook({ matcher: live, counters, searchField });
+    handle = installDomHook({ matcher: live, reverse: liveReverse, counters });
   } catch {
     counters.hookInstalled = false;
   }
 }
 
 function reconcile(config: GazetteerConfig): void {
-  const wasSearchField = searchField;
   applyConfig(config);
-  // The search-field guard is fixed at install time; re-install if it flipped.
-  if (wasSearchField !== searchField) {
-    try { handle?.disconnect(); } catch { /* ignore */ }
-    install();
-    return;
-  }
   handle?.rescan();
 }
 

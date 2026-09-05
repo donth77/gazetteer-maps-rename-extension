@@ -30,8 +30,8 @@ JSON import/export. Things to know:
   changes.
 - A rename can apply in one language or all of them. The UI itself ships in
   six.
-- The search box shows your name too. Searching again still works, because
-  Maps is sent the name it knows.
+- Search with your names. Type "Gulf of Bananas" and Maps is sent the name
+  it knows; the box keeps showing yours.
 
 ## How it works
 

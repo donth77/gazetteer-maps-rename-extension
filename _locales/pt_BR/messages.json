@@ -20,12 +20,6 @@
   "rasterToggleHint": {
     "message": "Enquanto o mapa carrega, o Google mostra brevemente uma imagem de visualização que ainda contém os nomes antigos. Com esta opção ativada, você vê uma grade cinza de carregamento no lugar, e os primeiros nomes a aparecer são os seus. Desativa-se automaticamente em computadores que não conseguem executar o mapa completo."
   },
-  "searchToggleLabel": {
-    "message": "Mostrar lugares renomeados na caixa de pesquisa"
-  },
-  "searchToggleHint": {
-    "message": "Após uma pesquisa, o Maps preenche a caixa de pesquisa com o nome antigo do lugar. Com esta opção ativada, a caixa mostra a sua versão renomeada. Pesquisar de novo continua funcionando: o Maps recebe o nome que ele conhece."
-  },
   "colLanguage": {
     "message": "Idioma"
   },

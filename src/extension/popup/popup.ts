@@ -15,7 +15,7 @@ interface Status {
   activeSubstitutions: number;
 }
 
-let config: GazetteerConfig = { enabled: true, searchField: true, suppressRasterPreview: true, rules: [] };
+let config: GazetteerConfig = { enabled: true, suppressRasterPreview: true, rules: [] };
 
 function renderRules(): void {
   const host = $<HTMLUListElement>('#rules');

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { compile, localeMatches, mergeDefaults, validateRules } from '../../src/core/rules.ts';
+import { compile, localeMatches, mergeDefaults, reverseSubs, validateRules } from '../../src/core/rules.ts';
 import { createCounters, healthOf, sumCounters } from '../../src/core/counters.ts';
 import { createMatcher } from '../../src/core/engine.ts';
 import type { Rule } from '../../src/core/types.ts';
@@ -165,4 +165,26 @@ test('validation failures carry a code and parameters a UI can phrase', () => {
   assert.deepEqual(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A' }] }] })?.params, ['x', '1']);
   assert.equal(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A' }] }] })?.code, 'renameNeedsText');
   assert.equal(fail({ rules: [{ id: 'x', substitutions: [{ from: 'A', to: 'B' }, 3] }] })?.code, 'renameNotObject');
+});
+
+test('reverseSubs turns the renames around, one per name, preferring the bare original', () => {
+  const compiled = compile([{
+    id: 'gulf', enabled: true, substitutions: [
+      { locale: 'en', from: 'Gulf of Mexico (Gulf of America)', to: 'Gulf of Bananas' },
+      { locale: 'en', from: 'Gulf of America', to: 'Gulf of Bananas' },
+      { locale: 'en', from: 'Same', to: 'Same' },
+      { locale: 'en', from: 'Erased', to: '' },
+    ],
+  }, {
+    id: 'lake', enabled: true, substitutions: [{ locale: 'en', from: 'Lake America', to: 'Lake Ontario' }],
+  }], 'en');
+  const reversed = reverseSubs(compiled);
+  assert.deepEqual(reversed.map((s) => [s.from, s.to]), [
+    ['Gulf of Bananas', 'Gulf of America'],
+    ['Lake Ontario', 'Lake America'],
+  ]);
+  // Longest first, so a query is matched leftmost-longest like page text.
+  assert.ok(reversed[0]!.from.length >= reversed[1]!.from.length);
+  const query = createMatcher(reversed, { ignoreCase: true });
+  assert.equal(query.substitute('ferry from lake ontario to the gulf of bananas').text, 'ferry from Lake America to the Gulf of America');
 });

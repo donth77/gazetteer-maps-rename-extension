@@ -53,6 +53,24 @@ export function mergeDefaults(
 }
 
 /**
+ * The renames turned around, for mapping what the user typed back to the name
+ * Google knows. One entry per renamed text: where several originals share a
+ * rename (the bare and compound forms of the shipped rules), the shortest
+ * original is the one to search for. Longest-first, like `compile`.
+ */
+export function reverseSubs(subs: readonly CompiledSubstitution[]): CompiledSubstitution[] {
+  const shortest = new Map<string, CompiledSubstitution>();
+  for (const sub of subs) {
+    if (sub.to === '' || sub.to === sub.from) continue;
+    const held = shortest.get(sub.to);
+    if (!held || sub.from.length < held.from.length) shortest.set(sub.to, sub);
+  }
+  return [...shortest.values()]
+    .map((sub) => ({ from: sub.to, to: sub.from, locale: sub.locale, ruleId: sub.ruleId }))
+    .sort((a, b) => b.from.length - a.from.length);
+}
+
+/**
  * Why a rules file was rejected. `code` and `params` let a UI phrase it in the
  * user's language; `error` is the same thing in English for logs and tests.
  */

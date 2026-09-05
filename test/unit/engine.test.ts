@@ -127,3 +127,12 @@ test('boundary check is code-point aware', () => {
 test('a match at the very end of the string is replaced', () => {
   assert.equal(substitute('go to A', [sub('A', 'B')]).text, 'go to B');
 });
+
+test('ignoreCase matches any capitalisation and keeps the rest of the text as typed', () => {
+  const subs = [sub('Gulf of Bananas', 'Gulf of America')];
+  assert.equal(substitute('gulf of bananas', subs, { ignoreCase: true }).text, 'Gulf of America');
+  assert.equal(substitute('Hotels near GULF OF BANANAS, cheap', subs, { ignoreCase: true }).text, 'Hotels near Gulf of America, cheap');
+  assert.equal(substitute('gulf of bananas', subs).changed, false, 'exact matching is still the default');
+  // Word boundaries still apply under case folding.
+  assert.equal(substitute('gulf of bananasplit', subs, { ignoreCase: true }).changed, false);
+});

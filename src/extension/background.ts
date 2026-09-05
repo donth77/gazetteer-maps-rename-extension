@@ -12,12 +12,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     if (stored?.[STORAGE_KEY]) {
       // An update: merge any newly shipped rules into what the user already has.
       const config = await loadConfig();
-      if ((config.v ?? 1) < 2) {
-        // v2 flipped the search-box default on; stored v1 configs carry an
-        // explicit false that only ever meant "the old default".
-        config.searchField = true;
-        config.v = 2;
-      }
+      config.v = 2;
       config.rules = mergeDefaults(config.rules, defaultRules(), config.removedDefaults ?? []);
       await saveConfig(config);
       return;
