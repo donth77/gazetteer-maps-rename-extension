@@ -348,13 +348,17 @@ try {
    * A label already drawn does not notice a rules change; only a redraw
    * applies it. The same context cycle that heals collisions makes Maps
    * rebuild its renderer, so a saved change shows on the map within a second
-   * instead of at the next pan. Debounced, because the settings page saves
-   * as the user types; skipped while the page is booting, when the table is
-   * only settling from the shipped defaults to the user's own and nothing
-   * stale has been drawn yet; and capped, since each cycle is real work.
+   * instead of at the next pan. Debounced, because the settings page saves as
+   * the user types, and capped, since each cycle is real work.
+   *
+   * This runs during boot too. Workers start from the shipped rules so nothing
+   * flashes, and when the stored config turns out to differ — the user renamed
+   * something else, or switched the extension off — whatever those rules
+   * already drew has to be redrawn under the real ones. A config that matches
+   * the shipped rules, which is most of them, never reaches here at all: the
+   * table is unchanged.
    */
   const REDRAW_DEBOUNCE_MS = 1000;
-  const REDRAW_BOOT_GRACE_MS = 3000;
   const MAX_CONFIG_REDRAWS = 12;
   let tableKey = JSON.stringify(currentSubs);
   let redraws = 0;
@@ -383,7 +387,7 @@ try {
     const key = JSON.stringify(subs);
     if (key !== tableKey) {
       tableKey = key;
-      if (performance.now() > REDRAW_BOOT_GRACE_MS) redrawForNewRules();
+      redrawForNewRules();
     }
   });
 
