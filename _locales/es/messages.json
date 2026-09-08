@@ -6,7 +6,7 @@
     "message": "Configuración de Gazetteer"
   },
   "tagline": {
-    "message": "Controla cómo Google Maps llama a los lugares."
+    "message": "Decide cómo Google Maps llama a los lugares."
   },
   "toggleEnabled": {
     "message": "Activado"
@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "Exportado"
+  },
+  "showRenames": {
+    "message": "Mostrar renombrados"
+  },
+  "hideRenames": {
+    "message": "Ocultar renombrados"
   }
 }

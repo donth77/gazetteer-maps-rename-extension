@@ -6,7 +6,7 @@
     "message": "Paramètres de Gazetteer"
   },
   "tagline": {
-    "message": "Contrôlez comment Google Maps nomme les lieux."
+    "message": "Décidez comment Google Maps nomme les lieux."
   },
   "toggleEnabled": {
     "message": "Activé"
@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "Exporté"
+  },
+  "showRenames": {
+    "message": "Afficher les renommages"
+  },
+  "hideRenames": {
+    "message": "Masquer les renommages"
   }
 }

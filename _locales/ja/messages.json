@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "エクスポートしました"
+  },
+  "showRenames": {
+    "message": "名前変更を表示"
+  },
+  "hideRenames": {
+    "message": "名前変更を非表示"
   }
 }

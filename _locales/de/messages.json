@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "Exportiert"
+  },
+  "showRenames": {
+    "message": "Umbenennungen anzeigen"
+  },
+  "hideRenames": {
+    "message": "Umbenennungen ausblenden"
   }
 }

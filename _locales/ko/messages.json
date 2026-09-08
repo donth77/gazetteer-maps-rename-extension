@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "내보냈습니다"
+  },
+  "showRenames": {
+    "message": "이름 변경 표시"
+  },
+  "hideRenames": {
+    "message": "이름 변경 숨기기"
   }
 }

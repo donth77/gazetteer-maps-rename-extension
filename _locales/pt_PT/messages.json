@@ -6,7 +6,7 @@
     "message": "Definições do Gazetteer"
   },
   "tagline": {
-    "message": "Controle como o Google Maps chama os lugares."
+    "message": "Decida como o Google Maps chama os lugares."
   },
   "toggleEnabled": {
     "message": "Ativado"
@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "Exportado"
+  },
+  "showRenames": {
+    "message": "Mostrar renomeações"
+  },
+  "hideRenames": {
+    "message": "Ocultar renomeações"
   }
 }

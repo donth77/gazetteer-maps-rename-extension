@@ -6,7 +6,7 @@
     "message": "Gazetteer Settings"
   },
   "tagline": {
-    "message": "Control what Google Maps calls things."
+    "message": "Decide what Google Maps calls things."
   },
   "toggleEnabled": {
     "message": "Enabled"
@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "Exported"
+  },
+  "showRenames": {
+    "message": "Show renames"
+  },
+  "hideRenames": {
+    "message": "Hide renames"
   }
 }

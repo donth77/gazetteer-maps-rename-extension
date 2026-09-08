@@ -205,5 +205,11 @@
   },
   "exportedPill": {
     "message": "已匯出"
+  },
+  "showRenames": {
+    "message": "顯示改名"
+  },
+  "hideRenames": {
+    "message": "隱藏改名"
   }
 }
