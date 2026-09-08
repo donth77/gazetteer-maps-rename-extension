@@ -7,10 +7,10 @@
 <p align="center">A Chrome extension that lets you decide what Google Maps calls things.</p>
 
 <p align="center">
-  <a href="https://github.com/donth77/maps-rename-extension/actions/workflows/ci.yml"><img alt="ci" src="https://img.shields.io/github/actions/workflow/status/donth77/maps-rename-extension/ci.yml?branch=main&label=ci"></a>
-  <a href="https://github.com/donth77/maps-rename-extension/actions/workflows/daily-health.yml"><img alt="daily health" src="https://img.shields.io/github/actions/workflow/status/donth77/maps-rename-extension/daily-health.yml?branch=main&label=daily%20health"></a>
+  <a href="https://github.com/donth77/gazetteer-maps-rename-extension/actions/workflows/ci.yml"><img alt="ci" src="https://img.shields.io/github/actions/workflow/status/donth77/gazetteer-maps-rename-extension/ci.yml?branch=main&label=ci"></a>
+  <a href="https://github.com/donth77/gazetteer-maps-rename-extension/actions/workflows/daily-health.yml"><img alt="daily health" src="https://img.shields.io/github/actions/workflow/status/donth77/gazetteer-maps-rename-extension/daily-health.yml?branch=main&label=daily%20health"></a>
   <img alt="Chrome manifest v3" src="https://img.shields.io/badge/Chrome%20manifest-v3-0b6b5e">
-  <a href="LICENSE"><img alt="license" src="https://img.shields.io/github/license/donth77/maps-rename-extension?color=0b6b5e"></a>
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/github/license/donth77/gazetteer-maps-rename-extension?color=0b6b5e"></a>
 </p>
 
 ---

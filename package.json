@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/donth77/maps-rename-extension.git"
+    "url": "git+https://github.com/donth77/gazetteer-maps-rename-extension.git"
   },
-  "homepage": "https://github.com/donth77/maps-rename-extension#readme",
+  "homepage": "https://github.com/donth77/gazetteer-maps-rename-extension#readme",
   "bugs": {
-    "url": "https://github.com/donth77/maps-rename-extension/issues"
+    "url": "https://github.com/donth77/gazetteer-maps-rename-extension/issues"
   },
   "type": "module",
   "packageManager": "pnpm@10.14.0",

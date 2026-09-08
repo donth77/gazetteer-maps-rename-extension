@@ -27,7 +27,7 @@ other website.
 ## Network
 
 The extension makes no network requests of any kind. You can verify this: the
-source is at https://github.com/donth77/maps-rename-extension and it requests
+source is at https://github.com/donth77/gazetteer-maps-rename-extension and it requests
 only the `storage` permission.
 
 ## Export files
@@ -42,4 +42,4 @@ delete individual rules, or all of them, from the settings page.
 
 ## Contact
 
-Questions or problems: https://github.com/donth77/maps-rename-extension/issues
+Questions or problems: https://github.com/donth77/gazetteer-maps-rename-extension/issues
