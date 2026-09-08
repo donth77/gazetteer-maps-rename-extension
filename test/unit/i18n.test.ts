@@ -127,3 +127,13 @@ test('every UI locale resolves to the intended catalog', () => {
   };
   for (const [ui, want] of Object.entries(expected)) assert.equal(resolve(ui), want, `${ui} should use ${want}`);
 });
+
+test('the store description fits the manifest limit in every language', () => {
+  // Chrome rejects a manifest description over 132 characters, and the store
+  // shows this text under the extension's name.
+  for (const locale of LOCALES) {
+    const description = catalogs[locale]!.extDescription!.message;
+    assert.ok(description.length <= 132, `${locale}: ${description.length} characters`);
+    assert.ok(description.length > 0, `${locale}: empty`);
+  }
+});

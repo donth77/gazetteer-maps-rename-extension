@@ -1,6 +1,6 @@
 {
   "extDescription": {
-    "message": "Google 지도에서 멕시코만, 온타리오호 등 이름이 바뀐 장소를 원래 이름으로 되돌립니다."
+    "message": "Google 지도가 장소를 부르는 이름을 직접 정하세요. 멕시코만, 온타리오호를 되돌리고 어떤 장소든 이름을 바꿉니다."
   },
   "settingsTitle": {
     "message": "Gazetteer 설정"

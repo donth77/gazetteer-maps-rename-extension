@@ -1,6 +1,6 @@
 {
   "extDescription": {
-    "message": "メキシコ湾、オンタリオ湖など、名前が変更された場所を Google マップ上で元に戻します。"
+    "message": "Google マップの地名を自分で決められます。メキシコ湾やオンタリオ湖を元に戻し、どんな場所でも名前を変更できます。"
   },
   "settingsTitle": {
     "message": "Gazetteer の設定"
