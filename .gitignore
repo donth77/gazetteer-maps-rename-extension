@@ -5,3 +5,4 @@ dist
 verify*.png
 dist-dbg
 gazetteer-*.zip
+tools/internal

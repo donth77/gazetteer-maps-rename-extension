@@ -137,3 +137,11 @@ test('the store description fits the manifest limit in every language', () => {
     assert.ok(description.length > 0, `${locale}: empty`);
   }
 });
+
+test('the store name fits the manifest limit', () => {
+  const manifest = JSON.parse(read('src/extension/manifest.json')) as { name: string };
+  // Chrome rejects a manifest name over 75 characters. The store indexes this
+  // text for search, so it carries a description as well as the brand.
+  assert.ok(manifest.name.length <= 75, `${manifest.name.length} characters`);
+  assert.match(manifest.name, /^Gazetteer/);
+});

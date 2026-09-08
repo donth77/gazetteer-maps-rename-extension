@@ -24,7 +24,6 @@
     "verify": "node tools/verify-live.mjs",
     "check:locales": "node tools/check-locales.mjs",
     "package": "node tools/package.mjs",
-    "shots": "node tools/make-shots.mjs",
     "demo": "node tools/demo.mjs"
   },
   "devDependencies": {

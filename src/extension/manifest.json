@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Gazetteer",
+  "name": "Gazetteer - Rename Google Maps places",
   "version": "0.1.0",
   "description": "__MSG_extDescription__",
   "permissions": [

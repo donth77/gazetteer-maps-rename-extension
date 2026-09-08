@@ -23,7 +23,7 @@ labels drawn on the map itself. Display only. No network requests, no tracking.
 Names are settings, not code.
 
 <p align="center">
-  <img src="assets/screenshots/popup.png" width="880" alt="Google Maps showing Lake Ontario in the sidebar, the search box and the map label, with the extension popup open">
+  <img src="assets/screenshot.png" width="880" alt="Google Maps showing Lake Ontario in the sidebar, the search box and the map label, with the extension popup open">
 </p>
 
 ## Install
