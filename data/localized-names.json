@@ -1,0 +1,277 @@
+{
+  "comment": "Served names read off Google Maps one language at a time, with the name each language uses for the place itself. Added to a rule only when a map in that language is actually opened, so nobody's settings carry 67 languages they will never see.",
+  "version": 1,
+  "localized": {
+    "gulf-of-mexico": {
+      "af": [
+        "Golf van Amerika",
+        "Golf van Meksiko"
+      ],
+      "am": [
+        "የአሜሪካ ባህረ ሰላጤ",
+        "የሜክሲኮ ባህረ ሰላጤ"
+      ],
+      "ar": [
+        "خليج أمريكا",
+        "خليج المكسيك"
+      ],
+      "az": [
+        "Amerika körfəzi",
+        "Meksika körfəzi"
+      ],
+      "bg": [
+        "Американски залив",
+        "Мексикански залив"
+      ],
+      "bn": [
+        "আমেরিকা উপসাগর",
+        "মেক্সিকো উপসাগর"
+      ],
+      "bs": [
+        "Američki zaliv",
+        "Meksički zaliv"
+      ],
+      "ca": [
+        "Golf d'Amèrica",
+        "Golf de Mèxic"
+      ],
+      "cs": [
+        "Americký záliv",
+        "Mexický záliv"
+      ],
+      "da": [
+        "Den Amerikanske Golf",
+        "Den Mexicanske Golf"
+      ],
+      "de": [
+        "Golf von Amerika",
+        "Golf von Mexiko"
+      ],
+      "el": [
+        "Κόλπος της Αμερικής",
+        "Κόλπος του Μεξικού"
+      ],
+      "es": [
+        "Golfo de América",
+        "Golfo de México"
+      ],
+      "es-419": [
+        "Golfo de América",
+        "Golfo de México"
+      ],
+      "et": [
+        "Ameerika laht",
+        "Mehhiko laht"
+      ],
+      "fa": [
+        "خلیج امریکا",
+        "خلیج مکزیک"
+      ],
+      "fi": [
+        "Amerikanlahti",
+        "Meksikonlahti"
+      ],
+      "fr": [
+        "Golfe d'Amérique",
+        "Golfe du Mexique"
+      ],
+      "gl": [
+        "Golfo de América",
+        "Golfo de México"
+      ],
+      "gu": [
+        "અમેરિકાનો અખાત",
+        "મેક્સિકોનો અખાત"
+      ],
+      "hr": [
+        "Američki zaljev",
+        "Meksički zaljev"
+      ],
+      "hu": [
+        "Amerikai-öböl",
+        "Mexikói-öböl"
+      ],
+      "hy": [
+        "Ամերիկյան ծոց",
+        "Մեքսիկական ծոց"
+      ],
+      "id": [
+        "Teluk Amerika",
+        "Teluk Meksiko"
+      ],
+      "is": [
+        "Ameríkuflói",
+        "Mexíkóflói"
+      ],
+      "it": [
+        "Golfo d'America",
+        "Golfo del Messico"
+      ],
+      "iw": [
+        "מפרץ אמריקה",
+        "מפרץ מקסיקו"
+      ],
+      "ja": [
+        "アメリカ湾",
+        "メキシコ湾"
+      ],
+      "ka": [
+        "ამერიკის ყურე",
+        "მექსიკის ყურე"
+      ],
+      "kk": [
+        "Америка шығанағы",
+        "Мексика шығанағы"
+      ],
+      "km": [
+        "ឈូង​សមុទ្រ​អាមេរិក",
+        "ឈូង​សមុទ្រ​ម៉ិកស៊ិក"
+      ],
+      "kn": [
+        "ಗಲ್ಫ್ ಆಫ್ ಅಮೇರಿಕಾ",
+        "ಗಲ್ಫ್ ಆಫ್ ಮೆಕ್ಸಿಕೊ"
+      ],
+      "ko": [
+        "아메리카만",
+        "멕시코만"
+      ],
+      "ky": [
+        "Америка булуңу",
+        "Мексика булуңу"
+      ],
+      "lo": [
+        "ອ່າວອາເມລິກາ",
+        "ອ່າວເມັກຊິໂກ"
+      ],
+      "lt": [
+        "Amerikos įlanka",
+        "Meksikos įlanka"
+      ],
+      "lv": [
+        "Amerikas līcis",
+        "Meksikas līcis"
+      ],
+      "mk": [
+        "Американски Залив",
+        "Мексикански Залив"
+      ],
+      "ml": [
+        "അമേരിക്കൻ ഉൾക്കടൽ",
+        "മെക്സിക്കൻ ഉൾക്കടൽ"
+      ],
+      "mn": [
+        "Америкийн булан",
+        "Мексикийн булан"
+      ],
+      "mr": [
+        "गल्फ ऑफ अमेरिका",
+        "गल्फ ऑफ मेक्सिको"
+      ],
+      "ms": [
+        "Teluk Amerika",
+        "Teluk Mexico"
+      ],
+      "nl": [
+        "Golf van Amerika",
+        "Golf van Mexico"
+      ],
+      "no": [
+        "Amerikagolfen",
+        "Mexicogolfen"
+      ],
+      "pa": [
+        "ਅਮਰੀਕਾ ਦੀ ਖਾੜੀ",
+        "ਮੈਕਸੀਕੋ ਦੀ ਖਾੜੀ"
+      ],
+      "pl": [
+        "Zatoka Amerykańska",
+        "Zatoka Meksykańska"
+      ],
+      "pt-BR": [
+        "Golfo da América",
+        "Golfo do México"
+      ],
+      "pt-PT": [
+        "Golfo da América",
+        "Golfo do México"
+      ],
+      "ro": [
+        "Golful America",
+        "Golful Mexic"
+      ],
+      "ru": [
+        "Американский залив",
+        "Мексиканский залив"
+      ],
+      "si": [
+        "ඇමරිකානු බොක්ක",
+        "මෙක්සිකෝ බොක්ක"
+      ],
+      "sk": [
+        "Americký záliv",
+        "Mexický záliv"
+      ],
+      "sl": [
+        "Ameriški zaliv",
+        "Mehiški zaliv"
+      ],
+      "sq": [
+        "Gjiri i Amerikës",
+        "Gjiri i Meksikës"
+      ],
+      "sr": [
+        "Амерички залив",
+        "Мексички залив"
+      ],
+      "sv": [
+        "Amerikanska golfen",
+        "Mexikanska golfen"
+      ],
+      "sw": [
+        "Ghuba ya Marekani",
+        "Ghuba ya Meksiko"
+      ],
+      "ta": [
+        "அமெரிக்க வளைகுடா",
+        "மெக்சிகோ வளைகுடா"
+      ],
+      "te": [
+        "గల్ఫ్ ఆఫ్ అమెరికా",
+        "గల్ఫ్ ఆఫ్ మెక్సికో"
+      ],
+      "th": [
+        "อ่าวอเมริกา",
+        "อ่าวเม็กซิโก"
+      ],
+      "tr": [
+        "Amerika Körfezi",
+        "Meksika Körfezi"
+      ],
+      "uk": [
+        "Американська затока",
+        "Мексиканська затока"
+      ],
+      "ur": [
+        "گلف آف امریکہ",
+        "گلف آف میکسیکو"
+      ],
+      "uz": [
+        "Amerika koʻrfazi",
+        "Meksika koʻrfazi"
+      ],
+      "vi": [
+        "Vịnh của Mỹ",
+        "Vịnh Mexico"
+      ],
+      "zh-CN": [
+        "美洲湾",
+        "墨西哥湾"
+      ],
+      "zh-TW": [
+        "美國灣",
+        "墨西哥灣"
+      ]
+    },
+    "lake-ontario": {}
+  }
+}

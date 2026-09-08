@@ -29,17 +29,17 @@
       "description": "Restore Lake Ontario",
       "substitutions": [
         {
-          "locale": "en",
+          "locale": "*",
           "from": "Lake Ontario (Lake America)",
           "to": "Lake Ontario"
         },
         {
-          "locale": "en",
+          "locale": "*",
           "from": "Lake America (Lake Ontario)",
           "to": "Lake Ontario"
         },
         {
-          "locale": "en",
+          "locale": "*",
           "from": "Lake America",
           "to": "Lake Ontario"
         }

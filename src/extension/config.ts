@@ -25,6 +25,8 @@ export interface GazetteerConfig {
   suppressRasterPreview: boolean;
   /** Shipped rules the user deleted; update-time merging must not resurrect them. */
   removedDefaults?: string[];
+  /** Page languages whose translated forms have already been offered. */
+  localesAdded?: string[];
   rules: Rule[];
 }
 
@@ -41,7 +43,7 @@ export function defaultRules(): Rule[] {
 }
 
 export function defaultConfig(): GazetteerConfig {
-  return { v: 2, enabled: true, suppressRasterPreview: true, removedDefaults: [], rules: defaultRules() };
+  return { v: 2, enabled: true, suppressRasterPreview: true, removedDefaults: [], localesAdded: [], rules: defaultRules() };
 }
 
 export async function loadConfig(): Promise<GazetteerConfig> {
@@ -55,6 +57,9 @@ export async function loadConfig(): Promise<GazetteerConfig> {
       suppressRasterPreview: raw.suppressRasterPreview !== false,
       removedDefaults: Array.isArray(raw.removedDefaults)
         ? raw.removedDefaults.filter((x): x is string => typeof x === 'string')
+        : [],
+      localesAdded: Array.isArray(raw.localesAdded)
+        ? raw.localesAdded.filter((x): x is string => typeof x === 'string')
         : [],
       // Deliberately no default-merging here: new shipped rules are merged once
       // per update by the background worker, so deleting a rule sticks.
