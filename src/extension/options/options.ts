@@ -87,12 +87,30 @@ function focusAfterDelete(candidates: (Element | null | undefined)[]): void {
   $<HTMLButtonElement>('#add-rule').focus();
 }
 
+/** Ids still carrying their placeholder, which are safe to replace. */
+const AUTO_ID = /^new-place(-\d+)?$/;
+
 function slugify(text: string, taken: Set<string>): string {
-  const base = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'new-place';
+  const base = text
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // "México" -> "Mexico"
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'new-place';
   let id = base;
   let n = 2;
   while (taken.has(id)) id = `${base}-${n++}`;
   return id;
+}
+
+/**
+ * Ids already spoken for. Shipped ids and deleted-shipped ids count even when
+ * no rule is using them: reusing one would make the next update's merge treat
+ * this rule as the shipped one.
+ */
+function takenIds(except?: Rule): Set<string> {
+  return new Set([
+    ...config.rules.filter((r) => r !== except).map((r) => r.id),
+    ...defaultRules().map((r) => r.id),
+    ...(config.removedDefaults ?? []),
+  ]);
 }
 
 import { LANGUAGES } from './languages.ts';
@@ -133,7 +151,12 @@ const LANGUAGE_ENTRIES: LanguageEntry[] = LANGUAGE_OPTIONS.map(([code, native]) 
 });
 
 function languageLabel(code: string): string {
-  return LANGUAGE_ENTRIES.find((e) => e.code === code)?.native ?? code;
+  const known = LANGUAGE_ENTRIES.find((e) => e.code === code);
+  if (known) return known.native;
+  // A code Maps' own menu does not list, such as the base "pt" covering both
+  // Brazil and Portugal. Name it rather than showing the user a bare code.
+  const named = englishNameOf(code);
+  return named || code;
 }
 
 /**
@@ -324,13 +347,43 @@ function renderRule(rule: Rule): HTMLElement {
   const node = ($<HTMLTemplateElement>('#rule-template').content.cloneNode(true) as DocumentFragment)
     .firstElementChild as HTMLElement;
 
+  const count = node.querySelector<HTMLElement>('.js-count')!;
   const refreshSubs = () => {
     const body = node.querySelector<HTMLElement>('.js-subs')!;
     body.textContent = '';
     for (const sub of rule.substitutions) body.append(renderSub(sub, rule, refreshSubs));
     // Bare column headings over an empty table read as a rendering bug.
     node.querySelector<HTMLElement>('.subs')!.hidden = rule.substitutions.length === 0;
+    const n = rule.substitutions.length;
+    count.textContent = n === 1 ? t('popupRenameCountOne') : t('popupRenameCountMany', [String(n)]);
   };
+
+  /**
+   * Rules collapse, because a rule that has picked up a language or two runs
+   * long and the page becomes a scroll. Which ones are open is a view
+   * preference, so it lives in the browser rather than in the saved rules.
+   */
+  const toggle = node.querySelector<HTMLButtonElement>('.js-toggle')!;
+  const body = node.querySelector<HTMLElement>('.js-body')!;
+  body.id = `rule-body-${rule.id.replace(/[^a-z0-9-]/gi, '') || 'x'}`;
+  toggle.setAttribute('aria-controls', body.id);
+  const remembered = (() => {
+    try { return localStorage.getItem(`gz.open.${rule.id}`); } catch { return null; }
+  })();
+  let open = remembered === null ? false : remembered === '1';
+  const applyOpen = () => {
+    node.classList.toggle('collapsed', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    const label = t(open ? 'hideRenames' : 'showRenames');
+    toggle.setAttribute('aria-label', label);
+    toggle.title = label;
+  };
+  toggle.addEventListener('click', () => {
+    open = !open;
+    applyOpen();
+    try { localStorage.setItem(`gz.open.${rule.id}`, open ? '1' : '0'); } catch { /* ignore */ }
+  });
+  applyOpen();
 
   const enabled = node.querySelector<HTMLInputElement>('.js-enabled')!;
   enabled.checked = rule.enabled;
@@ -346,6 +399,19 @@ function renderRule(rule: Rule): HTMLElement {
   description.value = rule.description ?? '';
   description.addEventListener('input', () => {
     rule.description = description.value;
+    persist();
+  });
+  // Name the rule after itself once the user has named it, so the id in an
+  // exported file means something. Only while the id is still the placeholder:
+  // after that it is frozen, because exports and deletions are keyed on it.
+  description.addEventListener('change', () => {
+    const named = rule.description?.trim();
+    if (!named || !AUTO_ID.test(rule.id)) return;
+    const next = slugify(named, takenIds(rule));
+    if (next === rule.id) return;
+    rule.id = next;
+    node.querySelector<HTMLElement>('.js-id')!.textContent = rule.id;
+    enabled.setAttribute('aria-label', t('ariaEnableRule', [named]));
     persist();
   });
 
@@ -518,9 +584,11 @@ async function init(): Promise<void> {
   });
 
   $<HTMLButtonElement>('#add-rule').addEventListener('click', () => {
-    const taken = new Set(config.rules.map((r) => r.id));
+    const id = slugify('new place', takenIds());
+    // A place you just added opens, since the next thing you want is its fields.
+    try { localStorage.setItem(`gz.open.${id}`, '1'); } catch { /* ignore */ }
     config.rules.push({
-      id: slugify('new place', taken),
+      id,
       enabled: true,
       description: '',
       substitutions: [{ locale: '*', from: '', to: '' }],

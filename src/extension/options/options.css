@@ -87,6 +87,14 @@ input:focus-visible + .switch { outline: 2px solid var(--accent); outline-offset
 }
 .title-input:hover { border-color: var(--line); }
 .rule-id { color: var(--muted); display: block; margin-top: .15rem; }
+.rule-count { color: var(--muted); font-size: .82rem; white-space: nowrap; align-self: center; }
+.chevron {
+  display: block; width: .5rem; height: .5rem; margin: .1rem .2rem;
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(45deg); transition: transform .15s ease;
+}
+.js-toggle[aria-expanded="false"] .chevron { transform: rotate(-45deg); }
+.rule.collapsed .rule-body { display: none; }
 .rule-note {
   background: var(--note-bg); border-radius: 8px; padding: .55rem .7rem;
   color: var(--muted); font-size: .85rem; margin: .7rem 0 0;

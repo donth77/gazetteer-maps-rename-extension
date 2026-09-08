@@ -12,7 +12,7 @@
       <img src="icons/icon48.png" alt="" width="32" height="32">
       <div>
         <h1>Gazetteer</h1>
-        <p class="tagline" data-i18n="tagline">Control what Google Maps calls things.</p>
+        <p class="tagline" data-i18n="tagline">Decide what Google Maps calls things.</p>
       </div>
     </div>
     <label class="master">
@@ -77,9 +77,12 @@
           <input type="text" class="js-description title-input" placeholder="What this restores" aria-label="Rule description" data-i18n-placeholder="phRuleDescription" data-i18n-arialabel="ariaRuleDescription">
           <code class="js-id rule-id"></code>
         </div>
+        <span class="rule-count js-count"></span>
+        <button type="button" class="btn icon js-toggle" aria-expanded="true"><span class="chevron" aria-hidden="true"></span></button>
         <button type="button" class="btn icon js-delete-rule" aria-label="Delete this rule" title="Delete this rule" data-i18n-arialabel="ariaDeleteRule" data-i18n-title="ariaDeleteRule">&times;</button>
       </div>
       <p class="rule-note js-note" hidden></p>
+      <div class="rule-body js-body">
       <table class="subs">
         <thead>
           <tr><th scope="col" data-i18n="colLanguage">Language</th><th scope="col" data-i18n="colGoogleShows">Google shows</th><th scope="col" data-i18n="colShowInstead">Show instead</th><th><span class="sr-only" data-i18n="colRemove">Remove</span></th></tr>
@@ -87,6 +90,7 @@
         <tbody class="js-subs"></tbody>
       </table>
       <button type="button" class="btn small js-add-sub" data-i18n="addRename">Add a rename</button>
+      </div>
     </article>
   </template>
 
