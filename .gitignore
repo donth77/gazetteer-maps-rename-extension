@@ -4,3 +4,4 @@ node_modules
 dist
 verify*.png
 dist-dbg
+gazetteer-*.zip

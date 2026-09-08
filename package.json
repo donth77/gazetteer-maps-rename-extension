@@ -1,8 +1,17 @@
 {
   "name": "gazetteer",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Restore the Gulf of Mexico, Lake Ontario, and rename anything else on Google Maps.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donth77/maps-rename-extension.git"
+  },
+  "homepage": "https://github.com/donth77/maps-rename-extension#readme",
+  "bugs": {
+    "url": "https://github.com/donth77/maps-rename-extension/issues"
+  },
   "type": "module",
   "packageManager": "pnpm@10.14.0",
   "scripts": {
@@ -14,6 +23,8 @@
     "check": "pnpm run typecheck && pnpm test",
     "verify": "node tools/verify-live.mjs",
     "check:locales": "node tools/check-locales.mjs",
+    "package": "node tools/package.mjs",
+    "shots": "node tools/make-shots.mjs",
     "demo": "node tools/demo.mjs"
   },
   "devDependencies": {

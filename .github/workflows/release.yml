@@ -1,0 +1,28 @@
+# Builds the store zip when a version tag is pushed and attaches it to a
+# GitHub release. Upload to the Chrome Web Store stays manual: the store
+# wants a human to confirm the listing and the data disclosures.
+name: release
+on:
+  push:
+    tags: ['v*']
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run check
+      - run: pnpm run package
+      - name: Attach the zip to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: gazetteer-*.zip
+          generate_release_notes: true
