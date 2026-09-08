@@ -9,8 +9,8 @@
 <p align="center">
   <a href="https://github.com/donth77/maps-rename-extension/actions/workflows/ci.yml"><img alt="ci" src="https://img.shields.io/github/actions/workflow/status/donth77/maps-rename-extension/ci.yml?branch=main&label=ci"></a>
   <a href="https://github.com/donth77/maps-rename-extension/actions/workflows/daily-health.yml"><img alt="daily health" src="https://img.shields.io/github/actions/workflow/status/donth77/maps-rename-extension/daily-health.yml?branch=main&label=daily%20health"></a>
-  <img alt="manifest v3" src="https://img.shields.io/badge/manifest-v3-0B6B5E">
-  <a href="LICENSE"><img alt="license" src="https://img.shields.io/github/license/donth77/maps-rename-extension?color=0B6B5E"></a>
+  <img alt="Chrome manifest v3" src="https://img.shields.io/badge/Chrome%20manifest-v3-0b6b5e">
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/github/license/donth77/maps-rename-extension?color=0b6b5e"></a>
 </p>
 
 ---
@@ -33,31 +33,24 @@ Open `chrome://extensions`, turn on Developer mode, click "Load unpacked", pick
 `dist/`. Reload any open Maps tabs. Or run `pnpm run demo` to try it in a
 throwaway browser first.
 
-## Use
+## Usage
 
-The popup has an on/off switch per place. Settings has the full editor, plus
-JSON import and export. Things to know:
+The popup switches each place on or off. Settings is the full editor, with
+import and export, and a rename can apply in one language or in all of them.
 
-- Match names exactly as Maps shows them, case included. States need both
-  "Florida" and "FLORIDA".
-- Map labels that wrap onto two lines only rename cleanly when a single word
-  changes.
-- A rename can apply in one language or all of them. The interface itself
-  ships in nine.
-- Search works with your names. Type "Gulf of Bananas" and Maps is sent the
-  name it knows, while the box keeps showing yours.
-- Changes reach an open tab within a second. No reload needed.
+Names have to match exactly, capitals included, so a state needs both "Florida" and "FLORIDA". And where a label wraps onto two lines, only one of the words can change.
 
 ## How it works
 
-Page text is a DOM observer that rewrites strings before paint. Map labels are
-harder: Google draws them with WebGL inside web workers and never calls a text
-API you could hook. The text does pass through `TextDecoder` on its way out of
-WASM, so the extension injects into those workers and rewrites it there.
-Details are in the comments in `src/hooks/`.
+For page text, an observer rewrites the names before the browser
+paints them.
+
+For map labelsm Google draws them with WebGL inside web workers, so there is no text on the page to edit. The names pass through a browser
+function on their way to being drawn, and that is where the extension steps in.
+The reasoning is in the comments in `src/hooks/`.
 
 While the map loads, Google shows prerendered images that still carry the old
-names. The extension hides those behind a copy of Maps' own loading grid, so
+names. The extension hides those behind a copy of the Maps loading grid, so
 the first names you see are yours.
 
 ## Develop
@@ -83,5 +76,4 @@ update `data/names.json` soon, because Google ships the change within days.
 `storage`, plus Google Maps addresses. Nothing else. Your rules stay on your
 computer and the extension makes no network requests. See [PRIVACY.md](PRIVACY.md).
 
-One rule about the code: no place name may appear in `src/`. They all live in
-`data/names.json`.
+Place names live in `data/names.json`.
