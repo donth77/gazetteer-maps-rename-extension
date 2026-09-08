@@ -22,6 +22,10 @@ Renames show up everywhere: the sidebar, search results, the tab title, and the
 labels drawn on the map itself. Display only. No network requests, no tracking.
 Names are settings, not code.
 
+<p align="center">
+  <img src="assets/screenshots/popup.png" width="880" alt="Google Maps showing Lake Ontario in the sidebar, the search box and the map label, with the extension popup open">
+</p>
+
 ## Install
 
 ```sh
@@ -38,7 +42,7 @@ throwaway browser first.
 The popup switches each place on or off. Settings is the full editor, with
 import and export, and a rename can apply in one language or in all of them.
 
-Names have to match exactly, capitals included, so a state needs both "Florida" and "FLORIDA". And where a label wraps onto two lines, only one of the words can change.
+Names have to match exactly, capitals included, so a state needs both "Florida" and "FLORIDA". And where a label wraps onto two lines, only one of the words can change. Places that share a name cannot be told apart on the map, because a label arrives as the bare word: "Paris, France" renames the sidebar and leaves the map alone, while "Paris" renames every Paris there is.
 
 ## How it works
 

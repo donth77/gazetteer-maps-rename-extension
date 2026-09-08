@@ -129,9 +129,18 @@ test('every shipped substitution survives a round trip through the engine', asyn
   const res = validateRules(shipped);
   assert.equal(res.ok, true);
   if (!res.ok) return;
-  const matcher = createMatcher(compile(res.rules, 'en'));
+  // Each substitution has to be checked under a page language it applies in;
+  // one matcher built for English cannot see the translated entries.
+  const byLocale = new Map<string, ReturnType<typeof createMatcher>>();
+  const matcherFor = (locale: string) => {
+    const key = locale === '*' ? 'en' : locale;
+    let m = byLocale.get(key);
+    if (!m) byLocale.set(key, (m = createMatcher(compile(res.rules, key))));
+    return m;
+  };
   for (const rule of res.rules) {
     for (const sub of rule.substitutions) {
+      const matcher = matcherFor(sub.locale);
       const out = matcher.substitute(sub.from);
       assert.equal(out.text, sub.to, `${rule.id}: "${sub.from}" should become "${sub.to}"`);
       // And the result must be stable — no "X (X)" on a second pass.
