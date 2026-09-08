@@ -64,8 +64,8 @@ try {
 
   const optionsPage = await context.newPage();
   await optionsPage.goto(`chrome-extension://${id}/options.html`);
-  // Rules collapse by default. A collapsed card shows a store visitor nothing,
-  // so open them for the picture.
+  // Open any folded rule, so the picture does not depend on what the default
+  // happens to be.
   await optionsPage.evaluate(() => {
     for (const el of document.querySelectorAll('.js-toggle')) {
       if (el.getAttribute('aria-expanded') === 'false') el.click();

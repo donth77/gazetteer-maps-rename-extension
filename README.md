@@ -15,7 +15,7 @@
 
 ---
 
-Google renamed the Gulf of Mexico and Lake Ontario. This puts the old names
+Google renamed the Gulf of Mexico and Lake Ontario. This puts the proper names
 back, or any name you want, on anything from countries to corner stores.
 
 Renames show up everywhere: the sidebar, search results, the tab title, and the
@@ -49,13 +49,11 @@ Names have to match exactly, capitals included, so a state needs both "Florida" 
 For page text, an observer rewrites the names before the browser
 paints them.
 
-For map labelsm Google draws them with WebGL inside web workers, so there is no text on the page to edit. The names pass through a browser
-function on their way to being drawn, and that is where the extension steps in.
-The reasoning is in the comments in `src/hooks/`.
+For map labels, Google draws them with WebGL inside web workers and there's no text on the page to edit. The names pass through a browser
+function and that is where the extension steps in.
 
 While the map loads, Google shows prerendered images that still carry the old
-names. The extension hides those behind a copy of the Maps loading grid, so
-the first names you see are yours.
+names. The extension hides those behind a copy of the Maps loading grid by default.
 
 ## Develop
 

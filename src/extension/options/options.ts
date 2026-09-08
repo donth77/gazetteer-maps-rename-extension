@@ -359,9 +359,11 @@ function renderRule(rule: Rule): HTMLElement {
   };
 
   /**
-   * Rules collapse, because a rule that has picked up a language or two runs
-   * long and the page becomes a scroll. Which ones are open is a view
-   * preference, so it lives in the browser rather than in the saved rules.
+   * Rules can be folded away, because one that has picked up a language or two
+   * runs long and turns the page into a scroll. They start open, so the editor
+   * shows its contents rather than a row of closed drawers. Which ones are
+   * open is a view preference, so it lives in the browser, not in the saved
+   * rules.
    */
   const toggle = node.querySelector<HTMLButtonElement>('.js-toggle')!;
   const body = node.querySelector<HTMLElement>('.js-body')!;
@@ -370,7 +372,7 @@ function renderRule(rule: Rule): HTMLElement {
   const remembered = (() => {
     try { return localStorage.getItem(`gz.open.${rule.id}`); } catch { return null; }
   })();
-  let open = remembered === null ? false : remembered === '1';
+  let open = remembered === null ? true : remembered === '1';
   const applyOpen = () => {
     node.classList.toggle('collapsed', !open);
     toggle.setAttribute('aria-expanded', String(open));
