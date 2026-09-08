@@ -136,14 +136,20 @@ async function init(): Promise<void> {
     if (status) $<HTMLButtonElement>('#reload').hidden = false;
   });
 
-  $<HTMLButtonElement>('#open-options').addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+  // Closing the popup tears this page down, and any call still in flight with
+  // it. Both of these are asynchronous, and on the first click of a session
+  // the service worker is asleep, which is exactly when the round trip is
+  // slowest. So wait for the call to land before closing.
+  $<HTMLButtonElement>('#open-options').addEventListener('click', async () => {
+    try { await chrome.runtime.openOptionsPage(); } catch { /* ignore */ }
     window.close();
   });
 
   $<HTMLButtonElement>('#reload').addEventListener('click', async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab?.id) chrome.tabs.reload(tab.id);
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id) await chrome.tabs.reload(tab.id);
+    } catch { /* ignore */ }
     window.close();
   });
 
