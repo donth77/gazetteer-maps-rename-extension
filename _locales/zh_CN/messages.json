@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "隐藏改名"
+  },
+  "filterPlaces": {
+    "message": "查找地点"
+  },
+  "noMatchingPlaces": {
+    "message": "没有匹配的地点"
   }
 }

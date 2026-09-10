@@ -36,7 +36,10 @@ let mapContested = false;
 function applyConfig(config: GazetteerConfig): void {
   const subs = config.enabled ? compile(config.rules, pageLocale()) : [];
   active = createMatcher(subs);
-  activeReverse = createMatcher(reverseSubs(subs), { ignoreCase: true });
+  // The reverse table matches regardless of case, so it wants one entry per
+  // name rather than the capitals variants the forward table carries.
+  const plain = config.enabled ? compile(config.rules, pageLocale(), { uppercaseVariants: false }) : [];
+  activeReverse = createMatcher(reverseSubs(plain), { ignoreCase: true });
   // The MAIN-world hook cannot read storage; hand it the compiled table.
   try {
     window.postMessage({

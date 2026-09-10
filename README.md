@@ -42,7 +42,7 @@ throwaway browser first.
 The popup switches each place on or off. Settings is the full editor, with
 import and export, and a rename can apply in one language or in all of them.
 
-Names have to match exactly, capitals included, so a state needs both "Florida" and "FLORIDA". And where a label wraps onto two lines, only one of the words can change. Places that share a name cannot be told apart on the map, because a label arrives as the bare word: "Paris, France" renames the sidebar and leaves the map alone, while "Paris" renames every Paris there is.
+Names have to match exactly as Maps shows them, though the all-capitals form the map uses for states and countries is covered for you: a rename for "Florida" also changes "FLORIDA". Where a label wraps onto two lines, only one of the words can change. Places that share a name cannot be told apart on the map, because a label arrives as the bare word: "Paris, France" renames the sidebar and leaves the map alone, while "Paris" renames every Paris there is.
 
 ## How it works
 

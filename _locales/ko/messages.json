@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "이름 변경 숨기기"
+  },
+  "filterPlaces": {
+    "message": "장소 찾기"
+  },
+  "noMatchingPlaces": {
+    "message": "일치하는 장소가 없습니다"
   }
 }

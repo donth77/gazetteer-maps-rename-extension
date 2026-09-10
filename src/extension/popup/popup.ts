@@ -17,6 +17,9 @@ interface Status {
 
 let config: GazetteerConfig = { enabled: true, suppressRasterPreview: true, rules: [] };
 
+/** A list long enough that finding a place in it needs help. */
+const FILTER_FROM = 8;
+
 function renderRules(): void {
   const host = $<HTMLUListElement>('#rules');
   host.textContent = '';
@@ -29,8 +32,16 @@ function renderRules(): void {
     return;
   }
 
-  for (const rule of config.rules) {
+  // The ones doing something come first. Decided once, when the list is
+  // drawn: a rule switched off here stays where it is until the popup is
+  // next opened, rather than jumping away from the pointer.
+  const ordered = [...config.rules].sort((a, b) => Number(b.enabled) - Number(a.enabled));
+
+  $<HTMLElement>('#filter-row').hidden = config.rules.length < FILTER_FROM;
+
+  for (const rule of ordered) {
     const li = document.createElement('li');
+    li.dataset.haystack = `${rule.description ?? ''} ${rule.id}`.toLowerCase();
     const label = document.createElement('label');
 
     const box = document.createElement('input');
@@ -114,9 +125,32 @@ async function fetchStatus(): Promise<Status | null> {
   }
 }
 
+function applyFilter(): void {
+  const query = $<HTMLInputElement>('#filter').value.trim().toLowerCase();
+  const host = $<HTMLUListElement>('#rules');
+  let shown = 0;
+  for (const li of host.querySelectorAll<HTMLLIElement>('li[data-haystack]')) {
+    const hit = query === '' || li.dataset.haystack!.includes(query);
+    li.hidden = !hit;
+    if (hit) shown++;
+  }
+  let none = host.querySelector<HTMLLIElement>('li.empty');
+  if (shown === 0 && query !== '') {
+    if (!none) {
+      none = document.createElement('li');
+      none.className = 'empty';
+      host.append(none);
+    }
+    none.textContent = t('noMatchingPlaces');
+  } else {
+    none?.remove();
+  }
+}
+
 async function init(): Promise<void> {
   document.documentElement.lang = t('uiLang');
   localizeDocument();
+  $<HTMLInputElement>('#filter').addEventListener('input', applyFilter);
   try {
     const manifest = chrome.runtime.getManifest();
     // Dev builds carry a per-build stamp in version_name; releases just the version.

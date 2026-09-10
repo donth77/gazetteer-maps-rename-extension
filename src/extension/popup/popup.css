@@ -29,7 +29,14 @@ input:checked + .switch { background: var(--accent); }
 input:checked + .switch::after { transform: translateX(14px); }
 input:focus-visible + .switch { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+.filter { padding: .55rem .9rem 0; }
+.filter input {
+  width: 100%; box-sizing: border-box; font: inherit; padding: .4rem .6rem;
+  border: 1px solid var(--control); border-radius: 7px; background: var(--bg); color: var(--ink);
+}
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
 .rules { list-style: none; margin: 0; padding: .35rem 0; max-height: 240px; overflow-y: auto; }
+.rules li[hidden] { display: none; }
 .rules li { display: flex; align-items: center; gap: .55rem; padding: .4rem .9rem; }
 .rules li:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
 .rules label { display: flex; align-items: center; gap: .55rem; cursor: pointer; width: 100%; }

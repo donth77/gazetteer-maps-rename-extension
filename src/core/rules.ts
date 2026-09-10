@@ -19,7 +19,17 @@ export function localeMatches(subLocale: string, pageLocale: string): boolean {
  * ("X (Y)") being clobbered by the bare form and producing "X (X)".
  * `Array.sort` is stable, so equal-length entries keep config order.
  */
-export function compile(rules: readonly Rule[], pageLocale: string): CompiledSubstitution[] {
+export interface CompileOptions {
+  /**
+   * Also match the all-capitals form of each name. Maps sets states, countries
+   * and regions in capitals on the map itself ("FLORIDA"), so a rename written
+   * the way the sidebar shows it would otherwise miss the label. On by
+   * default; off for the reverse table, which wants one entry per name.
+   */
+  uppercaseVariants?: boolean;
+}
+
+export function compile(rules: readonly Rule[], pageLocale: string, options?: CompileOptions): CompiledSubstitution[] {
   const out: CompiledSubstitution[] = [];
   for (const rule of rules ?? []) {
     if (!rule || rule.enabled === false || !Array.isArray(rule.substitutions)) continue;
@@ -28,6 +38,21 @@ export function compile(rules: readonly Rule[], pageLocale: string): CompiledSub
       if (sub.from === '' || sub.from === sub.to) continue;
       if (!localeMatches(sub.locale, pageLocale)) continue;
       out.push({ from: sub.from, to: sub.to, locale: sub.locale, ruleId: rule.id });
+    }
+  }
+  if (options?.uppercaseVariants !== false) {
+    // Derived after everything the user wrote, so a capitals form they listed
+    // themselves is never displaced by one made up from another entry.
+    const listed = new Set(out.map((s) => `${s.locale}\u0000${s.from}`));
+    for (const sub of [...out]) {
+      const upper = sub.from.toUpperCase();
+      // Only where capitals are a different spelling: scripts without case,
+      // and names already in capitals, get nothing extra.
+      if (upper === sub.from || upper.toLowerCase() !== sub.from.toLowerCase()) continue;
+      const key = `${sub.locale}\u0000${upper}`;
+      if (listed.has(key)) continue;
+      listed.add(key);
+      out.push({ from: upper, to: sub.to.toUpperCase(), locale: sub.locale, ruleId: sub.ruleId });
     }
   }
   return out.sort((a, b) => b.from.length - a.from.length);

@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "Umbenennungen ausblenden"
+  },
+  "filterPlaces": {
+    "message": "Ort suchen"
+  },
+  "noMatchingPlaces": {
+    "message": "Kein passender Ort"
   }
 }

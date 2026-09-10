@@ -36,7 +36,7 @@ test('compile sorts by descending from-length', () => {
     { locale: '*', from: 'ab', to: 'x' },
     { locale: '*', from: 'abcd', to: 'x' },
     { locale: '*', from: 'abc', to: 'x' },
-  ] })], 'en');
+  ] })], 'en', { uppercaseVariants: false });
   assert.deepEqual(out.map((s) => s.from), ['abcd', 'abc', 'ab']);
 });
 
@@ -44,7 +44,7 @@ test('compile keeps config order among equal-length entries', () => {
   const out = compile([rule({ substitutions: [
     { locale: '*', from: 'aa', to: 'first' },
     { locale: '*', from: 'bb', to: 'second' },
-  ] })], 'en');
+  ] })], 'en', { uppercaseVariants: false });
   assert.deepEqual(out.map((s) => s.to), ['first', 'second']);
 });
 
@@ -57,7 +57,7 @@ test('compile skips junk without throwing', () => {
     ] }),
     { id: 'empty', enabled: true, substitutions: [] } as Rule,
   ];
-  const out = compile(messy, 'en');
+  const out = compile(messy, 'en', { uppercaseVariants: false });
   assert.deepEqual(out.map((s) => s.from), ['ok']);
 });
 
@@ -186,7 +186,7 @@ test('reverseSubs turns the renames around, one per name, preferring the bare or
     ],
   }, {
     id: 'lake', enabled: true, substitutions: [{ locale: 'en', from: 'Lake America', to: 'Lake Ontario' }],
-  }], 'en');
+  }], 'en', { uppercaseVariants: false });
   const reversed = reverseSubs(compiled);
   assert.deepEqual(reversed.map((s) => [s.from, s.to]), [
     ['Gulf of Bananas', 'Gulf of America'],
@@ -196,4 +196,35 @@ test('reverseSubs turns the renames around, one per name, preferring the bare or
   assert.ok(reversed[0]!.from.length >= reversed[1]!.from.length);
   const query = createMatcher(reversed, { ignoreCase: true });
   assert.equal(query.substitute('ferry from lake ontario to the gulf of bananas').text, 'ferry from Lake America to the Gulf of America');
+});
+
+test('compile adds the all-capitals form of each name, as map labels use it', () => {
+  const subs = compile([rule({ substitutions: [{ locale: '*', from: 'Florida', to: 'Sunshine State' }] })], 'en');
+  // Same length, so the user's own entry keeps its place and the variant follows.
+  assert.deepEqual(subs.map((s) => [s.from, s.to]), [['Florida', 'Sunshine State'], ['FLORIDA', 'SUNSHINE STATE']]);
+  const m = createMatcher(subs);
+  assert.equal(m.substitute('FLORIDA').text, 'SUNSHINE STATE');
+  assert.equal(m.substitute('Florida').text, 'Sunshine State');
+});
+
+test('capitals variants are skipped where they would add nothing', () => {
+  const one = (from: string, to: string) => compile([rule({ substitutions: [{ locale: '*', from, to }] })], 'en');
+  assert.equal(one('FLORIDA', 'X').length, 1, 'already capitals');
+  assert.equal(one('メキシコ湾', 'X').length, 1, 'script without case');
+  assert.equal(one('Route 66', 'Mother Road').length, 2, 'digits alongside letters still get a variant');
+});
+
+test('a capitals form the user listed themselves beats a derived one', () => {
+  const both = compile([rule({ substitutions: [
+    { locale: '*', from: 'Florida', to: 'Sunshine State' },
+    { locale: '*', from: 'FLORIDA', to: 'The Sunshine State' },
+  ] })], 'en');
+  assert.equal(both.length, 2);
+  assert.equal(both.find((s) => s.from === 'FLORIDA')!.to, 'The Sunshine State');
+});
+
+test('the reverse table is built without capitals variants', () => {
+  const rules = [rule({ substitutions: [{ locale: '*', from: 'Gulf of America', to: 'Gulf of Mexico' }] })];
+  const reversed = reverseSubs(compile(rules, 'en', { uppercaseVariants: false }));
+  assert.deepEqual(reversed.map((s) => [s.from, s.to]), [['Gulf of Mexico', 'Gulf of America']]);
 });

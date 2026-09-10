@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "名前変更を非表示"
+  },
+  "filterPlaces": {
+    "message": "場所を検索"
+  },
+  "noMatchingPlaces": {
+    "message": "一致する場所がありません"
   }
 }

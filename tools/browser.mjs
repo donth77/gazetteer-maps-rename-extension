@@ -87,9 +87,14 @@ export function unpackedExtensionId(dir = path.resolve(process.env.GZ_DIST ?? 'd
   return [...hash].map((h) => String.fromCharCode(97 + parseInt(h, 16))).join('');
 }
 
-/** Prefer the live worker's id when one is awake; fall back to computing it. */
+/**
+ * Prefer the live worker's id when one is awake; fall back to computing it.
+ * Only the extension's own worker counts: a Maps tab registers a service
+ * worker of its own, and picking that one up yields "www.google.com".
+ */
 export async function extensionId(context, timeout = 3000) {
-  const worker = context.serviceWorkers()[0]
-    ?? await context.waitForEvent('serviceworker', { timeout }).catch(() => null);
+  const ours = (w) => w.url().startsWith('chrome-extension://');
+  const worker = context.serviceWorkers().find(ours)
+    ?? await context.waitForEvent('serviceworker', { predicate: ours, timeout }).catch(() => null);
   return worker ? worker.url().split('/')[2] : unpackedExtensionId();
 }

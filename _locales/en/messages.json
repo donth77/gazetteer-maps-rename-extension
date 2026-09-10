@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "Hide renames"
+  },
+  "filterPlaces": {
+    "message": "Find a place"
+  },
+  "noMatchingPlaces": {
+    "message": "No matching places"
   }
 }

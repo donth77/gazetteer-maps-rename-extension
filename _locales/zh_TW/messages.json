@@ -211,5 +211,11 @@
   },
   "hideRenames": {
     "message": "隱藏改名"
+  },
+  "filterPlaces": {
+    "message": "尋找地點"
+  },
+  "noMatchingPlaces": {
+    "message": "沒有相符的地點"
   }
 }

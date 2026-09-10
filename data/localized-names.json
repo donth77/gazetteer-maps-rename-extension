@@ -272,6 +272,279 @@
         "墨西哥灣"
       ]
     },
-    "lake-ontario": {}
+    "lake-ontario": {
+      "af": [
+        "Amerika-meer",
+        "Ontariomeer"
+      ],
+      "am": [
+        "ሐይቅ አሜሪካ",
+        "ሐይቅ ኦንታሪዮ"
+      ],
+      "ar": [
+        "بحيرة أمريكا",
+        "بحيرة أونتاريو"
+      ],
+      "az": [
+        "Amerika gölü",
+        "Ontario gölü"
+      ],
+      "bg": [
+        "Езерото Америка",
+        "Езерото Онтарио"
+      ],
+      "bs": [
+        "Jezero Amerika",
+        "Jezero Ontario"
+      ],
+      "ca": [
+        "Llac Amèrica",
+        "Llac Ontario"
+      ],
+      "cs": [
+        "Americké jezero",
+        "Ontarijské jezero"
+      ],
+      "da": [
+        "Amerikasøen",
+        "Ontariosøen"
+      ],
+      "de": [
+        "Amerikasee",
+        "Ontariosee"
+      ],
+      "el": [
+        "Λίμνη Αμερική",
+        "Λίμνη Οντάριο"
+      ],
+      "es": [
+        "Lago América",
+        "Lago Ontario"
+      ],
+      "es-419": [
+        "Lago América",
+        "Lago Ontario"
+      ],
+      "et": [
+        "Ameerika järv",
+        "Ontario järv"
+      ],
+      "eu": [
+        "America lakua",
+        "Ontario lakua"
+      ],
+      "fa": [
+        "دریاچه امریکا",
+        "دریاچه انتاریو"
+      ],
+      "fi": [
+        "Amerikanjärvi",
+        "Ontariojärvi"
+      ],
+      "fr": [
+        "Lac d'Amérique",
+        "Lac Ontario"
+      ],
+      "gl": [
+        "Lago América",
+        "Lago Ontario"
+      ],
+      "gu": [
+        "લેક અમેરિકા",
+        "લેક ઓન્ટારિયો"
+      ],
+      "hi": [
+        "लेक अमेरिका",
+        "लेक ओंटारियो"
+      ],
+      "hr": [
+        "Jezero Amerika",
+        "Jezero Ontario"
+      ],
+      "hu": [
+        "Amerika-tó",
+        "Ontario-tó"
+      ],
+      "hy": [
+        "Ամերիկա լիճ",
+        "Օնտարիո լիճ"
+      ],
+      "id": [
+        "Danau Amerika",
+        "Danau Ontario"
+      ],
+      "is": [
+        "Ameríkuvatn",
+        "Ontariovatn"
+      ],
+      "it": [
+        "Lago d'America",
+        "Lago Ontario"
+      ],
+      "iw": [
+        "ימת אמריקה",
+        "ימת אונטריו"
+      ],
+      "ja": [
+        "アメリカ湖",
+        "オンタリオ湖"
+      ],
+      "ka": [
+        "ამერიკის ტბა",
+        "ონტარიოს ტბა"
+      ],
+      "kk": [
+        "Америка көлі",
+        "Онтарио көлі"
+      ],
+      "km": [
+        "បឹងអាមេរិក",
+        "បឹងអុនតារីយ៉ូ"
+      ],
+      "kn": [
+        "ಅಮೇರಿಕಾ ಸರೋವರ",
+        "ಒಂಟಾರಿಯೊ ಸರೋವರ"
+      ],
+      "ko": [
+        "아메리카호",
+        "온타리오호"
+      ],
+      "ky": [
+        "Америка көлү",
+        "Онтарио көлү"
+      ],
+      "lo": [
+        "ທະເລສາບອາເມລິກາ",
+        "ທະເລສາບອອນແທຣີໂອ"
+      ],
+      "lt": [
+        "Amerikos ežeras",
+        "Ontarijo ežeras"
+      ],
+      "lv": [
+        "Amerikas ezers",
+        "Ontario ezers"
+      ],
+      "mk": [
+        "Езеро Америка",
+        "Езеро Онтарио"
+      ],
+      "ml": [
+        "ലേക് അമേരിക്ക",
+        "ലേക് ഒന്റാറിയോ"
+      ],
+      "mr": [
+        "लेक अमेरिका",
+        "लेक ओंटारियो"
+      ],
+      "ms": [
+        "Tasik Amerika",
+        "Tasik Ontario"
+      ],
+      "my": [
+        "အမေရိက ရေကန်",
+        "အွန်တာရီယို ရေကန်"
+      ],
+      "ne": [
+        "अमेरिका ताल",
+        "ओन्टारियो ताल"
+      ],
+      "nl": [
+        "Americameer",
+        "Ontariomeer"
+      ],
+      "no": [
+        "Amerikasjøen",
+        "Ontariosjøen"
+      ],
+      "pa": [
+        "ਅਮਰੀਕਾ ਦਾ ਝੀਲ",
+        "ਓਨਟਾਰੀਓ ਝੀਲ"
+      ],
+      "pl": [
+        "Jezioro Ameryka",
+        "Jezioro Ontario"
+      ],
+      "pt-BR": [
+        "Lago América",
+        "Lago Ontário"
+      ],
+      "pt-PT": [
+        "Lago América",
+        "Lago Ontário"
+      ],
+      "ro": [
+        "Lacul America",
+        "Lacul Ontario"
+      ],
+      "ru": [
+        "Озеро Америка",
+        "Озеро Онтарио"
+      ],
+      "si": [
+        "ඇමරිකා විල",
+        "ඔන්ටාරියෝ විල"
+      ],
+      "sk": [
+        "Americké jazero",
+        "Jazero Ontário"
+      ],
+      "sl": [
+        "Ameriško jezero",
+        "Ontarijsko jezero"
+      ],
+      "sq": [
+        "Liqeni Amerika",
+        "Liqeni Ontario"
+      ],
+      "sr": [
+        "Језеро Америка",
+        "Језеро Онтарио"
+      ],
+      "sv": [
+        "Amerikasjön",
+        "Ontariosjön"
+      ],
+      "sw": [
+        "Ziwa Amerika",
+        "Ziwa Ontario"
+      ],
+      "ta": [
+        "அமெரிக்க ஏரி",
+        "ஒன்டாரியோ ஏரி"
+      ],
+      "te": [
+        "లేక్ అమెరికా",
+        "లేక్ అంటారియో"
+      ],
+      "th": [
+        "ทะเลสาบอเมริกา",
+        "ทะเลสาบออนแทรีโอ"
+      ],
+      "tr": [
+        "Amerika Gölü",
+        "Ontario Gölü"
+      ],
+      "uk": [
+        "Озеро Америка",
+        "Озеро Онтаріо"
+      ],
+      "ur": [
+        "جھیل امریکہ",
+        "جھیل اونٹاریو"
+      ],
+      "vi": [
+        "Hồ Mỹ",
+        "Hồ Ontario"
+      ],
+      "zh-CN": [
+        "美洲湖",
+        "安大略湖"
+      ],
+      "zh-TW": [
+        "美洲湖",
+        "安大略湖"
+      ]
+    }
   }
 }
