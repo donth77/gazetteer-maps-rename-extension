@@ -10,13 +10,15 @@
  * Bundled separately and injected as source text, so it must not assume any
  * DOM or extension API.
  */
-import { createLineMatcher, createResolutionStore, type LineMatcher, type NearbyProbe } from '../core/lines.ts';
+import { createLineMatcher, createResolutionStore, type LineMatcher } from '../core/lines.ts';
 import type { CompiledSubstitution } from '../core/types.ts';
 
 declare const __GZ: {
   base: string;
   channel: string;
   subs: CompiledSubstitution[];
+  /** What the page has already resolved, for a worker that starts late (after a rebuild, say). */
+  resolved?: [string, string][];
   name?: string;
 };
 /** Build-time switch; the shipped bundle has this false and the blocks removed. */
@@ -31,16 +33,21 @@ declare const __GZ_DEBUG__: boolean;
   const counters = { decodes: 0, substitutions: 0, whole: 0, lines: 0, shared: 0 };
   const workerId = (config.name || 'w') + '-' + Math.random().toString(36).slice(2, 8);
   let matcher: LineMatcher | null = config.subs.length ? createLineMatcher(config.subs) : null;
+  let rulesKey = JSON.stringify(config.subs);
 
   /**
-   * Two workers see every label line. The labeler decodes them in label order
-   * (so it can tell "America" under "Gulf of" from "America" under "North"),
-   * but it is the renderer's decode that decides which glyphs get drawn — and
-   * the renderer sees each unique line once, in hash order, with no context at
-   * all. Fortunately the labeler runs first by tens of milliseconds, so what
-   * it resolves is broadcast for the renderer to apply.
+   * Two workers see every label line. The labeler decodes each label's lines
+   * top to bottom (so it can tell "America" under "Gulf of" from "America"
+   * under "Lake"), but it is the renderer's decode that decides which glyphs
+   * get drawn, and the renderer reads each label bottom-up: "America" arrives
+   * before its "Gulf of", right after whatever label came before. Its own
+   * context can only guess. Fortunately the labeler runs first by tens of
+   * milliseconds, so what it resolves is broadcast for the renderer to apply.
    */
   const resolved = createResolutionStore();
+  // Start from what the page already knows, so a renderer built by a repair
+  // draws the current word even if it decodes before the labeler speaks.
+  try { for (const [text, to] of config.resolved ?? []) resolved.publish(text, to); } catch { /* start empty */ }
   const lastAnnounced = new Map<string, string>();
   let channel: BroadcastChannel | null = null;
   function announce(text: string, to: string): void {
@@ -54,18 +61,34 @@ declare const __GZ_DEBUG__: boolean;
     try { channel?.postMessage({ type: 'gazetteer:resolved', text, to, from: workerId }); } catch { /* ignore */ }
   }
 
+  /**
+   * What the renderer drew each shared word as, sent to the page whenever it
+   * changes. The page compares it with the labeler's current resolution to
+   * tell when a drawing has gone stale and a rebuild is due.
+   */
+  const lastDrawn = new Map<string, string>();
+  function reportDrawn(text: string, value: string): void {
+    if (lastDrawn.get(text) === value) return;
+    lastDrawn.set(text, value);
+    try { channel?.postMessage({ type: 'gazetteer:drawn', text, to: value, from: workerId }); } catch { /* ignore */ }
+  }
+
   const debug: Record<string, unknown>[] = [];
   if (__GZ_DEBUG__) (scope as Record<string, unknown>).__GAZETTEER_EVT__ = debug;
   /**
-   * The renderer keeps one glyph rendering per unique label-line string for the
-   * whole session, so when two renamed places share a word ("America"), a label
-   * drawn under the other place's context is wrong and no later decode can
-   * correct it. The one lever that clears that cache: losing and restoring the
-   * WebGL context, which Maps answers by rebuilding its renderer — fresh
-   * workers, fresh caches, every label re-laid-out under the now-current
-   * resolution. Contexts are captured here; the repair below cycles them. The
-   * decision to repair lives in the page, which outlives the workers a repair
-   * replaces, so its budget cannot be reset by the repair itself.
+   * The renderer keeps the glyphs it drew for a label line, so when two renamed
+   * places share a word ("America"), moving from one to the other can leave
+   * the word drawn the first place's way. The one lever that clears that
+   * cache: losing and restoring the WebGL context, which Maps answers by
+   * rebuilding its renderer — fresh workers, fresh caches, every label
+   * re-laid-out under the now-current resolution. Contexts are captured here;
+   * the repair below cycles them. The decision to repair lives in the page,
+   * which outlives the workers a repair replaces, so its budget cannot be reset
+   * by the repair itself.
+   *
+   * Holding a context is also what marks this worker as the renderer: it
+   * reports what it drew each shared word as, and never lets its own
+   * out-of-order context decide one.
    *
    * The first context is also reported to the page: it is the proof that the
    * vector map is really being drawn, which the raster-preview suppression
@@ -120,10 +143,16 @@ declare const __GZ_DEBUG__: boolean;
         return;
       }
       if (data?.type !== 'gazetteer:rules' || !Array.isArray(data.subs)) return;
+      // Every new worker's hello brings the table round again. Only a change
+      // makes what has been resolved and drawn so far worthless.
+      const key = JSON.stringify(data.subs);
+      if (key === rulesKey) return;
+      rulesKey = key;
       // Rebuild rather than mutate: the matcher owns its context window.
       matcher = data.subs.length ? createLineMatcher(data.subs) : null;
       resolved.clear();
       lastAnnounced.clear();
+      lastDrawn.clear();
     };
     // We are usually constructed before the user's config has been read, and a
     // BroadcastChannel does not replay. Ask for the current table.
@@ -177,44 +206,6 @@ declare const __GZ_DEBUG__: boolean;
     };
   } catch { /* ignore */ }
 
-  /**
-   * How far either side of a decoded slice to look for a sibling label line.
-   * Generous, because the two lines are separate heap allocations and are not
-   * reliably adjacent; the scan only runs for the rare ambiguous token.
-   */
-  const PROBE_BYTES = 32768;
-  const encoder = new TextEncoder();
-
-  function findBytes(hay: Uint8Array, needle: Uint8Array): boolean {
-    if (needle.length === 0 || needle.length > hay.length) return false;
-    const last = hay.length - needle.length;
-    const first = needle[0]!;
-    outer: for (let i = 0; i <= last; i++) {
-      if (hay[i] !== first) continue;
-      for (let j = 1; j < needle.length; j++) if (hay[i + j] !== needle[j]) continue outer;
-      return true;
-    }
-    return false;
-  }
-
-  function makeProbe(source: unknown): NearbyProbe | undefined {
-    if (!ArrayBuffer.isView(source)) return undefined;
-    const view = source as ArrayBufferView;
-    const buffer = view.buffer;
-    const lo = Math.max(0, view.byteOffset - PROBE_BYTES);
-    const hi = Math.min(buffer.byteLength, view.byteOffset + view.byteLength + PROBE_BYTES);
-    if (hi <= lo) return undefined;
-    let window: Uint8Array | null = null;
-    return (needle: string): boolean => {
-      try {
-        if (window === null) window = new Uint8Array(buffer, lo, hi - lo);
-        return findBytes(window, encoder.encode(needle));
-      } catch {
-        return false;
-      }
-    };
-  }
-
   let pending = false;
   function report(): void {
     if (pending || !channel) return;
@@ -233,8 +224,11 @@ declare const __GZ_DEBUG__: boolean;
       try {
         counters.decodes++;
         if (counters.decodes % 500 === 1) report();
+        // The renderer's recent lines belong to other labels, so only the
+        // labeler's context may decide a shared word.
+        const drawing = glContexts.length > 0;
         const before = matcher.lines;
-        const next = matcher.substitute(out, makeProbe(args[0]));
+        const next = matcher.substitute(out, !drawing);
         if (__GZ_DEBUG__ && (out === 'America' || out === 'Gulf of' || out === 'Mexico' || out === 'Lake' || out === 'Ontario' || out === 'Lake America' || out === 'Lake Ontario')) {
           debug.push({ ev: 'decode', w: workerId, text: out, at: Date.now(), matched: next !== out, known: resolved.has(out) });
         }
@@ -253,6 +247,7 @@ declare const __GZ_DEBUG__: boolean;
         }
         // No local match — apply a resolution another worker worked out.
         const known = resolved.apply(out);
+        if (drawing && matcher.needsContext(out)) reportDrawn(out, known);
         if (known !== out) {
           counters.substitutions++;
           counters.shared++;

@@ -66,17 +66,18 @@ export function deriveLineRule(sub: CompiledSubstitution): LineRule | null {
   };
 }
 
-/**
- * Optional order-independent context check. The two lines of one label are
- * separate allocations a few hundred bytes apart in the same buffer, so when the
- * lines arrive in the wrong order — which happens — asking whether an anchor
- * sits near this decode recovers the pairing that the recency window misses.
- */
-export type NearbyProbe = (needle: string) => boolean;
-
 export interface LineMatcher {
-  /** Feed every decoded string through this; returns the text to render. */
-  substitute(text: string, nearby?: NearbyProbe): string;
+  /**
+   * Feed every decoded string through this; returns the text to render.
+   *
+   * Pass `useContext: false` for a decoder that reads each label's lines
+   * bottom-up, as the renderer does. The line before "America" there belongs
+   * to some other label, often a lake's "Lake", so only whole-label matches
+   * are safe.
+   */
+  substitute(text: string, useContext?: boolean): string;
+  /** Whether `text` is a line that only its neighbouring line can rename. */
+  needsContext(text: string): boolean;
   readonly substitutions: number;
   readonly whole: number;
   readonly lines: number;
@@ -112,7 +113,7 @@ export function createLineMatcher(subs: readonly CompiledSubstitution[]): LineMa
     if (recent.length > CONTEXT_WINDOW) recent.shift();
   }
 
-  function substitute(text: string, nearby?: NearbyProbe): string {
+  function substitute(text: string, useContext = true): string {
     const direct = whole.get(text);
     if (direct !== undefined) {
       remember(text);
@@ -121,7 +122,7 @@ export function createLineMatcher(subs: readonly CompiledSubstitution[]): LineMa
       return direct;
     }
 
-    const candidates = byToken.get(text);
+    const candidates = useContext ? byToken.get(text) : undefined;
     if (candidates !== undefined) {
       // When several names share a differing token, the most recent anchor wins.
       let best: LineRule | undefined;
@@ -132,18 +133,6 @@ export function createLineMatcher(subs: readonly CompiledSubstitution[]): LineMa
             if (i > bestAt) { bestAt = i; best = rule; }
             break;
           }
-        }
-      }
-      // Fall back to the buffer probe when recency found nothing — this is the
-      // reverse-order case, where the anchor has not been decoded yet.
-      if (best === undefined && nearby !== undefined) {
-        for (const rule of candidates) {
-          let matched = false;
-          for (const anchor of rule.context) {
-            try { matched = nearby(anchor); } catch { matched = false; }
-            if (matched) break;
-          }
-          if (matched) { best = rule; break; }
         }
       }
 
@@ -161,6 +150,7 @@ export function createLineMatcher(subs: readonly CompiledSubstitution[]): LineMa
 
   return {
     substitute,
+    needsContext: (text) => byToken.has(text),
     get substitutions() { return substitutions; },
     get whole() { return wholeHits; },
     get lines() { return lineHits; },
@@ -177,17 +167,14 @@ export function createLineMatcher(subs: readonly CompiledSubstitution[]): LineMa
  * (a BroadcastChannel) lives in the worker runtime.
  */
 export interface ResolutionStore {
-  /**
-   * Record that `text` was resolved to `to` (by a context-aware decode).
-   * Returns true when this overwrote a different resolution for the same text —
-   * the signal that two rules' labels are colliding on a shared word, at which
-   * point anything already rendered from the old value is stale beyond reach.
-   */
-  publish(text: string, to: string): boolean;
+  /** Record that `text` was resolved to `to` (by a context-aware decode). Last write wins. */
+  publish(text: string, to: string): void;
   /** Apply a previously published resolution, or return the input unchanged. */
   apply(text: string): string;
   /** Whether a resolution exists (and actually changes the text). */
   has(text: string): boolean;
+  /** Every resolution, for handing to a worker that starts later. */
+  entries(): [string, string][];
   clear(): void;
 }
 
@@ -195,57 +182,114 @@ export function createResolutionStore(): ResolutionStore {
   const map = new Map<string, string>();
   return {
     publish(text, to) {
-      if (!text || !to || text === to) return false;
-      const previous = map.get(text);
+      if (!text || !to || text === to) return;
       map.set(text, to);
-      return previous !== undefined && previous !== to;
     },
     apply(text) { const to = map.get(text); return to !== undefined ? to : text; },
     has(text) { const to = map.get(text); return to !== undefined && to !== text; },
+    entries() { return [...map.entries()]; },
     clear() { map.clear(); },
   };
 }
 
 
 /**
- * Decides whether a label-collision repair (a renderer rebuild) may run.
- * Two guards keep it from thrashing:
- *  - the overwritten resolution must have stood a few seconds (a rapid
- *    flip-flop means both places are on screen at once, genuinely ambiguous,
- *    where a rebuild would just re-poison one of them);
- *  - repairs are rate-limited and capped per page.
+ * Decides when to rebuild the renderer, the only way to change a label it has
+ * already drawn. The renderer draws a shared word ("America") as whatever the
+ * labeler had resolved it to at the time, and keeps that drawing. So the
+ * planner compares what each renderer drew with what the labeler resolves the
+ * word to now. When they differ (the user has moved from one of the places
+ * sharing the word to the other) it asks for a rebuild, and while a guard says
+ * not yet, it waits rather than dropping the rebuild. The guards:
+ *  - a rebuild that did not fix the map is not repeated until the view
+ *    changes, because with both places on screen one label is wrong whichever
+ *    way the word is drawn;
+ *  - rebuilds are spaced out, so a new renderer has started before it is judged;
+ *  - a page gets a generous but finite number of them.
  */
-export interface RepairGovernor {
-  /** Record that `text` resolved (to anything) at `now`; returns the previous time. */
-  touch(text: string, now: number): number;
-  /** May a repair run for a collision whose previous value was set at `prevAt`? */
-  allow(prevAt: number, now: number): boolean;
+export interface RepairPlanner {
+  /** A decoder that sees each label's lines in order resolved `text` to `to`. */
+  resolved(text: string, to: string): void;
+  /** Renderer `source` drew `text` as `value`. */
+  drawn(source: string, text: string, value: string): void;
+  /** What to do now, given the map's current view (null when it is not known). */
+  decide(now: number, view: string | null): RepairDecision;
+  /** A rebuild for a mismatch went out at `view`. */
+  repaired(now: number, view: string | null): void;
+  /** The renderers seen so far are being replaced (any rebuild, including one for new rules). */
+  replaced(now: number): void;
+  /** The rules changed: nothing resolved or drawn so far still counts. */
+  reset(): void;
 }
 
-export function createRepairGovernor(options?: {
-  minStableMs?: number;
-  cooldownMs?: number;
-  maxRepairs?: number;
-}): RepairGovernor {
-  const minStableMs = options?.minStableMs ?? 4000;
-  const cooldownMs = options?.cooldownMs ?? 45000;
-  const maxRepairs = options?.maxRepairs ?? 3;
-  const touched = new Map<string, number>();
+export type RepairDecision =
+  /** Every drawn word matches its current resolution. */
+  | { action: 'none' }
+  | { action: 'repair' }
+  | { action: 'wait'; ms: number }
+  /**
+   * A word is drawn wrong and a rebuild here would not fix it. `recheck` is
+   * true while one might, once the view moves.
+   */
+  | { action: 'contested'; recheck: boolean };
+
+export function createRepairPlanner(options?: { minGapMs?: number; maxRepairs?: number }): RepairPlanner {
+  const minGapMs = options?.minGapMs ?? 2500;
+  const maxRepairs = options?.maxRepairs ?? 20;
+  const wanted = new Map<string, string>();
+  const drawnBy = new Map<string, Map<string, string>>();
+  // Renderers a rebuild replaced; a report they sent before dying may still arrive.
+  const retired = new Set<string>();
   let lastRepairAt = -Infinity;
+  // The view of the last rebuild, until the map is seen to match again.
+  let unfixedView: string | null | undefined;
   let repairs = 0;
+
+  function stale(): boolean {
+    for (const drawn of drawnBy.values()) {
+      for (const [text, value] of drawn) {
+        const want = wanted.get(text);
+        if (want !== undefined && want !== value) return true;
+      }
+    }
+    return false;
+  }
+
+  function replaced(now: number): void {
+    lastRepairAt = now;
+    for (const source of drawnBy.keys()) retired.add(source);
+    drawnBy.clear();
+  }
+
   return {
-    touch(text, now) {
-      const prev = touched.get(text) ?? 0;
-      touched.set(text, now);
-      return prev;
+    resolved(text, to) { wanted.set(text, to); },
+    drawn(source, text, value) {
+      if (retired.has(source)) return;
+      let drawn = drawnBy.get(source);
+      if (!drawn) drawnBy.set(source, (drawn = new Map()));
+      drawn.set(text, value);
     },
-    allow(prevAt, now) {
-      if (repairs >= maxRepairs) return false;
-      if (now - lastRepairAt < cooldownMs) return false;
-      if (prevAt <= 0 || now - prevAt < minStableMs) return false;
-      lastRepairAt = now;
+    decide(now, view) {
+      if (!stale()) {
+        unfixedView = undefined;
+        return { action: 'none' };
+      }
+      if (repairs >= maxRepairs) return { action: 'contested', recheck: false };
+      if (view === unfixedView) return { action: 'contested', recheck: true };
+      const since = now - lastRepairAt;
+      if (since < minGapMs) return { action: 'wait', ms: minGapMs - since };
+      return { action: 'repair' };
+    },
+    repaired(now, view) {
+      replaced(now);
+      unfixedView = view;
       repairs++;
-      return true;
+    },
+    replaced,
+    reset() {
+      wanted.clear();
+      drawnBy.clear();
+      unfixedView = undefined;
     },
   };
 }

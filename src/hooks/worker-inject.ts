@@ -20,6 +20,8 @@ export interface WorkerInjectOptions {
   channel: string;
   /** Read at each worker construction, so late workers start already configured. */
   getSubs: () => CompiledSubstitution[];
+  /** Shared words resolved so far, read the same way. */
+  getResolved?: () => [string, string][];
 }
 
 export interface WorkerInjectHandle {
@@ -33,7 +35,9 @@ export function installWorkerHook(options: WorkerInjectOptions): WorkerInjectHan
   const state = { wrapped: 0, failed: 0 };
 
   const preamble = (base: string, name?: string): string =>
-    `self.__GAZETTEER__=${JSON.stringify({ base, channel: options.channel, subs: options.getSubs(), name })};\n`;
+    `self.__GAZETTEER__=${JSON.stringify({
+      base, channel: options.channel, subs: options.getSubs(), resolved: options.getResolved?.() ?? [], name,
+    })};\n`;
 
   const NativeWorker = self.Worker;
   const nativeCreateObjectURL = URL.createObjectURL.bind(URL);

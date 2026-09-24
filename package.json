@@ -1,6 +1,6 @@
 {
   "name": "gazetteer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Restore the Gulf of Mexico, Lake Ontario, and rename anything else on Google Maps.",
   "license": "MIT",

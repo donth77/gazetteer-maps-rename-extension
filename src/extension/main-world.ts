@@ -7,7 +7,7 @@
  */
 import { installWorkerHook } from '../hooks/worker-inject.ts';
 import { compile, validateRules } from '../core/rules.ts';
-import { createLineMatcher, createRepairGovernor, createResolutionStore, type LineMatcher } from '../core/lines.ts';
+import { createLineMatcher, createRepairPlanner, createResolutionStore, type LineMatcher } from '../core/lines.ts';
 import shipped from '../../data/names.json' with { type: 'json' };
 import { LOADING_TILE_DARK, LOADING_TILE_LIGHT } from './loading-tile.ts';
 import type { CompiledSubstitution } from '../core/types.ts';
@@ -59,6 +59,7 @@ try {
     mainMatcher = subs.length ? createLineMatcher(subs) : null;
     mainStore.clear();
     lastAnnouncedMain.clear();
+    planner.reset();
   }
   const handle = installWorkerHook({
     runtime: __WORKER_RUNTIME__,
@@ -66,6 +67,7 @@ try {
     // Read at construction time, so a worker created after the config arrives
     // is born with the right table instead of waiting for a broadcast.
     getSubs: () => currentSubs,
+    getResolved: () => mainStore.entries(),
   });
 
   let channel: BroadcastChannel | null = null;
@@ -79,32 +81,54 @@ try {
   }
 
   /**
-   * Every resolution any worker announces passes through here. When a
-   * different name claims a word already resolved the other way, anything
-   * drawn from the old value is beyond the reach of any decode, but cycling
-   * the WebGL contexts makes Maps rebuild its renderer, which redraws every
-   * label under the now-current resolution. The governor stops that from
-   * thrashing in the genuinely ambiguous case (both places on screen,
-   * resolutions flip-flopping) and caps it per page. It lives here, not in
-   * the workers, because a rebuild replaces the workers and would hand a
-   * fresh budget to each repair.
+   * Every resolution any worker announces, and every shared word the renderer
+   * reports drawing, passes through here. Once a drawn word no longer matches
+   * how the labeler resolves it (the user has moved from one place sharing the
+   * word to the other), no decode can reach the old glyphs, but cycling the
+   * WebGL contexts makes Maps rebuild its renderer, which redraws every label
+   * under the current resolution. The planner decides when. It lives here,
+   * not in the workers, because a rebuild replaces the workers and would hand
+   * a fresh budget to each repair.
    */
-  const governor = createRepairGovernor();
+  const planner = createRepairPlanner();
   let repairs = 0;
-  function onResolution(text: string, to: string): void {
+  // Decide once the labeling that follows a move has finished arriving.
+  const SETTLE_MS = 700;
+  // While a wrong label waits on the view moving, which may bring no decode at all.
+  const RECHECK_MS = 3000;
+  let checkTimer: number | null = null;
+  function checkSoon(ms = SETTLE_MS): void {
+    if (checkTimer !== null) clearTimeout(checkTimer);
+    checkTimer = window.setTimeout(checkRepair, ms);
+  }
+  /** The camera part of the URL ("@25,-90,6z"), which Maps rewrites as the view moves. */
+  function currentView(): string | null {
+    try { return /@-?[\d.]+,-?[\d.]+,[\d.]+[a-z]/.exec(location.href)?.[0] ?? null; } catch { return null; }
+  }
+  function checkRepair(): void {
+    checkTimer = null;
     const now = Date.now();
-    const prevAt = governor.touch(text, now);
-    if (!mainStore.publish(text, to)) return;
-    if (governor.allow(prevAt, now)) {
-      contested = false;
+    const view = currentView();
+    const decision = planner.decide(now, view);
+    if (decision.action === 'repair') {
+      planner.repaired(now, view);
       repairs++;
+      contested = false;
       try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
+    } else if (decision.action === 'wait') {
+      checkSoon(decision.ms);
     } else {
-      // Repair is guarded off (ambiguous flip-flop, cooldown, or cap): the
-      // only case the user needs to be told about.
-      contested = true;
+      // Wrong and a rebuild will not help (both places on screen, or out of
+      // repairs): the only case the user needs to be told about.
+      contested = decision.action === 'contested';
+      if (decision.action === 'contested' && decision.recheck) checkSoon(RECHECK_MS);
     }
     postCounters();
+  }
+  function onResolution(text: string, to: string): void {
+    mainStore.publish(text, to);
+    planner.resolved(text, to);
+    checkSoon();
   }
 
   if (channel) {
@@ -120,6 +144,12 @@ try {
       } else if (data?.type === 'gazetteer:resolved') {
         const r = data as { text?: string; to?: string; from?: string };
         if (typeof r.text === 'string' && typeof r.to === 'string' && r.from !== mainId) onResolution(r.text, r.to);
+      } else if (data?.type === 'gazetteer:drawn') {
+        const r = data as { text?: string; to?: string; from?: string };
+        if (typeof r.text === 'string' && typeof r.to === 'string' && typeof r.from === 'string') {
+          planner.drawn(r.from, r.text, r.to);
+          checkSoon();
+        }
       } else if (data?.type === 'gazetteer:gl') {
         vectorIsAlive();
       } else if (data?.type === 'gazetteer:hello' && currentSubs.length > 0) {
@@ -370,6 +400,7 @@ try {
       if (redraws >= MAX_CONFIG_REDRAWS) return;
       redraws++;
       contested = false; // everything is being redrawn under one table
+      planner.replaced(Date.now());
       try { channel?.postMessage({ type: 'gazetteer:repair' }); } catch { /* ignore */ }
       postCounters();
     }, REDRAW_DEBOUNCE_MS);
@@ -381,14 +412,15 @@ try {
     if (data?.source !== 'gazetteer-isolated' || data.type !== 'rules') return;
     if (typeof data.suppressRaster === 'boolean') suppressRaster = data.suppressRaster;
     const subs = sanitizeSubs(data.subs);
+    // A storage write that leaves the table as it was (another setting, a
+    // language recorded) must not throw away what has been resolved.
+    const key = JSON.stringify(subs);
+    if (key === tableKey) return;
     try { setMainRules(subs); } catch { return; }
     currentSubs = subs;
+    tableKey = key;
     try { channel?.postMessage({ type: 'gazetteer:rules', subs: currentSubs }); } catch { /* ignore */ }
-    const key = JSON.stringify(subs);
-    if (key !== tableKey) {
-      tableKey = key;
-      redrawForNewRules();
-    }
+    redrawForNewRules();
   });
 
   function reportMain(): void {
